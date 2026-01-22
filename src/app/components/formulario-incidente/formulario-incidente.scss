@@ -252,6 +252,32 @@ $transition: all 0.3s ease;
       }
     }
 
+    .external-ticket-placeholder {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 20px;
+      text-align: center;
+      animation: pulse 2s ease-in-out infinite;
+
+      .help-text {
+        color: white;
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.5;
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.8;
+      }
+    }
+
     .resultado {
       background: $bg-light;
       border: 2px solid $border-color;

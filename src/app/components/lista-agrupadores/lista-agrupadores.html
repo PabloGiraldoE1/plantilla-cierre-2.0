@@ -22,8 +22,12 @@
       </div>
       
       <div class="agrupadores-list">
-        <div class="agrupador-item" *ngFor="let agrupador of agrupadoresPorCategoria[categoria]; let i = index">
+        <div class="agrupador-item" 
+          *ngFor="let agrupador of agrupadoresPorCategoria[categoria]; let i = index"
+          (click)="seleccionarAgrupador(agrupador)"
+          title="Click para usar este agrupador en el formulario">
           <span class="item-text">{{ agrupador }}</span>
+          <span class="item-action">✓ Usar</span>
         </div>
       </div>
     </div>

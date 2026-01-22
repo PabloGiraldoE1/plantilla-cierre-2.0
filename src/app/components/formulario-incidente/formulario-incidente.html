@@ -200,7 +200,7 @@
     <div class="result-section">
       <h2>📄 TEXTO GENERADO SOLUCIÓN INCIDENTE</h2>
 
-      <div class="external-ticket">
+      <div class="external-ticket" *ngIf="mostrarExternalTicket">
         <label for="externalTicket">External Ticket:</label>
         <div class="ticket-input-group">
           <input type="text" id="externalTicket" [value]="externalTicket" readonly>
@@ -209,6 +209,10 @@
             📋
           </button>
         </div>
+      </div>
+
+      <div class="external-ticket-placeholder" *ngIf="!mostrarExternalTicket">
+        <p class="help-text">💡 Complete Aplicativo, Proceso y Agrupador del Error para generar el External Ticket</p>
       </div>
 
       <div class="resultado" [class.empty]="!textoGenerado">

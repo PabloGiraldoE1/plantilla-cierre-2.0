@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { IncidenteService } from '../../services/incidente';
 import { Storage } from '../../services/storage';
+import { AgrupadorSeleccionado } from '../../services/agrupador-seleccionado';
 import { Incidente } from '../../models/incidente';
 
 @Component({
@@ -15,6 +16,7 @@ export class FormularioIncidente implements OnInit {
   formulario!: FormGroup;
   textoGenerado: string = '';
   externalTicket: string = '';
+  mostrarExternalTicket: boolean = false;
   sugerenciasAgrupador: string[] = [];
   mostrarSugerencias: boolean = false;
   toastMessage: string = '';
@@ -66,12 +68,23 @@ export class FormularioIncidente implements OnInit {
   constructor(
     private fb: FormBuilder,
     public incidenteService: IncidenteService,
-    private storageService: Storage
+    private storageService: Storage,
+    private agrupadorService: AgrupadorSeleccionado
   ) {}
 
   ngOnInit(): void {
     this.inicializarFormulario();
     this.configurarValidaciones();
+    this.cargarAgrupadorSeleccionado();
+  }
+
+  cargarAgrupadorSeleccionado(): void {
+    const agrupador = this.agrupadorService.getAgrupador();
+    if (agrupador) {
+      this.formulario.patchValue({ agrupadorError: agrupador });
+      this.actualizarExternalTicket();
+      this.showToast('✅ Agrupador seleccionado: ' + agrupador);
+    }
   }
 
   inicializarFormulario(): void {
@@ -129,7 +142,15 @@ export class FormularioIncidente implements OnInit {
     const aplicativo = this.formulario.get('aplicativoAfectado')?.value || '';
     const proceso = this.formulario.get('procesoAplicativo')?.value || '';
     const agrupador = this.formulario.get('agrupadorError')?.value || '';
-    this.externalTicket = this.incidenteService.generarExternalTicket(aplicativo, proceso, agrupador);
+    
+    // Solo mostrar external ticket si los 3 campos tienen valor
+    this.mostrarExternalTicket = !!(aplicativo && proceso && agrupador);
+    
+    if (this.mostrarExternalTicket) {
+      this.externalTicket = this.incidenteService.generarExternalTicket(aplicativo, proceso, agrupador);
+    } else {
+      this.externalTicket = '';
+    }
   }
 
   generarTexto(): void {
