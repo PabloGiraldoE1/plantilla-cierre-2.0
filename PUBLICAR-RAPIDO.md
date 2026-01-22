@@ -26,7 +26,7 @@ git config --global user.email "tu@email.com"
 git add .
 
 # Primer commit
-git commit -m "Sistema de Gestión de Incidentes v2.0"
+git commit -m "Plantilla de Incidentes v2.0"
 
 # Conectar con GitHub (CAMBIA tu-usuario y tu-repositorio)
 git remote add origin https://github.com/tu-usuario/sistema-incidentes.git

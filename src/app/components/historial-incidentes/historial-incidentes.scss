@@ -1,0 +1,307 @@
+$primary-color: #003366;
+$primary-hover: #005999;
+$success-color: #28a745;
+$danger-color: #dc3545;
+$warning-color: #ffc107;
+$info-color: #17a2b8;
+$border-color: #dee2e6;
+$bg-light: #f8f9fa;
+$shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+.historial-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  .header {
+    margin-bottom: 30px;
+    
+    h1 {
+      color: $primary-color;
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .stats {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      
+      .stat-card {
+        background: linear-gradient(135deg, $primary-color, $primary-hover);
+        color: white;
+        padding: 20px 40px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: $shadow;
+        min-width: 150px;
+        
+        .stat-value {
+          display: block;
+          font-size: 2.5rem;
+          font-weight: 700;
+          margin-bottom: 5px;
+        }
+        
+        .stat-label {
+          font-size: 0.9rem;
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+
+  // Sección de filtros
+  .filter-section {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: $shadow;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+
+    .search-group,
+    .filter-group {
+      flex: 1;
+      min-width: 200px;
+      
+      input,
+      select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid $border-color;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+        }
+      }
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      
+      @media (max-width: 768px) {
+        width: 100%;
+        flex-direction: column;
+      }
+    }
+  }
+
+  // Tabla de incidentes
+  .table-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: $shadow;
+    overflow: hidden;
+    
+    .incidentes-table {
+      width: 100%;
+      border-collapse: collapse;
+      
+      thead {
+        background: $primary-color;
+        color: white;
+        
+        th {
+          padding: 15px;
+          text-align: left;
+          font-weight: 600;
+          font-size: 0.95rem;
+          white-space: nowrap;
+        }
+      }
+      
+      tbody {
+        tr {
+          transition: background 0.2s;
+          border-bottom: 1px solid $border-color;
+          
+          &:hover {
+            background: $bg-light;
+          }
+          
+          &:last-child {
+            border-bottom: none;
+          }
+        }
+        
+        td {
+          padding: 15px;
+          font-size: 0.9rem;
+          
+          &.id-cell {
+            font-family: 'Courier New', monospace;
+            color: #666;
+            font-size: 0.85rem;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          
+          &.agrupador-cell {
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          
+          &.ticket-cell {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #444;
+          }
+          
+          &.actions-cell {
+            text-align: center;
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+  }
+
+  // Badges
+  .badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    
+    &.badge-1 { background: #28a745; color: white; } // Identificada
+    &.badge-2 { background: #ffc107; color: #333; } // En curso
+    &.badge-3 { background: #17a2b8; color: white; } // Por Identificar
+    &.badge-4 { background: #6c757d; color: white; } // Aislado
+    &.badge-5 { background: #28a745; color: white; } // Finalizada
+    &.badge-6 { background: #e9ecef; color: #666; } // N/A
+    &.badge-default { background: #e9ecef; color: #666; }
+  }
+
+  // Botones
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    &:active:not(:disabled) {
+      transform: translateY(2px);
+    }
+    
+    &.btn-export {
+      background: $success-color;
+      color: white;
+      
+      &:hover:not(:disabled) {
+        background: darken($success-color, 10%);
+      }
+    }
+    
+    &.btn-danger {
+      background: $danger-color;
+      color: white;
+      
+      &:hover:not(:disabled) {
+        background: darken($danger-color, 10%);
+      }
+    }
+  }
+
+  .btn-icon {
+    background: transparent;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    
+    &:hover {
+      background: $bg-light;
+      transform: scale(1.1);
+    }
+    
+    &.btn-delete:hover {
+      background: lighten($danger-color, 40%);
+    }
+  }
+
+  // Estado vacío
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: $shadow;
+    
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+    
+    h3 {
+      color: #666;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    
+    p {
+      color: #999;
+      font-size: 1rem;
+    }
+  }
+
+  // Responsive
+  @media (max-width: 1024px) {
+    .table-container {
+      overflow-x: auto;
+      
+      .incidentes-table {
+        min-width: 800px;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px;
+    
+    .header h1 {
+      font-size: 1.5rem;
+    }
+    
+    .stats {
+      .stat-card {
+        min-width: 120px;
+        padding: 15px 20px;
+        
+        .stat-value {
+          font-size: 2rem;
+        }
+      }
+    }
+  }
+}

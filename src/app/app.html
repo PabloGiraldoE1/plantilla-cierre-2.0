@@ -1,0 +1,26 @@
+<div class="app-container">
+  <!-- Navegación -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <h1>🎯 {{ title }}</h1>
+    </div>
+    <div class="nav-links">
+      <a routerLink="/formulario" routerLinkActive="active" class="nav-link">
+        📝 Plantilla de Cierre
+      </a>
+      <a routerLink="/historial" routerLinkActive="active" class="nav-link">
+        📊 Historial
+      </a>
+    </div>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Sistema de Gestión de Incidentes v2.0 - Angular {{ getCurrentYear() }}</p>
+  </footer>
+</div>

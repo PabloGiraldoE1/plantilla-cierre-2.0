@@ -1,0 +1,371 @@
+// Variables
+$primary-color: #003366;
+$primary-hover: #005999;
+$success-color: #28a745;
+$secondary-color: #6c757d;
+$error-color: #dc3545;
+$border-color: #ccc;
+$bg-light: #f9f9f9;
+$bg-white: #ffffff;
+$shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+$transition: all 0.3s ease;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin card {
+  background: $bg-white;
+  border-radius: 8px;
+  box-shadow: $shadow;
+  padding: 20px;
+}
+
+.formulario-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  h1 {
+    color: $primary-color;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 600;
+    
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+    }
+  }
+
+  .main-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // Form Section
+  .form-section {
+    @include card;
+    
+    .fieldset {
+      border: 2px solid $border-color;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      
+      legend {
+        color: $primary-color;
+        font-weight: 600;
+        font-size: 1.1rem;
+        padding: 0 10px;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      position: relative;
+      
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #333;
+        font-size: 0.95rem;
+        
+        .required {
+          color: $error-color;
+          margin-left: 3px;
+        }
+      }
+
+      input[type="text"],
+      select,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid $border-color;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        transition: $transition;
+        background: $bg-white;
+        
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+        }
+        
+        &.invalid {
+          border-color: $error-color;
+          
+          &:focus {
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+          }
+        }
+        
+        &:disabled,
+        &[readonly] {
+          background-color: #e9ecef;
+          cursor: not-allowed;
+        }
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+        font-family: inherit;
+      }
+
+      .error {
+        color: $error-color;
+        font-size: 0.85rem;
+        margin-top: 4px;
+        display: block;
+        font-weight: 500;
+      }
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    // Autocomplete
+    .autocomplete-wrapper {
+      position: relative;
+      
+      .autocomplete-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: $bg-white;
+        border: 2px solid $border-color;
+        border-top: none;
+        border-radius: 0 0 6px 6px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+        box-shadow: $shadow;
+        margin-top: -2px;
+
+        .autocomplete-item {
+          padding: 10px;
+          cursor: pointer;
+          transition: background 0.2s;
+          font-size: 0.9rem;
+          
+          &:hover {
+            background-color: $bg-light;
+          }
+          
+          &:active {
+            background-color: #e0e0e0;
+          }
+        }
+      }
+    }
+
+    // Buttons
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      
+      @media (max-width: 768px) {
+        flex-direction: column;
+      }
+    }
+  }
+
+  // Result Section
+  .result-section {
+    @include card;
+    
+    h2 {
+      color: $primary-color;
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .external-ticket {
+      margin-bottom: 20px;
+      
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .ticket-input-group {
+        display: flex;
+        gap: 10px;
+        
+        input {
+          flex: 1;
+          padding: 10px;
+          border: 2px solid $border-color;
+          border-radius: 6px;
+          background-color: #e9ecef;
+          font-family: 'Courier New', monospace;
+          font-size: 0.9rem;
+        }
+
+        .btn-copy {
+          padding: 10px 15px;
+          background: $primary-color;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: $transition;
+          font-size: 1.2rem;
+          
+          &:hover:not(:disabled) {
+            background: $primary-hover;
+            transform: scale(1.05);
+          }
+          
+          &:disabled {
+            background: $secondary-color;
+            cursor: not-allowed;
+            opacity: 0.6;
+          }
+        }
+      }
+    }
+
+    .resultado {
+      background: $bg-light;
+      border: 2px solid $border-color;
+      border-radius: 6px;
+      padding: 20px;
+      min-height: 300px;
+      white-space: pre-wrap;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      overflow-x: auto;
+      
+      &.empty {
+        color: #999;
+        font-style: italic;
+        @include flex-center;
+      }
+    }
+
+    .full-width {
+      width: 100%;
+    }
+  }
+
+  // Buttons Styles
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition;
+    text-align: center;
+    flex: 1;
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    &:active:not(:disabled) {
+      transform: translateY(2px);
+    }
+    
+    &.btn-primary {
+      background: $primary-color;
+      color: white;
+      
+      &:hover:not(:disabled) {
+        background: $primary-hover;
+      }
+    }
+    
+    &.btn-success {
+      background: $success-color;
+      color: white;
+      
+      &:hover:not(:disabled) {
+        background: darken($success-color, 10%);
+      }
+    }
+    
+    &.btn-secondary {
+      background: $secondary-color;
+      color: white;
+      
+      &:hover:not(:disabled) {
+        background: darken($secondary-color, 10%);
+      }
+    }
+  }
+
+  // Toast Notification
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #333;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    min-width: 250px;
+    text-align: center;
+    
+    &.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fieldset {
+  animation: fadeIn 0.3s ease;
+}

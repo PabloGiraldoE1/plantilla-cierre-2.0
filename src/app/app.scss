@@ -1,0 +1,131 @@
+// Variables globales
+$primary-color: #003366;
+$primary-hover: #005999;
+$bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$nav-height: 70px;
+$footer-height: 60px;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f5f7fa;
+
+  // Navegación
+  .navbar {
+    background: $primary-color;
+    color: white;
+    height: $nav-height;
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    .nav-brand {
+      h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+        
+        @media (max-width: 768px) {
+          font-size: 1.2rem;
+        }
+      }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      
+      @media (max-width: 768px) {
+        gap: 10px;
+      }
+
+      .nav-link {
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        
+        @media (max-width: 768px) {
+          padding: 8px 12px;
+          font-size: 0.9rem;
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+          transform: translateY(-2px);
+        }
+
+        &.active {
+          background: white;
+          color: $primary-color;
+          font-weight: 600;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+      }
+    }
+  }
+
+  // Contenido Principal
+  .main-content {
+    flex: 1;
+    padding: 30px 20px;
+    min-height: calc(100vh - #{$nav-height} - #{$footer-height});
+    
+    @media (max-width: 768px) {
+      padding: 20px 10px;
+    }
+  }
+
+  // Footer
+  .footer {
+    background: $primary-color;
+    color: white;
+    height: $footer-height;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 20px;
+
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+      opacity: 0.9;
+      
+      @media (max-width: 768px) {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+// Animaciones
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.main-content {
+  animation: fadeIn 0.4s ease;
+}

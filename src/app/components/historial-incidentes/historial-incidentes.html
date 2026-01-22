@@ -1,0 +1,98 @@
+<div class="historial-container">
+  <div class="header">
+    <h1>📊 HISTORIAL DE INCIDENTES</h1>
+    <div class="stats">
+      <div class="stat-card">
+        <span class="stat-value">{{ historial.length }}</span>
+        <span class="stat-label">Total Incidentes</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">{{ aplicativosUnicos.length }}</span>
+        <span class="stat-label">Aplicativos</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros y Búsqueda -->
+  <div class="filter-section">
+    <div class="search-group">
+      <input type="text" 
+        [(ngModel)]="searchTerm" 
+        (input)="buscar()"
+        placeholder="🔍 Buscar por agrupador, diagnóstico, solución...">
+    </div>
+    
+    <div class="filter-group">
+      <select [(ngModel)]="filtroAplicativo" (change)="buscar()">
+        <option value="">🖥️ Todos los aplicativos</option>
+        <option *ngFor="let app of aplicativosUnicos" [value]="app">
+          {{ app }}
+        </option>
+      </select>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-export" (click)="exportarJSON()">
+        📥 Exportar JSON
+      </button>
+      <button class="btn btn-export" (click)="exportarCSV()">
+        📊 Exportar CSV
+      </button>
+      <button class="btn btn-danger" (click)="limpiarHistorial()" 
+        [disabled]="historial.length === 0">
+        🗑️ Limpiar Todo
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabla de Incidentes -->
+  <div class="table-container" *ngIf="filteredHistorial.length > 0">
+    <table class="incidentes-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Aplicativo</th>
+          <th>Agrupador</th>
+          <th>Estado</th>
+          <th>External Ticket</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let incidente of filteredHistorial" class="incidente-row">
+          <td class="id-cell">{{ incidente.id }}</td>
+          <td>{{ formatearFecha(incidente.fecha) }}</td>
+          <td><strong>{{ incidente.aplicativoAfectado }}</strong></td>
+          <td class="agrupador-cell">{{ incidente.agrupadorError }}</td>
+          <td>
+            <span class="badge" [class]="'badge-' + (incidente.estadoRaizal || 'default')">
+              {{ incidente.estadoRaizal || 'N/A' }}
+            </span>
+          </td>
+          <td class="ticket-cell">{{ incidente.externalTicket }}</td>
+          <td class="actions-cell">
+            <button class="btn-icon" (click)="copiarIncidente(incidente)" title="Copiar">
+              📋
+            </button>
+            <button class="btn-icon btn-delete" (click)="eliminarIncidente(incidente.id)" title="Eliminar">
+              🗑️
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mensaje cuando no hay resultados -->
+  <div class="empty-state" *ngIf="filteredHistorial.length === 0">
+    <div class="empty-icon">📭</div>
+    <h3>No se encontraron incidentes</h3>
+    <p *ngIf="searchTerm || filtroAplicativo">
+      Intenta ajustar los filtros de búsqueda
+    </p>
+    <p *ngIf="!searchTerm && !filtroAplicativo && historial.length === 0">
+      Aún no has guardado ningún incidente
+    </p>
+  </div>
+</div>

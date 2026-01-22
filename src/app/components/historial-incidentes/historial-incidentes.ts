@@ -1,0 +1,114 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Storage } from '../../services/storage';
+import { Incidente } from '../../models/incidente';
+
+@Component({
+  selector: 'app-historial-incidentes',
+  imports: [CommonModule, FormsModule],
+  templateUrl: './historial-incidentes.html',
+  styleUrl: './historial-incidentes.scss',
+})
+export class HistorialIncidentes implements OnInit {
+  historial: Incidente[] = [];
+  filteredHistorial: Incidente[] = [];
+  searchTerm: string = '';
+  filtroAplicativo: string = '';
+  aplicativosUnicos: string[] = [];
+
+  constructor(private storageService: Storage) {}
+
+  ngOnInit(): void {
+    this.cargarHistorial();
+  }
+
+  cargarHistorial(): void {
+    this.historial = this.storageService.obtenerHistorial();
+    this.filteredHistorial = [...this.historial];
+    this.extraerAplicativosUnicos();
+  }
+
+  extraerAplicativosUnicos(): void {
+    const aplicativos = this.historial.map(inc => inc.aplicativoAfectado);
+    this.aplicativosUnicos = [...new Set(aplicativos)].filter(Boolean);
+  }
+
+  buscar(): void {
+    let resultado = [...this.historial];
+    
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      resultado = resultado.filter(inc => 
+        inc.agrupadorError?.toLowerCase().includes(term) ||
+        inc.diagnostico?.toLowerCase().includes(term) ||
+        inc.descripcionSolucion?.toLowerCase().includes(term) ||
+        inc.externalTicket?.toLowerCase().includes(term)
+      );
+    }
+    
+    if (this.filtroAplicativo) {
+      resultado = resultado.filter(inc => inc.aplicativoAfectado === this.filtroAplicativo);
+    }
+    
+    this.filteredHistorial = resultado;
+  }
+
+  eliminarIncidente(id: string | undefined): void {
+    if (!id) return;
+    if (confirm('¿Estás seguro de eliminar este incidente?')) {
+      this.storageService.eliminarIncidente(id);
+      this.cargarHistorial();
+    }
+  }
+
+  limpiarHistorial(): void {
+    if (confirm('¿Estás seguro de eliminar TODO el historial? Esta acción no se puede deshacer.')) {
+      this.storageService.limpiarHistorial();
+      this.cargarHistorial();
+    }
+  }
+
+  exportarJSON(): void {
+    const json = this.storageService.exportarJSON();
+    this.descargarArchivo(json, 'incidentes.json', 'application/json');
+  }
+
+  exportarCSV(): void {
+    const csv = this.storageService.exportarCSV();
+    this.descargarArchivo(csv, 'incidentes.csv', 'text/csv');
+  }
+
+  private descargarArchivo(contenido: string, nombreArchivo: string, tipo: string): void {
+    const blob = new Blob([contenido], { type: tipo });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = nombreArchivo;
+    link.click();
+    window.URL.revokeObjectURL(url);
+  }
+
+  formatearFecha(fecha: Date | undefined): string {
+    if (!fecha) return 'N/A';
+    return new Date(fecha).toLocaleString('es-ES');
+  }
+
+  copiarIncidente(incidente: Incidente): void {
+    const texto = `
+* Agrupador del Error: ${incidente.agrupadorError}
+* Proceso del Error: ${incidente.procesoError}
+* HU Raizal / Mejora: ${incidente.huRaizal}
+* Estado Raizal: ${incidente.estadoRaizal}
+* Responsable Solución: ${incidente.responsableSolucion}
+* Diagnóstico: ${incidente.diagnostico}
+* Acción Ejecutada: ${incidente.accionEjecutada}
+* Descripción de Solución: ${incidente.descripcionSolucion}
+    `.trim();
+    
+    navigator.clipboard.writeText(texto).then(() => {
+      alert('📋 Incidente copiado al portapapeles');
+    });
+  }
+}
+
