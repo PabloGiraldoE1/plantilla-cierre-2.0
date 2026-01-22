@@ -69,26 +69,6 @@ export class HistorialIncidentes implements OnInit {
     }
   }
 
-  exportarJSON(): void {
-    const json = this.storageService.exportarJSON();
-    this.descargarArchivo(json, 'incidentes.json', 'application/json');
-  }
-
-  exportarCSV(): void {
-    const csv = this.storageService.exportarCSV();
-    this.descargarArchivo(csv, 'incidentes.csv', 'text/csv');
-  }
-
-  private descargarArchivo(contenido: string, nombreArchivo: string, tipo: string): void {
-    const blob = new Blob([contenido], { type: tipo });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = nombreArchivo;
-    link.click();
-    window.URL.revokeObjectURL(url);
-  }
-
   formatearFecha(fecha: Date | undefined): string {
     if (!fecha) return 'N/A';
     return new Date(fecha).toLocaleString('es-ES');

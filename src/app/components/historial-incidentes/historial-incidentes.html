@@ -32,12 +32,6 @@
     </div>
 
     <div class="action-buttons">
-      <button class="btn btn-export" (click)="exportarJSON()">
-        📥 Exportar JSON
-      </button>
-      <button class="btn btn-export" (click)="exportarCSV()">
-        📊 Exportar CSV
-      </button>
       <button class="btn btn-danger" (click)="limpiarHistorial()" 
         [disabled]="historial.length === 0">
         🗑️ Limpiar Todo

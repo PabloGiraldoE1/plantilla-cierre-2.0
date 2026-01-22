@@ -1,0 +1,31 @@
+<div class="agrupadores-container">
+  <div class="header">
+    <h1>📋 LISTADO DE AGRUPADORES</h1>
+    <p class="subtitle">Catálogo completo de agrupadores de errores disponibles</p>
+  </div>
+
+  <div class="info-banner">
+    <span class="info-icon">ℹ️</span>
+    <p>Este listado es de solo lectura. Los agrupadores se utilizan para clasificar incidentes en el formulario de cierre.</p>
+  </div>
+
+  <div class="stats-card">
+    <span class="total-count">{{ totalAgrupadores }}</span>
+    <span class="total-label">Agrupadores Disponibles</span>
+  </div>
+
+  <div class="categorias-container">
+    <div class="categoria-section" *ngFor="let categoria of categorias">
+      <div class="categoria-header">
+        <h2>{{ categoria }}</h2>
+        <span class="categoria-count">{{ agrupadoresPorCategoria[categoria].length }}</span>
+      </div>
+      
+      <div class="agrupadores-list">
+        <div class="agrupador-item" *ngFor="let agrupador of agrupadoresPorCategoria[categoria]; let i = index">
+          <span class="item-text">{{ agrupador }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
