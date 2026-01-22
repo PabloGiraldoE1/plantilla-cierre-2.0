@@ -54,7 +54,16 @@ export class FormularioIncidente implements OnInit {
     "21. Sacar de bolsa", "22. Pago siniestros", "23. P8 (Documentos)",
     "24. ATR", "25. Case Tracking", "26. Gestion de la informacion de cliente",
     "27. Consultar información", "28. Reserva sinietros", "34. Login",
-    "35. Solicitud hogar", "36. Sincronización", "37. Creación de cita"
+    "35. Solicitud hogar", "36. Sincronización", "37. Creación de cita",
+    "38. Conductor Elegido", "39. Cierre de sesión", "40. Inspeccion virtual",
+    "41. Reembolso", "42. Bolsillo", "43. Firma remota", "44. Sarlaft",
+    "45. Fatca", "47. Información de Cliente", "48. Información de riesgo/negocio",
+    "49. Tarifación", "50. Solicitud electrónica", "51. Plan de Recompensa",
+    "52. Reporte Monitoreo", "53. Error de Tipificación", "54. AWS",
+    "55. Reportes Producción", "56. Agregar Soat Digital", "57. Pagar Cita Virtual",
+    "58. Firma Contrato ViaFirma", "59. Modulo de Pagos SEL", "60. Autorizacion",
+    "61. Consulta", "62. Descargar documento", "63. Solicitud Evaluacion Medica",
+    "64. Estado radicado - AUS", "65. Solicitud Autos", "66. Incidente duplicado"
   ];
 
   estadosRaizal = [
@@ -170,6 +179,9 @@ export class FormularioIncidente implements OnInit {
 * Diagnóstico: ${valores.diagnostico}
 * Acción Ejecutada: ${valores.accionEjecutada}
 * Descripción de Solución: ${valores.descripcionSolucion}
+
+Ha sido un gusto ayudarte. En breve recibirás un correo con la resolución del incidente y una breve encuesta de satisfacción. Solo tomará 3 minutos y tus comentarios nos ayudan a mejorar. ¡Gracias por tu confianza!
+
 * Confirmar operatividad del usuario Afectado: ${valores.confirmacionUsuario}
 * ID Formulario de Solicitud de Credenciales: ${valores.formularioCredenciales}
 * OC Acceso a PAM - (PAM): ${valores.ocPam}
