@@ -160,7 +160,6 @@ export class IncidenteService {
     "Colectivo",
     "Subgrupos",
     "Radicacion",
-    "Firmas",
     "Procesos AWS",
   ];
 
