@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Incidente } from '../models/incidente';
 
 @Injectable({
@@ -6,11 +7,15 @@ import { Incidente } from '../models/incidente';
 })
 export class Storage {
   private readonly STORAGE_KEY = 'incidentes_historial';
+  private platformId = inject(PLATFORM_ID);
+  private isBrowser = isPlatformBrowser(this.platformId);
 
   constructor() { }
 
   // Guardar incidente en localStorage
   guardarIncidente(incidente: Incidente): void {
+    if (!this.isBrowser) return;
+    
     const historial = this.obtenerHistorial();
     incidente.id = this.generarId();
     incidente.fecha = new Date();
@@ -20,18 +25,24 @@ export class Storage {
 
   // Obtener todos los incidentes
   obtenerHistorial(): Incidente[] {
+    if (!this.isBrowser) return [];
+    
     const data = localStorage.getItem(this.STORAGE_KEY);
     return data ? JSON.parse(data) : [];
   }
 
   // Eliminar un incidente por ID
   eliminarIncidente(id: string): void {
+    if (!this.isBrowser) return;
+    
     const historial = this.obtenerHistorial().filter(inc => inc.id !== id);
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(historial));
   }
 
   // Limpiar todo el historial
   limpiarHistorial(): void {
+    if (!this.isBrowser) return;
+    
     localStorage.removeItem(this.STORAGE_KEY);
   }
 
