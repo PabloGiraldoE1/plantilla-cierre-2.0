@@ -1,4 +1,4 @@
-# 🎯 Sistema de Gestión de Incidentes
+# 🎯 Plantilla de Gestión de Incidentes
 
 <div align="center">
   

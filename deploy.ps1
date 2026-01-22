@@ -1,6 +1,6 @@
 # ========================================
 # Script de Despliegue a GitHub Pages
-# Sistema de Gestión de Incidentes
+# Plantilla de Gestión de Incidentes
 # ========================================
 
 # CONFIGURACIÓN - EDITA ESTOS VALORES

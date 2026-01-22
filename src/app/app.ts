@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app.scss'
 })
 export class App {
-  title = 'Sistema de Gestión de Incidentes';
+  title = 'Plantilla de Gestión de Incidentes';
   
   getCurrentYear(): number {
     return new Date().getFullYear();
