@@ -77,6 +77,7 @@ export class HistorialIncidentes implements OnInit {
   copiarIncidente(incidente: Incidente): void {
     const texto = `
 * Agrupador del Error: ${incidente.agrupadorError}
+* Causa del Error: ${incidente.causaError}
 * Proceso del Error: ${incidente.procesoError}
 * HU Raizal / Mejora: ${incidente.huRaizal}
 * Estado Raizal: ${incidente.estadoRaizal}
@@ -84,6 +85,11 @@ export class HistorialIncidentes implements OnInit {
 * Diagnóstico: ${incidente.diagnostico}
 * Acción Ejecutada: ${incidente.accionEjecutada}
 * Descripción de Solución: ${incidente.descripcionSolucion}
+* Confirmación Usuario: ${incidente.confirmacionUsuario}
+* Formulario Credenciales: ${incidente.formularioCredenciales}
+* OC PAM: ${incidente.ocPam}
+* Causa Raíz: ${incidente.causaRaiz}
+* External Ticket: ${incidente.externalTicket}
     `.trim();
     
     navigator.clipboard.writeText(texto).then(() => {

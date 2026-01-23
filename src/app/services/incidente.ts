@@ -131,6 +131,7 @@ export class IncidenteService {
     "Mis Negocios",
     "Cotizador Educacion",
     "Cotizador Pension",
+    "Cotizador Vida / Plan Vive",
     "Cotizador Mas Vida",
     "Cotizador Ingreso Digital Vida Grupo",
     "Cotizador Saldado",

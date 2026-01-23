@@ -172,6 +172,7 @@ export class FormularioIncidente implements OnInit {
     const valores = this.formulario.value;
     this.textoGenerado = `
 * Agrupador del Error: ${valores.agrupadorError}
+* Causa del Error: ${valores.causaError}
 * Proceso del Error: ${valores.procesoError}
 * HU Raizal / Mejora: ${valores.huRaizal}
 * Estado Raizal: ${valores.estadoRaizal}
