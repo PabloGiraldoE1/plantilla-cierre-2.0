@@ -85,6 +85,9 @@ export class HistorialIncidentes implements OnInit {
 * Diagnóstico: ${incidente.diagnostico}
 * Acción Ejecutada: ${incidente.accionEjecutada}
 * Descripción de Solución: ${incidente.descripcionSolucion}
+
+Ha sido un gusto ayudarte. En breve recibirás un correo con la resolución del incidente y una breve encuesta de satisfacción. Solo tomará 3 minutos y tus comentarios nos ayudan a mejorar. ¡Gracias por tu confianza!
+
 * Confirmación Usuario: ${incidente.confirmacionUsuario}
 * Formulario Credenciales: ${incidente.formularioCredenciales}
 * OC PAM: ${incidente.ocPam}
