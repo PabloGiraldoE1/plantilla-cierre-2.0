@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { IncidenteService } from '../../services/incidente';
 import { Storage } from '../../services/storage';
 import { AgrupadorSeleccionado } from '../../services/agrupador-seleccionado';
+import { IncidenteCompartido } from '../../services/incidente-compartido';
 import { Incidente } from '../../models/incidente';
 
 @Component({
@@ -78,12 +79,23 @@ export class FormularioIncidente implements OnInit {
     private fb: FormBuilder,
     public incidenteService: IncidenteService,
     private storageService: Storage,
-    private agrupadorService: AgrupadorSeleccionado
+    private agrupadorService: AgrupadorSeleccionado,
+    private incidenteCompartido: IncidenteCompartido
   ) {}
 
   ngOnInit(): void {
     this.inicializarFormulario();
     this.configurarValidaciones();
+    this.cargarIncidenteRecuperado();
+  }
+
+  cargarIncidenteRecuperado(): void {
+    const incidente = this.incidenteCompartido.getIncidente();
+    if (incidente) {
+      this.formulario.patchValue(incidente);
+      this.actualizarExternalTicket();
+      this.incidenteCompartido.limpiarIncidente();
+    }
     this.cargarAgrupadorSeleccionado();
   }
 
@@ -152,8 +164,11 @@ export class FormularioIncidente implements OnInit {
     const proceso = this.formulario.get('procesoAplicativo')?.value || '';
     const agrupador = this.formulario.get('agrupadorError')?.value || '';
     
-    // Solo mostrar external ticket si los 3 campos tienen valor
-    this.mostrarExternalTicket = !!(aplicativo && proceso && agrupador);
+    // Verificar que el agrupador esté en la lista de opciones válidas
+    const agrupadorValido = this.incidenteService.opcionesAgrupador.includes(agrupador);
+    
+    // Solo mostrar external ticket si los 3 campos tienen valor Y el agrupador es válido
+    this.mostrarExternalTicket = !!(aplicativo && proceso && agrupador && agrupadorValido);
     
     if (this.mostrarExternalTicket) {
       this.externalTicket = this.incidenteService.generarExternalTicket(aplicativo, proceso, agrupador);

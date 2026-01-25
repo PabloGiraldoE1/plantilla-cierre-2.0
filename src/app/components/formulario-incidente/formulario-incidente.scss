@@ -196,7 +196,7 @@ $transition: all 0.3s ease;
   // Result Section
   .result-section {
     @include card;
-    
+
     h2 {
       color: $primary-color;
       font-size: 1.3rem;

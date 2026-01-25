@@ -1,0 +1,181 @@
+<div class="formulario-container">
+  <div class="header">
+    <h1>🔧 RAIZALES</h1>
+    <p>Gestión de raizales técnicos</p>
+  </div>
+
+  <div class="main-layout">
+    <form [formGroup]="formulario" class="formulario">
+    <!-- Aplicación Afectada -->
+    <div class="form-group">
+      <label>Aplicación Afectada *</label>
+      <input 
+        type="text" 
+        formControlName="aplicacionAfectada"
+        [class.invalid]="isFieldInvalid('aplicacionAfectada')"
+        placeholder="Ingresa la aplicación afectada">
+      <span class="error-message" *ngIf="isFieldInvalid('aplicacionAfectada')">
+        Este campo es obligatorio
+      </span>
+    </div>
+
+    <!-- PO -->
+    <div class="form-group">
+      <label>PO *</label>
+      <input 
+        type="text" 
+        formControlName="po"
+        [class.invalid]="isFieldInvalid('po')"
+        placeholder="Ingresa el PO">
+      <span class="error-message" *ngIf="isFieldInvalid('po')">
+        Este campo es obligatorio
+      </span>
+    </div>
+
+    <!-- Contexto Técnico -->
+    <div class="form-group">
+      <label>Contexto Técnico *</label>
+      <textarea 
+        formControlName="contextoTecnico"
+        [class.invalid]="isFieldInvalid('contextoTecnico')"
+        placeholder="Describe el contexto técnico"
+        rows="4"></textarea>
+      <span class="error-message" *ngIf="isFieldInvalid('contextoTecnico')">
+        Este campo es obligatorio
+      </span>
+    </div>
+
+    <!-- Código de Incidentes -->
+    <div class="form-group">
+      <label>Código de Incidentes *</label>
+      <input 
+        type="text" 
+        formControlName="codigoIncidentes"
+        [class.invalid]="isFieldInvalid('codigoIncidentes')"
+        placeholder="Ingresa el código de incidentes">
+      <span class="error-message" *ngIf="isFieldInvalid('codigoIncidentes')">
+        Este campo es obligatorio
+      </span>
+    </div>
+
+    <!-- Incidentes por Mes -->
+    <div class="form-group">
+      <label>Incidentes por Mes *</label>
+      <input 
+        type="text" 
+        formControlName="incidentesPorMes"
+        [class.invalid]="isFieldInvalid('incidentesPorMes')"
+        placeholder="Cantidad de incidentes por mes">
+      <span class="error-message" *ngIf="isFieldInvalid('incidentesPorMes')">
+        Este campo es obligatorio
+      </span>
+    </div>
+
+    <!-- Impacto Negocio -->
+    <div class="form-group">
+      <label>Impacto Negocio *</label>
+      <textarea 
+        formControlName="impactoNegocio"
+        [class.invalid]="isFieldInvalid('impactoNegocio')"
+        placeholder="Describe el impacto en el negocio"
+        rows="3"></textarea>
+      <span class="error-message" *ngIf="isFieldInvalid('impactoNegocio')">
+        Este campo es obligatorio
+      </span>
+    </div>
+
+    <!-- Solución Puntual (Confluence) -->
+    <div class="form-group">
+      <label>Solución Puntual (Confluence) *</label>
+      <textarea 
+        formControlName="solucionPuntual"
+        [class.invalid]="isFieldInvalid('solucionPuntual')"
+        placeholder="Describe la solución puntual"
+        rows="4"></textarea>
+      <span class="error-message" *ngIf="isFieldInvalid('solucionPuntual')">
+        Este campo es obligatorio
+      </span>
+    </div>
+
+    <!-- Afecta Canal Asesor -->
+    <div class="form-group">
+      <label>Afecta Canal Asesor *</label>
+      <div class="radio-group">
+        <label class="radio-label">
+          <input type="radio" formControlName="afectaCanalAsesor" value="SI">
+          <span>SI</span>
+        </label>
+        <label class="radio-label">
+          <input type="radio" formControlName="afectaCanalAsesor" value="NO">
+          <span>NO</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Requiere Barrido -->
+    <div class="form-group">
+      <label>Requiere Barrido *</label>
+      <div class="radio-group">
+        <label class="radio-label">
+          <input type="radio" formControlName="requiereBarrido" value="SI">
+          <span>SI</span>
+        </label>
+        <label class="radio-label">
+          <input type="radio" formControlName="requiereBarrido" value="NO">
+          <span>NO</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Descripción del Error -->
+    <div class="form-group">
+      <label>Descripción del Error *</label>
+      <textarea 
+        formControlName="descripcionError"
+        [class.invalid]="isFieldInvalid('descripcionError')"
+        placeholder="Describe el error detalladamente"
+        rows="4"></textarea>
+      <span class="error-message" *ngIf="isFieldInvalid('descripcionError')">
+        Este campo es obligatorio
+      </span>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="button-group">
+      <button type="button" class="btn btn-primary" (click)="generarTexto()">
+        ✨ Generar Texto
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="limpiarFormulario()">
+        🔄 Limpiar
+      </button>
+    </div>
+  </form>
+
+    <!-- Área de Texto Generado -->
+    <div class="texto-generado-container">
+      @if (textoGenerado) {
+        <div class="texto-generado">
+          <div class="texto-header">
+            <h3>📄 Texto Generado</h3>
+            <button class="btn-copy" (click)="copiarAlPortapapeles()">
+              📋 Copiar
+            </button>
+          </div>
+          <pre class="texto-content">{{ textoGenerado }}</pre>
+        </div>
+      } @else {
+        <div class="texto-placeholder">
+          <div class="placeholder-icon">📄</div>
+          <p>El texto generado aparecerá aquí</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  @if (mostrarToast) {
+    <div class="toast">
+      {{ toastMessage }}
+    </div>
+  }
+</div>

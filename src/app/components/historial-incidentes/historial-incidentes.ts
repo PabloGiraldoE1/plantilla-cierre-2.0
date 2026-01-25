@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Storage } from '../../services/storage';
+import { IncidenteCompartido } from '../../services/incidente-compartido';
 import { Incidente } from '../../models/incidente';
 
 @Component({
@@ -17,7 +19,11 @@ export class HistorialIncidentes implements OnInit {
   filtroAplicativo: string = '';
   aplicativosUnicos: string[] = [];
 
-  constructor(private storageService: Storage) {}
+  constructor(
+    private storageService: Storage,
+    private incidenteCompartido: IncidenteCompartido,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.cargarHistorial();
@@ -94,18 +100,19 @@ ${mensajeCierre}
 * ID Formulario de Solicitud de Credenciales: ${incidente.formularioCredenciales}
 * OC Acceso a PAM - (PAM): ${incidente.ocPam}
 * Causa Raíz (Identificada/Sin Identificar): ${incidente.causaRaiz}
-* Confirmación Usuario: ${incidente.confirmacionUsuario}
-* Formulario Credenciales: ${incidente.formularioCredenciales}
-* OC PAM: ${incidente.ocPam}
-* Causa Raíz: ${incidente.causaRaiz}
-* External Ticket: ${incidente.externalTicket}
-
-
     `.trim();
     
     navigator.clipboard.writeText(texto).then(() => {
       alert('📋 Incidente copiado al portapapeles');
     });
+  }
+
+  recuperarIncidente(incidente: Incidente): void {
+    this.incidenteCompartido.setIncidente(incidente);
+    this.router.navigate(['/formulario']);
+    setTimeout(() => {
+      alert('✅ Incidente recuperado. Los datos se han cargado en el formulario.');
+    }, 300);
   }
 }
 

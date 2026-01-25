@@ -248,6 +248,10 @@ $shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     &.btn-delete:hover {
       background: lighten($danger-color, 40%);
     }
+
+    &.btn-recover:hover {
+      background: lighten($info-color, 40%);
+    }
   }
 
   // Estado vacío
