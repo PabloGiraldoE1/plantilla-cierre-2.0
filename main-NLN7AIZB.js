@@ -38,9 +38,6 @@ ${n}
 * ID Formulario de Solicitud de Credenciales: ${t.formularioCredenciales}
 * OC Acceso a PAM - (PAM): ${t.ocPam}
 * Causa Ra\xEDz (Identificada/Sin Identificar): ${t.causaRaiz}
-=======
-Ha sido un gusto ayudarte. En breve recibir\xE1s un correo con la resoluci\xF3n del incidente y una breve encuesta de satisfacci\xF3n. Solo tomar\xE1 3 minutos y tus comentarios nos ayudan a mejorar. \xA1Gracias por tu confianza!
-
 * Confirmaci\xF3n Usuario: ${t.confirmacionUsuario}
 * Formulario Credenciales: ${t.formularioCredenciales}
 * OC PAM: ${t.ocPam}
