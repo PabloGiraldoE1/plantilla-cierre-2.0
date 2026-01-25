@@ -88,7 +88,6 @@ export class HistorialIncidentes implements OnInit {
 * Acción Ejecutada: ${incidente.accionEjecutada}
 * Descripción de Solución: ${incidente.descripcionSolucion}
 
-<<<<<<< HEAD
 ${mensajeCierre}
 
 * Confirmar operatividad del usuario Afectado: ${incidente.confirmacionUsuario}
@@ -103,7 +102,8 @@ Ha sido un gusto ayudarte. En breve recibirás un correo con la resolución del 
 * OC PAM: ${incidente.ocPam}
 * Causa Raíz: ${incidente.causaRaiz}
 * External Ticket: ${incidente.externalTicket}
->>>>>>> f29d28a84b70d90a05338c8e7b017adf92bf0d88
+
+
     `.trim();
     
     navigator.clipboard.writeText(texto).then(() => {
