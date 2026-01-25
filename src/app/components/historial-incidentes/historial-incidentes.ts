@@ -88,12 +88,22 @@ export class HistorialIncidentes implements OnInit {
 * Acción Ejecutada: ${incidente.accionEjecutada}
 * Descripción de Solución: ${incidente.descripcionSolucion}
 
+<<<<<<< HEAD
 ${mensajeCierre}
 
 * Confirmar operatividad del usuario Afectado: ${incidente.confirmacionUsuario}
 * ID Formulario de Solicitud de Credenciales: ${incidente.formularioCredenciales}
 * OC Acceso a PAM - (PAM): ${incidente.ocPam}
 * Causa Raíz (Identificada/Sin Identificar): ${incidente.causaRaiz}
+=======
+Ha sido un gusto ayudarte. En breve recibirás un correo con la resolución del incidente y una breve encuesta de satisfacción. Solo tomará 3 minutos y tus comentarios nos ayudan a mejorar. ¡Gracias por tu confianza!
+
+* Confirmación Usuario: ${incidente.confirmacionUsuario}
+* Formulario Credenciales: ${incidente.formularioCredenciales}
+* OC PAM: ${incidente.ocPam}
+* Causa Raíz: ${incidente.causaRaiz}
+* External Ticket: ${incidente.externalTicket}
+>>>>>>> f29d28a84b70d90a05338c8e7b017adf92bf0d88
     `.trim();
     
     navigator.clipboard.writeText(texto).then(() => {
