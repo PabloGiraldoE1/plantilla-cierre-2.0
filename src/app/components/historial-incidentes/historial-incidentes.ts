@@ -94,9 +94,6 @@ ${mensajeCierre}
 * ID Formulario de Solicitud de Credenciales: ${incidente.formularioCredenciales}
 * OC Acceso a PAM - (PAM): ${incidente.ocPam}
 * Causa Raíz (Identificada/Sin Identificar): ${incidente.causaRaiz}
-=======
-Ha sido un gusto ayudarte. En breve recibirás un correo con la resolución del incidente y una breve encuesta de satisfacción. Solo tomará 3 minutos y tus comentarios nos ayudan a mejorar. ¡Gracias por tu confianza!
-
 * Confirmación Usuario: ${incidente.confirmacionUsuario}
 * Formulario Credenciales: ${incidente.formularioCredenciales}
 * OC PAM: ${incidente.ocPam}
