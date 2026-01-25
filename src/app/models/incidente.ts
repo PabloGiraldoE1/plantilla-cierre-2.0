@@ -17,6 +17,7 @@ export interface Incidente {
   ocPam: string;
   causaRaiz: string;
   externalTicket?: string;
+  mensajeCierre?: string;
 }
 
 export interface EstadisticasIncidente {

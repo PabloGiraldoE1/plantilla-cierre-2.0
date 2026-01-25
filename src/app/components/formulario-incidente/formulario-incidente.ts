@@ -196,9 +196,12 @@ Ha sido un gusto ayudarte. En breve recibirás un correo con la resolución del 
       return;
     }
 
+    const mensajeCierre = 'Ha sido un gusto ayudarte. En breve recibirás un correo con la resolución del incidente y una breve encuesta de satisfacción. Solo tomará 3 minutos y tus comentarios nos ayudan a mejorar. ¡Gracias por tu confianza!';
+
     const incidente: Incidente = {
       ...this.formulario.value,
-      externalTicket: this.externalTicket
+      externalTicket: this.externalTicket,
+      mensajeCierre
     };
 
     this.storageService.guardarIncidente(incidente);
