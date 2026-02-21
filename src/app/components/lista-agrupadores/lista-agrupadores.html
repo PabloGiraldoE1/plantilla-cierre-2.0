@@ -6,7 +6,54 @@
 
   <div class="info-banner">
     <span class="info-icon">ℹ️</span>
-    <p>Este listado es de solo lectura. Los agrupadores se utilizan para clasificar incidentes en el formulario de cierre.</p>
+    <p>Selecciona un agrupador de la lista para incluirlo en el generador de External Ticket.</p>
+  </div>
+
+  <!-- Generador de External Ticket -->
+  <div class="ticket-generator">
+    <h2>🔗 Generador de External Ticket</h2>
+
+    <div class="ticket-form">
+      <div class="form-group">
+        <label for="aplicativoTk">Aplicativo Afectado</label>
+        <select id="aplicativoTk" [(ngModel)]="aplicativoSeleccionado" (change)="calcularExternalTicket()">
+          <option value="">-- Seleccione aplicativo --</option>
+          <option *ngFor="let app of incidenteService.aplicativos" [value]="app">
+            {{ app }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="procesoTk">Proceso</label>
+        <select id="procesoTk" [(ngModel)]="procesoSeleccionado" (change)="calcularExternalTicket()">
+          <option value="">-- Seleccione proceso --</option>
+          <option *ngFor="let proceso of incidenteService.procesos" [value]="proceso">
+            {{ proceso }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Agrupador Seleccionado</label>
+        <input type="text" [value]="agrupadorSeleccionadoTicket || 'Haz clic en un agrupador de la lista'"
+          readonly class="agrupador-display">
+      </div>
+    </div>
+
+    <div class="ticket-result" *ngIf="externalTicket">
+      <label>External Ticket generado:</label>
+      <div class="ticket-input-group">
+        <input type="text" [value]="externalTicket" readonly>
+        <button type="button" class="btn-copy" (click)="copiarTicket()">
+          📋 Copiar
+        </button>
+      </div>
+    </div>
+
+    <div class="ticket-hint" *ngIf="!externalTicket">
+      <p>💡 Selecciona aplicativo, proceso y haz clic en un agrupador para generar el External Ticket</p>
+    </div>
   </div>
 
   <div class="stats-card">
@@ -20,16 +67,22 @@
         <h2>{{ categoria }}</h2>
         <span class="categoria-count">{{ agrupadoresPorCategoria[categoria].length }}</span>
       </div>
-      
+
       <div class="agrupadores-list">
-        <div class="agrupador-item" 
+        <div class="agrupador-item"
           *ngFor="let agrupador of agrupadoresPorCategoria[categoria]; let i = index"
-          (click)="seleccionarAgrupador(agrupador)"
-          title="Click para usar este agrupador en el formulario">
+          [class.selected]="agrupador === agrupadorSeleccionadoTicket"
+          (click)="seleccionarAgrupadorParaTicket(agrupador)"
+          title="Clic para seleccionar este agrupador en el generador de ticket">
           <span class="item-text">{{ agrupador }}</span>
-          <span class="item-action">✓ Usar</span>
+          <span class="item-action">✓ Seleccionar</span>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Toast de Notificaciones -->
+<div class="toast" [class.show]="mostrarToast">
+  {{ toastMessage }}
 </div>

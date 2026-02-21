@@ -132,6 +132,14 @@ $transition: all 0.3s ease;
         display: block;
         font-weight: 500;
       }
+
+      .field-hint {
+        color: #6c757d;
+        font-size: 0.8rem;
+        margin-top: 4px;
+        display: block;
+        font-style: italic;
+      }
     }
 
     .form-row {

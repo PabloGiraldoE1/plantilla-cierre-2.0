@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { IncidenteService } from '../../services/incidente';
 import { Storage } from '../../services/storage';
-import { AgrupadorSeleccionado } from '../../services/agrupador-seleccionado';
 import { IncidenteCompartido } from '../../services/incidente-compartido';
 import { Incidente } from '../../models/incidente';
+
+const MENSAJE_CIERRE = 'Ha sido un gusto ayudarte. En breve recibirás un correo con la resolución del incidente y una breve encuesta de satisfacción. Solo tomará 3 minutos y tus comentarios nos ayudan a mejorar. ¡Gracias por tu confianza!';
 
 @Component({
   selector: 'app-formulario-incidente',
@@ -16,10 +17,6 @@ import { Incidente } from '../../models/incidente';
 export class FormularioIncidente implements OnInit {
   formulario!: FormGroup;
   textoGenerado: string = '';
-  externalTicket: string = '';
-  mostrarExternalTicket: boolean = false;
-  sugerenciasAgrupador: string[] = [];
-  mostrarSugerencias: boolean = false;
   toastMessage: string = '';
   mostrarToast: boolean = false;
 
@@ -46,40 +43,12 @@ export class FormularioIncidente implements OnInit {
     { value: "20. Problema externo a la aplicación", label: "20. Problema externo" }
   ];
 
-  procesosError = [
-    "1. Expedicion", "3. Reclamacion", "4. Cotizacion", "5. Modificacion",
-    "6. Reaseguro", "7. Impresión", "9. Asesoria y Venta", "11. Cancelaciones",
-    "12. Configuracion de Producto", "13. Emision de Recibos", "14. Recaudo",
-    "15. Cambios de Comisiones", "16. Cambios de Deducible", "17. Estrategias Comerciales",
-    "18. Anulacion de Recibos", "19. Cobros", "20. Recibo manual",
-    "21. Sacar de bolsa", "22. Pago siniestros", "23. P8 (Documentos)",
-    "24. ATR", "25. Case Tracking", "26. Gestion de la informacion de cliente",
-    "27. Consultar información", "28. Reserva sinietros", "34. Login",
-    "35. Solicitud hogar", "36. Sincronización", "37. Creación de cita",
-    "38. Conductor Elegido", "39. Cierre de sesión", "40. Inspeccion virtual",
-    "41. Reembolso", "42. Bolsillo", "43. Firma remota", "44. Sarlaft",
-    "45. Fatca", "47. Información de Cliente", "48. Información de riesgo/negocio",
-    "49. Tarifación", "50. Solicitud electrónica", "51. Plan de Recompensa",
-    "52. Reporte Monitoreo", "53. Error de Tipificación", "54. AWS",
-    "55. Reportes Producción", "56. Agregar Soat Digital", "57. Pagar Cita Virtual",
-    "58. Firma Contrato ViaFirma", "59. Modulo de Pagos SEL", "60. Autorizacion",
-    "61. Consulta", "62. Descargar documento", "63. Solicitud Evaluacion Medica",
-    "64. Estado radicado - AUS", "65. Solicitud Autos", "66. Incidente duplicado"
-  ];
-
-  estadosRaizal = [
-    "1. Identificada", "2. En curso", "3. Por Identificar",
-    "4. Aislado", "5. Finalizada", "6. N/A"
-  ];
-
-  responsables = ["1. TI", "2. Negocio", "3. TI/Negocio"];
   causasRaiz = ["Identificada", "Sin Identificar"];
 
   constructor(
     private fb: FormBuilder,
     public incidenteService: IncidenteService,
     private storageService: Storage,
-    private agrupadorService: AgrupadorSeleccionado,
     private incidenteCompartido: IncidenteCompartido
   ) {}
 
@@ -93,88 +62,27 @@ export class FormularioIncidente implements OnInit {
     const incidente = this.incidenteCompartido.getIncidente();
     if (incidente) {
       this.formulario.patchValue(incidente);
-      this.actualizarExternalTicket();
       this.incidenteCompartido.limpiarIncidente();
-    }
-    this.cargarAgrupadorSeleccionado();
-  }
-
-  cargarAgrupadorSeleccionado(): void {
-    const agrupador = this.agrupadorService.getAgrupador();
-    if (agrupador) {
-      this.formulario.patchValue({ agrupadorError: agrupador });
-      this.actualizarExternalTicket();
-      this.showToast('✅ Agrupador seleccionado: ' + agrupador);
     }
   }
 
   inicializarFormulario(): void {
     this.formulario = this.fb.group({
-      aplicativoAfectado: ['', Validators.required],
-      procesoAplicativo: [''],
-      agrupadorError: ['', Validators.required],
-      causaError: [''],
-      procesoError: [''],
-      huRaizal: [''],
-      estadoRaizal: [''],
-      responsableSolucion: [''],
-      diagnostico: ['', Validators.required],
-      accionEjecutada: ['', Validators.required],
+      causaError: ['', Validators.required],
+      huRaizal: ['', Validators.required],
+      causaRaiz: ['', Validators.required],
       descripcionSolucion: ['', Validators.required],
-      confirmacionUsuario: ['Sí'],
-      formularioCredenciales: [''],
-      ocPam: [''],
-      causaRaiz: ['']
+      confirmacionUsuario: ['Si', Validators.required]
     });
   }
 
   configurarValidaciones(): void {
-    this.formulario.get('aplicativoAfectado')?.valueChanges.subscribe(() => {
-      this.actualizarExternalTicket();
-    });
-    this.formulario.get('procesoAplicativo')?.valueChanges.subscribe(() => {
-      this.actualizarExternalTicket();
-    });
-    this.formulario.get('agrupadorError')?.valueChanges.subscribe(() => {
-      this.actualizarExternalTicket();
-      this.onAgrupadorChange();
-    });
     this.formulario.get('huRaizal')?.valueChanges.subscribe(valor => {
       if (valor && !this.incidenteService.validarHURaizal(valor)) {
-        this.showToast('No se permite "N/A", "NA" o "No aplica" en HU Raizal');
+        this.showToast('No se permite "N/A", "NA" o "No aplica" en HU Raizal / Mejora');
         this.formulario.patchValue({ huRaizal: '' }, { emitEvent: false });
       }
     });
-  }
-
-  onAgrupadorChange(): void {
-    const valor = this.formulario.get('agrupadorError')?.value || '';
-    this.sugerenciasAgrupador = this.incidenteService.filtrarAgrupadores(valor);
-    this.mostrarSugerencias = this.sugerenciasAgrupador.length > 0;
-  }
-
-  seleccionarSugerencia(sugerencia: string): void {
-    this.formulario.patchValue({ agrupadorError: sugerencia });
-    this.mostrarSugerencias = false;
-    this.actualizarExternalTicket();
-  }
-
-  actualizarExternalTicket(): void {
-    const aplicativo = this.formulario.get('aplicativoAfectado')?.value || '';
-    const proceso = this.formulario.get('procesoAplicativo')?.value || '';
-    const agrupador = this.formulario.get('agrupadorError')?.value || '';
-    
-    // Verificar que el agrupador esté en la lista de opciones válidas
-    const agrupadorValido = this.incidenteService.opcionesAgrupador.includes(agrupador);
-    
-    // Solo mostrar external ticket si los 3 campos tienen valor Y el agrupador es válido
-    this.mostrarExternalTicket = !!(aplicativo && proceso && agrupador && agrupadorValido);
-    
-    if (this.mostrarExternalTicket) {
-      this.externalTicket = this.incidenteService.generarExternalTicket(aplicativo, proceso, agrupador);
-    } else {
-      this.externalTicket = '';
-    }
   }
 
   generarTexto(): void {
@@ -184,25 +92,15 @@ export class FormularioIncidente implements OnInit {
       return;
     }
 
-    const valores = this.formulario.value;
-    this.textoGenerado = `
-* Agrupador del Error: ${valores.agrupadorError}
-* Causa del Error: ${valores.causaError}
-* Proceso del Error: ${valores.procesoError}
-* HU Raizal / Mejora: ${valores.huRaizal}
-* Estado Raizal: ${valores.estadoRaizal}
-* Responsable Solución: ${valores.responsableSolucion}
-* Diagnóstico: ${valores.diagnostico}
-* Acción Ejecutada: ${valores.accionEjecutada}
-* Descripción de Solución: ${valores.descripcionSolucion}
+    const v = this.formulario.value;
+    this.textoGenerado = `* Causa del Error: ${v.causaError}
+* HU Raizal / Mejora: ${v.huRaizal}
+* Causa Raíz (Identificada/Sin Identificar): ${v.causaRaiz}
+* Descripción de Solución: ${v.descripcionSolucion}
 
-Ha sido un gusto ayudarte. En breve recibirás un correo con la resolución del incidente y una breve encuesta de satisfacción. Solo tomará 3 minutos y tus comentarios nos ayudan a mejorar. ¡Gracias por tu confianza!
+${MENSAJE_CIERRE}
 
-* Confirmar operatividad del usuario Afectado: ${valores.confirmacionUsuario}
-* ID Formulario de Solicitud de Credenciales: ${valores.formularioCredenciales}
-* OC Acceso a PAM - (PAM): ${valores.ocPam}
-* Causa Raíz (Identificada/Sin Identificar): ${valores.causaRaiz}
-    `.trim();
+* Confirmar Operatividad del Usuario Afectado: ${v.confirmacionUsuario}`.trim();
   }
 
   guardarIncidente(): void {
@@ -211,14 +109,7 @@ Ha sido un gusto ayudarte. En breve recibirás un correo con la resolución del 
       return;
     }
 
-    const mensajeCierre = 'Ha sido un gusto ayudarte. En breve recibirás un correo con la resolución del incidente y una breve encuesta de satisfacción. Solo tomará 3 minutos y tus comentarios nos ayudan a mejorar. ¡Gracias por tu confianza!';
-
-    const incidente: Incidente = {
-      ...this.formulario.value,
-      externalTicket: this.externalTicket,
-      mensajeCierre
-    };
-
+    const incidente: Incidente = { ...this.formulario.value };
     this.storageService.guardarIncidente(incidente);
     this.showToast('✅ Incidente guardado exitosamente');
     this.limpiarFormulario();
@@ -234,23 +125,11 @@ Ha sido un gusto ayudarte. En breve recibirás un correo con la resolución del 
     });
   }
 
-  copiarTicket(): void {
-    if (!this.externalTicket) {
-      this.showToast('No hay ticket para copiar');
-      return;
-    }
-    navigator.clipboard.writeText(this.externalTicket).then(() => {
-      this.showToast('📋 Ticket copiado');
-    });
-  }
-
   limpiarFormulario(): void {
     this.formulario.reset({
-      confirmacionUsuario: 'Sí'
+      confirmacionUsuario: 'Si'
     });
     this.textoGenerado = '';
-    this.externalTicket = '';
-    this.sugerenciasAgrupador = [];
   }
 
   private marcarCamposComoTocados(): void {

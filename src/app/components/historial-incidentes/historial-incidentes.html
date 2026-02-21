@@ -6,33 +6,20 @@
         <span class="stat-value">{{ historial.length }}</span>
         <span class="stat-label">Total Plantillas</span>
       </div>
-      <div class="stat-card">
-        <span class="stat-value">{{ aplicativosUnicos.length }}</span>
-        <span class="stat-label">Aplicativos</span>
-      </div>
     </div>
   </div>
 
   <!-- Filtros y Búsqueda -->
   <div class="filter-section">
     <div class="search-group">
-      <input type="text" 
-        [(ngModel)]="searchTerm" 
+      <input type="text"
+        [(ngModel)]="searchTerm"
         (input)="buscar()"
-        placeholder="🔍 Buscar por agrupador, diagnóstico, solución...">
-    </div>
-    
-    <div class="filter-group">
-      <select [(ngModel)]="filtroAplicativo" (change)="buscar()">
-        <option value="">🖥️ Todos los aplicativos</option>
-        <option *ngFor="let app of aplicativosUnicos" [value]="app">
-          {{ app }}
-        </option>
-      </select>
+        placeholder="🔍 Buscar por causa, HU Raizal, descripción...">
     </div>
 
     <div class="action-buttons">
-      <button class="btn btn-danger" (click)="limpiarHistorial()" 
+      <button class="btn btn-danger" (click)="limpiarHistorial()"
         [disabled]="historial.length === 0">
         🗑️ Limpiar Todo
       </button>
@@ -46,10 +33,10 @@
         <tr>
           <th>ID</th>
           <th>Fecha</th>
-          <th>Aplicativo</th>
-          <th>Agrupador</th>
-          <th>Estado</th>
-          <th>External Ticket</th>
+          <th>Causa del Error</th>
+          <th>HU Raizal</th>
+          <th>Causa Raíz</th>
+          <th>Conf. Operatividad</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -57,14 +44,14 @@
         <tr *ngFor="let incidente of filteredHistorial" class="incidente-row">
           <td class="id-cell">{{ incidente.id }}</td>
           <td>{{ formatearFecha(incidente.fecha) }}</td>
-          <td><strong>{{ incidente.aplicativoAfectado }}</strong></td>
-          <td class="agrupador-cell">{{ incidente.agrupadorError }}</td>
+          <td class="agrupador-cell">{{ incidente.causaError || 'N/A' }}</td>
+          <td>{{ incidente.huRaizal || 'N/A' }}</td>
           <td>
-            <span class="badge" [class]="'badge-' + (incidente.estadoRaizal || 'default')">
-              {{ incidente.estadoRaizal || 'N/A' }}
+            <span class="badge" [class]="incidente.causaRaiz === 'Identificada' ? 'badge-identificada' : 'badge-default'">
+              {{ incidente.causaRaiz || 'N/A' }}
             </span>
           </td>
-          <td class="ticket-cell">{{ incidente.externalTicket }}</td>
+          <td>{{ incidente.confirmacionUsuario || 'N/A' }}</td>
           <td class="actions-cell">
             <button class="btn-icon" (click)="copiarIncidente(incidente)" title="Copiar">
               📋
@@ -85,11 +72,12 @@
   <div class="empty-state" *ngIf="filteredHistorial.length === 0">
     <div class="empty-icon">📭</div>
     <h3>No se encontraron incidentes</h3>
-    <p *ngIf="searchTerm || filtroAplicativo">
+    <p *ngIf="searchTerm">
       Intenta ajustar los filtros de búsqueda
     </p>
-    <p *ngIf="!searchTerm && !filtroAplicativo && historial.length === 0">
+    <p *ngIf="!searchTerm && historial.length === 0">
       Aún no has guardado ningún incidente
     </p>
   </div>
 </div>
+

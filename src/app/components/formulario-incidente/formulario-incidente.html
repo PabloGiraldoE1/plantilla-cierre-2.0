@@ -5,179 +5,74 @@
     <!-- FORMULARIO -->
     <div class="form-section">
       <form [formGroup]="formulario" autocomplete="off">
-        
-        <!-- Procesos de Aplicativo -->
+
+        <!-- Clasificación del Incidente -->
         <fieldset class="fieldset">
-          <legend>🖥️ Procesos de Aplicativo</legend>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="aplicativoAfectado">
-                Aplicativo Afectado <span class="required">*</span>
-              </label>
-              <select id="aplicativoAfectado" formControlName="aplicativoAfectado"
-                [class.invalid]="isFieldInvalid('aplicativoAfectado')">
-                <option value="">-- Seleccione --</option>
-                <option *ngFor="let app of incidenteService.aplicativos" [value]="app">
-                  {{ app }}
-                </option>
-              </select>
-              <span class="error" *ngIf="isFieldInvalid('aplicativoAfectado')">
-                Campo obligatorio
-              </span>
-            </div>
+          <legend>🗂️ Clasificación del Incidente</legend>
 
-            <div class="form-group">
-              <label for="procesoAplicativo">Proceso</label>
-              <select id="procesoAplicativo" formControlName="procesoAplicativo">
-                <option value="">-- Seleccione --</option>
-                <option *ngFor="let proceso of incidenteService.procesos" [value]="proceso">
-                  {{ proceso }}
-                </option>
-              </select>
-            </div>
-          </div>
-        </fieldset>
-
-        <!-- Información de Incidente -->
-        <fieldset class="fieldset">
-          <legend>📝 Información de Incidente</legend>
-          
-          <div class="form-group autocomplete-wrapper">
-            <label for="agrupadorError">
-              Agrupador del Error <span class="required">*</span>
-            </label>
-            <input type="text" id="agrupadorError" formControlName="agrupadorError"
-              placeholder="Escribe para buscar..."
-              [class.invalid]="isFieldInvalid('agrupadorError')"
-              (focus)="onAgrupadorChange()">
-            
-            <div class="autocomplete-list" *ngIf="mostrarSugerencias && sugerenciasAgrupador.length > 0">
-              <div class="autocomplete-item" 
-                *ngFor="let sugerencia of sugerenciasAgrupador"
-                (click)="seleccionarSugerencia(sugerencia)">
-                {{ sugerencia }}
-              </div>
-            </div>
-            <span class="error" *ngIf="isFieldInvalid('agrupadorError')">
-              Campo obligatorio
-            </span>
-          </div>
-
+          <!-- Causa del Error -->
           <div class="form-group">
-            <label for="causaError">Causa del Error</label>
-            <select id="causaError" formControlName="causaError">
+            <label for="causaError">Causa del Error <span class="required">*</span></label>
+            <select id="causaError" formControlName="causaError"
+              [class.invalid]="isFieldInvalid('causaError')">
               <option value="">-- Seleccione --</option>
               <option *ngFor="let causa of causasError" [value]="causa.value">
                 {{ causa.label }}
               </option>
             </select>
+            <span class="error" *ngIf="isFieldInvalid('causaError')">Campo obligatorio</span>
           </div>
 
+          <!-- HU Raizal / Mejora -->
           <div class="form-group">
-            <label for="procesoError">Proceso del Error</label>
-            <select id="procesoError" formControlName="procesoError">
+            <label for="huRaizal">HU Raizal / Mejora <span class="required">*</span></label>
+            <input type="text" id="huRaizal" formControlName="huRaizal"
+              placeholder="HU-XXXXX (no se permite N/A)"
+              [class.invalid]="isFieldInvalid('huRaizal')">
+            <span class="error" *ngIf="isFieldInvalid('huRaizal')">Campo obligatorio</span>
+          </div>
+
+          <!-- Causa Raíz -->
+          <div class="form-group">
+            <label for="causaRaiz">Causa Raíz (Identificada/Sin Identificar) <span class="required">*</span></label>
+            <select id="causaRaiz" formControlName="causaRaiz"
+              [class.invalid]="isFieldInvalid('causaRaiz')">
               <option value="">-- Seleccione --</option>
-              <option *ngFor="let proceso of procesosError" [value]="proceso">
-                {{ proceso }}
+              <option *ngFor="let causa of causasRaiz" [value]="causa">
+                {{ causa }}
               </option>
             </select>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="huRaizal">HU Raizal / Mejora</label>
-              <input type="text" id="huRaizal" formControlName="huRaizal" 
-                placeholder="HU-XXXXX">
-            </div>
-
-            <div class="form-group">
-              <label for="estadoRaizal">Estado Raizal</label>
-              <select id="estadoRaizal" formControlName="estadoRaizal">
-                <option value="">-- Seleccione --</option>
-                <option *ngFor="let estado of estadosRaizal" [value]="estado">
-                  {{ estado }}
-                </option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="responsableSolucion">Responsable Solución</label>
-            <select id="responsableSolucion" formControlName="responsableSolucion">
-              <option value="">-- Seleccione --</option>
-              <option *ngFor="let resp of responsables" [value]="resp">
-                {{ resp }}
-              </option>
-            </select>
+            <span class="error" *ngIf="isFieldInvalid('causaRaiz')">Campo obligatorio</span>
           </div>
         </fieldset>
 
-        <!-- Solución y Diagnóstico -->
+        <!-- Solución -->
         <fieldset class="fieldset">
-          <legend>🔧 Solución y Diagnóstico</legend>
-          
-          <div class="form-group">
-            <label for="diagnostico">
-              Diagnóstico <span class="required">*</span>
-            </label>
-            <input type="text" id="diagnostico" formControlName="diagnostico"
-              [class.invalid]="isFieldInvalid('diagnostico')">
-            <span class="error" *ngIf="isFieldInvalid('diagnostico')">
-              Campo obligatorio
-            </span>
-          </div>
+          <legend>✅ Solución</legend>
 
-          <div class="form-group">
-            <label for="accionEjecutada">
-              Acción Ejecutada <span class="required">*</span>
-            </label>
-            <input type="text" id="accionEjecutada" formControlName="accionEjecutada"
-              [class.invalid]="isFieldInvalid('accionEjecutada')">
-            <span class="error" *ngIf="isFieldInvalid('accionEjecutada')">
-              Campo obligatorio
-            </span>
-          </div>
-
+          <!-- Descripción de la Solución -->
           <div class="form-group">
             <label for="descripcionSolucion">
-              Descripción de Solución <span class="required">*</span>
+              Descripción de la Solución <span class="required">*</span>
             </label>
             <textarea id="descripcionSolucion" formControlName="descripcionSolucion"
-              rows="4" [class.invalid]="isFieldInvalid('descripcionSolucion')"></textarea>
+              rows="5" [class.invalid]="isFieldInvalid('descripcionSolucion')"
+              placeholder="Describe la solución aplicada..."></textarea>
             <span class="error" *ngIf="isFieldInvalid('descripcionSolucion')">
               Campo obligatorio
             </span>
+            <span class="field-hint">💡 El mensaje de cierre se agregará automáticamente al generar el texto.</span>
           </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label for="confirmacionUsuario">¿Confirmar operatividad del usuario?</label>
-              <select id="confirmacionUsuario" formControlName="confirmacionUsuario">
-                <option value="Sí">Sí</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="causaRaiz">Causa Raíz</label>
-              <select id="causaRaiz" formControlName="causaRaiz">
-                <option value="">-- Seleccione --</option>
-                <option *ngFor="let causa of causasRaiz" [value]="causa">
-                  {{ causa }}
-                </option>
-              </select>
-            </div>
-          </div>
-
+          <!-- Confirmar Operatividad -->
           <div class="form-group">
-            <label for="formularioCredenciales">ID Formulario de Solicitud de Credenciales</label>
-            <input type="text" id="formularioCredenciales" formControlName="formularioCredenciales">
-          </div>
-
-          <div class="form-group">
-            <label for="ocPam">OC Acceso a PAM - (PAM)</label>
-            <input type="text" id="ocPam" formControlName="ocPam">
+            <label for="confirmacionUsuario">
+              Confirmar Operatividad del Usuario Afectado
+            </label>
+            <select id="confirmacionUsuario" formControlName="confirmacionUsuario">
+              <option value="Si">Sí</option>
+              <option value="No">No</option>
+            </select>
           </div>
         </fieldset>
 
@@ -200,27 +95,12 @@
     <div class="result-section">
       <h2>📄 TEXTO GENERADO SOLUCIÓN INCIDENTE</h2>
 
-      <div class="external-ticket" *ngIf="mostrarExternalTicket">
-        <label for="externalTicket">External Ticket:</label>
-        <div class="ticket-input-group">
-          <input type="text" id="externalTicket" [value]="externalTicket" readonly>
-          <button type="button" class="btn-copy" (click)="copiarTicket()" 
-            [disabled]="!externalTicket">
-            📋
-          </button>
-        </div>
-      </div>
-
-      <div class="external-ticket-placeholder" *ngIf="!mostrarExternalTicket">
-        <p class="help-text">💡 Complete Aplicativo, Proceso y Agrupador del Error para generar el External Ticket</p>
-      </div>
-
       <div class="resultado" [class.empty]="!textoGenerado">
         {{ textoGenerado || 'El texto generado aparecerá aquí...' }}
       </div>
 
-      <button type="button" class="btn btn-primary full-width" 
-        (click)="copiarAlPortapapeles()" 
+      <button type="button" class="btn btn-primary full-width"
+        (click)="copiarAlPortapapeles()"
         [disabled]="!textoGenerado">
         📋 Copiar al Portapapeles
       </button>
@@ -232,3 +112,4 @@
 <div class="toast" [class.show]="mostrarToast">
   {{ toastMessage }}
 </div>
+

@@ -152,6 +152,20 @@
     }
   }
 
+  &.selected {
+    background: #667eea;
+    border-color: #4a5fc4;
+
+    .item-text {
+      color: white;
+    }
+
+    .item-action {
+      opacity: 1;
+      color: white;
+    }
+  }
+
   .item-text {
     flex: 1;
     color: #2c3e50;
@@ -166,6 +180,142 @@
     opacity: 0;
     transition: opacity 0.3s ease;
     white-space: nowrap;
+  }
+}
+
+// Generador de External Ticket
+.ticket-generator {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  border: 1px solid #e0e0e0;
+
+  h2 {
+    color: #2c3e50;
+    font-size: 1.4rem;
+    margin-bottom: 1.25rem;
+    font-weight: 600;
+  }
+}
+
+.ticket-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #555;
+    }
+
+    select, input {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      color: #333;
+      background: #fafafa;
+
+      &:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+      }
+    }
+
+    .agrupador-display {
+      background: #f0f4ff;
+      border-color: #b3c3f5;
+      color: #555;
+      font-style: italic;
+    }
+  }
+}
+
+.ticket-result {
+  margin-top: 1rem;
+
+  label {
+    display: block;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+.ticket-input-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background: #f9f9f9;
+    color: #333;
+  }
+
+  .btn-copy {
+    padding: 0.5rem 1rem;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #4a5fc4;
+    }
+  }
+}
+
+.ticket-hint {
+  margin-top: 0.75rem;
+
+  p {
+    color: #888;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin: 0;
+  }
+}
+
+// Toast
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: #2c3e50;
+  color: white;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+  z-index: 9999;
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
