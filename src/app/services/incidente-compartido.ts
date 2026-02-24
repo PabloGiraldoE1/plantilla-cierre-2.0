@@ -6,6 +6,7 @@ import { Incidente } from '../models/incidente';
 })
 export class IncidenteCompartido {
   private incidenteRecuperado = signal<Incidente | null>(null);
+  private borrador = signal<Partial<Incidente> | null>(null);
 
   setIncidente(incidente: Incidente): void {
     this.incidenteRecuperado.set(incidente);
@@ -17,5 +18,17 @@ export class IncidenteCompartido {
 
   limpiarIncidente(): void {
     this.incidenteRecuperado.set(null);
+  }
+
+  setBorrador(valores: Partial<Incidente>): void {
+    this.borrador.set(valores);
+  }
+
+  getBorrador(): Partial<Incidente> | null {
+    return this.borrador();
+  }
+
+  limpiarBorrador(): void {
+    this.borrador.set(null);
   }
 }

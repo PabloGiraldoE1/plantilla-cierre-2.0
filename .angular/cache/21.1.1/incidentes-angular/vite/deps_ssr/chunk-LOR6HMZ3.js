@@ -43,7 +43,6 @@ import {
   numberAttribute,
   performanceMarkFeature,
   registerLocaleData,
-  require_cjs,
   setClassMetadata,
   stringify,
   untracked,
@@ -58,7 +57,10 @@ import {
   ɵɵinject,
   ɵɵinjectAttribute,
   ɵɵstyleProp
-} from "./chunk-FJJECL4K.js";
+} from "./chunk-XL6YDQ22.js";
+import {
+  require_cjs
+} from "./chunk-C27DBZK2.js";
 import {
   __spreadProps,
   __spreadValues,
@@ -4573,4 +4575,4 @@ export {
   PRECONNECT_CHECK_BLOCKLIST,
   NgOptimizedImage
 };
-//# sourceMappingURL=chunk-FFDV3MOY.js.map
+//# sourceMappingURL=chunk-LOR6HMZ3.js.map

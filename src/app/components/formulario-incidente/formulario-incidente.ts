@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { IncidenteService } from '../../services/incidente';
 import { Storage } from '../../services/storage';
 import { IncidenteCompartido } from '../../services/incidente-compartido';
@@ -14,7 +16,8 @@ const MENSAJE_CIERRE = 'Ha sido un gusto ayudarte. En breve recibirás un correo
   templateUrl: './formulario-incidente.html',
   styleUrl: './formulario-incidente.scss',
 })
-export class FormularioIncidente implements OnInit {
+export class FormularioIncidente implements OnInit, OnDestroy {
+  private readonly destroy$ = new Subject<void>();
   formulario!: FormGroup;
   textoGenerado: string = '';
   toastMessage: string = '';
@@ -54,8 +57,24 @@ export class FormularioIncidente implements OnInit {
 
   ngOnInit(): void {
     this.inicializarFormulario();
+    this.cargarBorrador();
     this.configurarValidaciones();
     this.cargarIncidenteRecuperado();
+    this.formulario.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(valores => this.incidenteCompartido.setBorrador(valores));
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  cargarBorrador(): void {
+    const borrador = this.incidenteCompartido.getBorrador();
+    if (borrador) {
+      this.formulario.patchValue(borrador, { emitEvent: false });
+    }
   }
 
   cargarIncidenteRecuperado(): void {
@@ -130,6 +149,7 @@ ${MENSAJE_CIERRE}
       confirmacionUsuario: 'Si'
     });
     this.textoGenerado = '';
+    this.incidenteCompartido.limpiarBorrador();
   }
 
   private marcarCamposComoTocados(): void {

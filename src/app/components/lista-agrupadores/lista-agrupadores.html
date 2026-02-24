@@ -9,6 +9,30 @@
     <p>Selecciona un agrupador de la lista para incluirlo en el generador de External Ticket.</p>
   </div>
 
+  <!-- Búsqueda por palabra clave -->
+  <div class="search-bar">
+    <label for="busquedaAgrupador" class="search-label">🔍 Buscar agrupador</label>
+    <div class="search-input-wrapper">
+      <input
+        id="busquedaAgrupador"
+        type="search"
+        [(ngModel)]="terminoBusqueda"
+        placeholder="Escribe una palabra clave…"
+        class="search-input"
+        aria-label="Buscar agrupador por palabra clave">
+      <button
+        *ngIf="terminoBusqueda"
+        type="button"
+        class="search-clear"
+        (click)="terminoBusqueda = ''"
+        aria-label="Limpiar búsqueda">✕</button>
+    </div>
+    <p *ngIf="terminoBusqueda" class="search-results-info">
+      {{ resultadosBusqueda }} resultado{{ resultadosBusqueda !== 1 ? 's' : '' }} para
+      <strong>"{{ terminoBusqueda }}"</strong>
+    </p>
+  </div>
+
   <!-- Generador de External Ticket -->
   <div class="ticket-generator">
     <h2>🔗 Generador de External Ticket</h2>
@@ -34,10 +58,40 @@
         </select>
       </div>
 
-      <div class="form-group">
-        <label>Agrupador Seleccionado</label>
-        <input type="text" [value]="agrupadorSeleccionadoTicket || 'Haz clic en un agrupador de la lista'"
-          readonly class="agrupador-display">
+      <div class="form-group agrupador-autocomplete-group">
+        <label for="busquedaAgrupadorTk">Agrupador del Error</label>
+        <div class="agrupador-autocomplete-wrapper">
+          <input
+            id="busquedaAgrupadorTk"
+            type="text"
+            [(ngModel)]="busquedaAgrupadorTicket"
+            (input)="filtrarSugerencias()"
+            (blur)="ocultarSugerencias()"
+            placeholder="Escribe para buscar agrupadores…"
+            class="agrupador-search-input"
+            [class.confirmado]="agrupadorSeleccionadoTicket"
+            autocomplete="off"
+            aria-label="Buscar agrupador del error">
+          <span class="agrupador-check" *ngIf="agrupadorSeleccionadoTicket">✅</span>
+          <button
+            *ngIf="busquedaAgrupadorTicket"
+            type="button"
+            class="agrupador-clear"
+            (click)="busquedaAgrupadorTicket = ''; agrupadorSeleccionadoTicket = ''; externalTicket = ''; sugerenciasAgrupador = []; mostrarSugerencias = false"
+            aria-label="Limpiar agrupador">✕</button>
+        </div>
+        <ul class="sugerencias-lista" *ngIf="mostrarSugerencias" role="listbox">
+          <li
+            *ngFor="let sug of sugerenciasAgrupador"
+            (mousedown)="seleccionarSugerencia(sug)"
+            class="sugerencia-item"
+            role="option">
+            {{ sug }}
+          </li>
+        </ul>
+        <p class="agrupador-hint" *ngIf="!agrupadorSeleccionadoTicket && !busquedaAgrupadorTicket">
+          💡 También puedes hacer clic en un agrupador de la lista de abajo
+        </p>
       </div>
     </div>
 
@@ -62,15 +116,15 @@
   </div>
 
   <div class="categorias-container">
-    <div class="categoria-section" *ngFor="let categoria of categorias">
+    <div class="categoria-section" *ngFor="let categoria of categoriasFiltradas">
       <div class="categoria-header">
         <h2>{{ categoria }}</h2>
-        <span class="categoria-count">{{ agrupadoresPorCategoria[categoria].length }}</span>
+        <span class="categoria-count">{{ agrupadoresFiltrados(categoria).length }}</span>
       </div>
 
       <div class="agrupadores-list">
         <div class="agrupador-item"
-          *ngFor="let agrupador of agrupadoresPorCategoria[categoria]; let i = index"
+          *ngFor="let agrupador of agrupadoresFiltrados(categoria); let i = index"
           [class.selected]="agrupador === agrupadorSeleccionadoTicket"
           (click)="seleccionarAgrupadorParaTicket(agrupador)"
           title="Clic para seleccionar este agrupador en el generador de ticket">
@@ -78,6 +132,10 @@
           <span class="item-action">✓ Seleccionar</span>
         </div>
       </div>
+    </div>
+
+    <div *ngIf="categoriasFiltradas.length === 0" class="no-results">
+      <p>😔 No se encontraron agrupadores para <strong>"{{ terminoBusqueda }}"</strong>.</p>
     </div>
   </div>
 </div>
