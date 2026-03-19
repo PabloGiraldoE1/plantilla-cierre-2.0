@@ -1,9 +1,3 @@
 {
-  "routes": {
-    "/plantilla-cierre-2.0": {},
-    "/plantilla-cierre-2.0/agrupadores": {},
-    "/plantilla-cierre-2.0/formulario": {},
-    "/plantilla-cierre-2.0/historial": {},
-    "/plantilla-cierre-2.0/plantilla-tecnica": {}
-  }
+  "routes": {}
 }
