@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -7,6 +7,7 @@ import { IncidenteService } from '../../services/incidente';
 import { Storage } from '../../services/storage';
 import { IncidenteCompartido } from '../../services/incidente-compartido';
 import { Incidente } from '../../models/incidente';
+import { BackendApiService, HURaizal } from '../../services/backend-api';
 
 const MENSAJE_CIERRE = 'Ha sido un gusto ayudarte. En breve recibirás un correo con la resolución del incidente y una breve encuesta de satisfacción. Solo tomará 3 minutos y tus comentarios nos ayudan a mejorar. ¡Gracias por tu confianza!';
 
@@ -22,6 +23,27 @@ export class FormularioIncidente implements OnInit, OnDestroy {
   textoGenerado: string = '';
   toastMessage: string = '';
   mostrarToast: boolean = false;
+
+  // Signals para HU Raizales
+  raizalesDisponibles = signal<HURaizal[]>([]);
+  busquedaRaizal = signal<string>('');
+  raizalSeleccionada = signal<string>('');
+  mostrarSugerenciasRaizal = signal<boolean>(false);
+  mostrarCampoOtro = signal<boolean>(false);
+  mostrarModalRaizales = signal<boolean>(false);
+
+  // Computed para sugerencias filtradas
+  sugerenciasRaizal = computed(() => {
+    const busqueda = this.busquedaRaizal().toLowerCase().trim();
+    if (!busqueda) return [];
+    
+    return this.raizalesDisponibles()
+      .filter(r => 
+        r.numero_historia.toLowerCase().includes(busqueda) ||
+        r.descripcion.toLowerCase().includes(busqueda)
+      )
+      .slice(0, 15);
+  });
 
   causasError = [
     { value: "1. Capacitación - Tiene la opción pero no sabe cómo hacerlo", label: "1. Capacitación - Tiene la opción pero no sabe cómo hacerlo" },
@@ -52,7 +74,8 @@ export class FormularioIncidente implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public incidenteService: IncidenteService,
     private storageService: Storage,
-    private incidenteCompartido: IncidenteCompartido
+    private incidenteCompartido: IncidenteCompartido,
+    private backendApi: BackendApiService
   ) {}
 
   ngOnInit(): void {
@@ -60,6 +83,7 @@ export class FormularioIncidente implements OnInit, OnDestroy {
     this.cargarBorrador();
     this.configurarValidaciones();
     this.cargarIncidenteRecuperado();
+    this.cargarRaizales();
     this.formulario.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe(valores => this.incidenteCompartido.setBorrador(valores));
@@ -89,6 +113,7 @@ export class FormularioIncidente implements OnInit, OnDestroy {
     this.formulario = this.fb.group({
       causaError: ['', Validators.required],
       huRaizal: ['', Validators.required],
+      huRaizalOtro: [''], // Campo para raizales custom
       causaRaiz: ['', Validators.required],
       descripcionSolucion: ['', Validators.required],
       confirmacionUsuario: ['Si', Validators.required]
@@ -112,8 +137,17 @@ export class FormularioIncidente implements OnInit, OnDestroy {
     }
 
     const v = this.formulario.value;
+    
+    // Determinar valor de HU Raizal: si es "Otro" usar el texto libre, si no solo el número
+    let raizalTexto: string;
+    if (this.mostrarCampoOtro()) {
+      raizalTexto = v.huRaizalOtro?.trim() || 'Sin especificar';
+    } else {
+      raizalTexto = this.incidenteService.extraerNumeroRaizal(v.huRaizal);
+    }
+    
     this.textoGenerado = `* Causa del Error: ${v.causaError}
-* HU Raizal / Mejora: ${v.huRaizal}
+* HU Raizal / Mejora: ${raizalTexto}
 * Causa Raíz (Identificada/Sin Identificar): ${v.causaRaiz}
 * Descripción de Solución: ${v.descripcionSolucion}
 
@@ -169,6 +203,57 @@ ${MENSAJE_CIERRE}
   isFieldInvalid(fieldName: string): boolean {
     const field = this.formulario.get(fieldName);
     return !!(field && field.invalid && field.touched);
+  }
+
+  // ===== MÉTODOS PARA HU RAIZALES =====
+
+  cargarRaizales(): void {
+    this.backendApi.obtenerTodasLasRaizales()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(raizales => {
+        this.raizalesDisponibles.set(raizales);
+      });
+  }
+
+  filtrarRaizales(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.busquedaRaizal.set(input.value);
+    this.mostrarSugerenciasRaizal.set(input.value.trim().length > 0);
+  }
+
+  seleccionarRaizal(raizal: HURaizal): void {
+    const valorCompleto = `${raizal.numero_historia} - ${raizal.tipo} - ${raizal.descripcion}`;
+    this.formulario.patchValue({ huRaizal: valorCompleto });
+    this.raizalSeleccionada.set(raizal.numero_historia);
+    this.busquedaRaizal.set(valorCompleto);
+    this.mostrarSugerenciasRaizal.set(false);
+    this.mostrarCampoOtro.set(false);
+    
+    // Incrementar contador de uso
+    this.backendApi.incrementarUsoRaizal(raizal.numero_historia).subscribe();
+    
+    this.showToast('✅ Raizal seleccionada: ' + raizal.numero_historia);
+  }
+
+  seleccionarOtro(): void {
+    this.mostrarCampoOtro.set(true);
+    this.mostrarSugerenciasRaizal.set(false);
+    this.formulario.patchValue({ huRaizal: 'OTRO' });
+    this.showToast('💡 Ingresa una nueva raizal en el campo "Otro"');
+  }
+
+
+
+  ocultarSugerenciasRaizal(): void {
+    setTimeout(() => this.mostrarSugerenciasRaizal.set(false), 200);
+  }
+
+  abrirModalRaizales(): void {
+    this.mostrarModalRaizales.set(true);
+  }
+
+  cerrarModalRaizales(): void {
+    this.mostrarModalRaizales.set(false);
   }
 }
 

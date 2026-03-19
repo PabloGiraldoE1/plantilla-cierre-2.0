@@ -26,9 +26,50 @@
           <!-- HU Raizal / Mejora -->
           <div class="form-group">
             <label for="huRaizal">HU Raizal / Mejora <span class="required">*</span></label>
-            <input type="text" id="huRaizal" formControlName="huRaizal"
-              placeholder="HU-XXXXX (no se permite N/A)"
-              [class.invalid]="isFieldInvalid('huRaizal')">
+            <div class="raizal-input-wrapper">
+              <input 
+                type="text" 
+                id="huRaizal" 
+                formControlName="huRaizal"
+                [value]="busquedaRaizal()"
+                (input)="filtrarRaizales($event)"
+                (blur)="ocultarSugerenciasRaizal()"
+                placeholder="Buscar historia raizal..."
+                [class.invalid]="isFieldInvalid('huRaizal')"
+                autocomplete="off">
+              <button 
+                type="button" 
+                class="btn-ver-raizales"
+                (click)="abrirModalRaizales()"
+                title="Ver listado completo de raizales">
+                📋 Ver Raizales
+              </button>
+            </div>
+            
+            <!-- Sugerencias de raizales -->
+            <ul class="sugerencias-raizal" *ngIf="mostrarSugerenciasRaizal() && sugerenciasRaizal().length > 0">
+              <li 
+                *ngFor="let raizal of sugerenciasRaizal()"
+                (mousedown)="seleccionarRaizal(raizal)"
+                class="sugerencia-raizal-item">
+                <strong>{{ raizal.numero_historia }}</strong> - {{ raizal.tipo }} - {{ raizal.descripcion }}
+              </li>
+              <li class="sugerencia-raizal-otro" (mousedown)="seleccionarOtro()">
+                ➕ <strong>Otro / No Existe Raizal</strong>
+              </li>
+            </ul>
+
+            <!-- Campo Otro -->
+            <div class="campo-otro" *ngIf="mostrarCampoOtro()">
+              <label for="huRaizalOtro">Motivo / Causa del error en la aplicación <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="huRaizalOtro" 
+                formControlName="huRaizalOtro"
+                placeholder="Ej: Error en validación de póliza al procesar solicitud"
+                maxlength="100">
+            </div>
+
             <span class="error" *ngIf="isFieldInvalid('huRaizal')">Campo obligatorio</span>
           </div>
 
@@ -111,5 +152,30 @@
 <!-- Toast de Notificaciones -->
 <div class="toast" [class.show]="mostrarToast">
   {{ toastMessage }}
+</div>
+
+<!-- Modal de Raizales -->
+<div class="modal-overlay" *ngIf="mostrarModalRaizales()" (click)="cerrarModalRaizales()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>📋 Listado de HU Raizales</h2>
+      <button type="button" class="modal-close" (click)="cerrarModalRaizales()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="raizales-list">
+        <div 
+          *ngFor="let raizal of raizalesDisponibles()" 
+          class="raizal-card"
+          (click)="seleccionarRaizal(raizal); cerrarModalRaizales()">
+          <div class="raizal-numero">{{ raizal.numero_historia }}</div>
+          <div class="raizal-tipo">{{ raizal.tipo }}</div>
+          <div class="raizal-desc">{{ raizal.descripcion }}</div>
+          <div class="raizal-uso" *ngIf="raizal.usado_contador">
+            🔢 Usado {{ raizal.usado_contador }} veces
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 

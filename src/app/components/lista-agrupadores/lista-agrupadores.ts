@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IncidenteService } from '../../services/incidente';
 import { AgrupadorSeleccionado } from '../../services/agrupador-seleccionado';
+import { BackendApiService, ExternalTicketHistorial } from '../../services/backend-api';
 
 @Component({
   selector: 'app-lista-agrupadores',
@@ -28,6 +29,13 @@ export class ListaAgrupadores implements OnInit {
   busquedaAgrupadorTicket: string = '';
   sugerenciasAgrupador: string[] = [];
   mostrarSugerencias: boolean = false;
+
+  // Historial de External Tickets
+  historialTickets = signal<ExternalTicketHistorial[]>([]);
+  mostrarHistorial = signal<boolean>(false);
+
+  // Categorías colapsables
+  categoriasAbiertas = signal<Set<string>>(new Set());
 
   get categoriasFiltradas(): string[] {
     const termino = this.terminoBusqueda.trim().toLowerCase();
@@ -56,7 +64,8 @@ export class ListaAgrupadores implements OnInit {
 
   constructor(
     public incidenteService: IncidenteService,
-    private agrupadorService: AgrupadorSeleccionado
+    private agrupadorService: AgrupadorSeleccionado,
+    private backendApi: BackendApiService
   ) {}
 
   ngOnInit(): void {
@@ -64,6 +73,8 @@ export class ListaAgrupadores implements OnInit {
     this.categorias = Object.keys(this.agrupadoresPorCategoria);
     this.totalAgrupadores = Object.values(this.agrupadoresPorCategoria)
       .reduce((total, items) => total + items.length, 0);
+    
+    this.cargarHistorialTickets();
   }
 
   seleccionarAgrupadorParaTicket(agrupador: string): void {
@@ -111,6 +122,16 @@ export class ListaAgrupadores implements OnInit {
         this.procesoSeleccionado,
         this.agrupadorSeleccionadoTicket
       );
+      // Guardar en historial automáticamente al tener los 3 campos completos
+      const ticketData: ExternalTicketHistorial = {
+        external_ticket: this.externalTicket,
+        aplicativo: this.aplicativoSeleccionado,
+        proceso: this.procesoSeleccionado,
+        agrupador: this.agrupadorSeleccionadoTicket
+      };
+      this.backendApi.guardarExternalTicket(ticketData).subscribe(() => {
+        this.cargarHistorialTickets();
+      });
     } else {
       this.externalTicket = '';
     }
@@ -132,6 +153,59 @@ export class ListaAgrupadores implements OnInit {
     setTimeout(() => {
       this.mostrarToast = false;
     }, 3500);
+  }
+
+  // ===== MÉTODOS PARA HISTORIAL =====
+
+  cargarHistorialTickets(): void {
+    this.backendApi.obtenerHistorialTickets(10).subscribe(tickets => {
+      this.historialTickets.set(tickets);
+    });
+  }
+
+  toggleHistorial(): void {
+    this.mostrarHistorial.set(!this.mostrarHistorial());
+  }
+
+  copiarTicketHistorial(ticket: ExternalTicketHistorial): void {
+    navigator.clipboard.writeText(ticket.external_ticket).then(() => {
+      this.showToast('📋 Ticket copiado: ' + ticket.external_ticket);
+    });
+  }
+
+  formatearFecha(fecha: string | undefined): string {
+    if (!fecha) return 'N/A';
+    return new Date(fecha).toLocaleString('es-ES', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  // ===== MÉTODOS PARA CATEGORÍAS COLAPSABLES =====
+
+  toggleCategoria(categoria: string): void {
+    const abiertas = new Set(this.categoriasAbiertas());
+    if (abiertas.has(categoria)) {
+      abiertas.delete(categoria);
+    } else {
+      abiertas.add(categoria);
+    }
+    this.categoriasAbiertas.set(abiertas);
+  }
+
+  isCategoriaAbierta(categoria: string): boolean {
+    return this.categoriasAbiertas().has(categoria);
+  }
+
+  expandirTodas(): void {
+    this.categoriasAbiertas.set(new Set(this.categorias));
+  }
+
+  colapsarTodas(): void {
+    this.categoriasAbiertas.set(new Set());
   }
 }
 

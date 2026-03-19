@@ -187,5 +187,13 @@ export class IncidenteService {
     const prohibidos = ["n/a", "na", "no aplica"];
     return !prohibidos.includes(valor.trim().toLowerCase());
   }
+
+  // Extraer solo el número de la historia raizal
+  extraerNumeroRaizal(huRaizal: string): string {
+    // Si es una estructura como "1027578 - Historia - Descripción"
+    // o solo "1027578", extraemos el número
+    const match = huRaizal.match(/^(\d+)/);
+    return match ? match[1] : huRaizal;
+  }
 }
 

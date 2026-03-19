@@ -115,14 +115,62 @@
     <span class="total-label">Agrupadores Disponibles</span>
   </div>
 
+  <!-- Historial de External Tickets -->
+  <div class="historial-section">
+    <button type="button" class="btn-toggle-historial" (click)="toggleHistorial()">
+      {{ mostrarHistorial() ? '🔽' : '▶️' }} Historial de External Tickets (Últimos 10)
+    </button>
+    
+    <div class="historial-content" *ngIf="mostrarHistorial()">
+      <div *ngIf="historialTickets().length === 0" class="historial-empty">
+        📭 No hay tickets generados aún
+      </div>
+      
+      <div class="historial-list" *ngIf="historialTickets().length > 0">
+        <div 
+          *ngFor="let ticket of historialTickets(); let i = index" 
+          class="historial-item">
+          <div class="historial-header">
+            <span class="historial-numero">#{{ i + 1 }}</span>
+            <span class="historial-fecha">{{ formatearFecha(ticket.fecha_creacion) }}</span>
+          </div>
+          <div class="historial-ticket">{{ ticket.external_ticket }}</div>
+          <div class="historial-detalles">
+            <span class="badge">{{ ticket.aplicativo }}</span>
+            <span class="badge">{{ ticket.proceso }}</span>
+          </div>
+          <button 
+            type="button" 
+            class="btn-copiar-historial"
+            (click)="copiarTicketHistorial(ticket)">
+            📋 Copiar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controles de expansión -->
+  <div class="expansion-controls">
+    <button type="button" class="btn-expansion" (click)="expandirTodas()">
+      ➕ Expandir Todas
+    </button>
+    <button type="button" class="btn-expansion" (click)="colapsarTodas()">
+      ➖ Colapsar Todas
+    </button>
+  </div>
+
   <div class="categorias-container">
     <div class="categoria-section" *ngFor="let categoria of categoriasFiltradas">
-      <div class="categoria-header">
-        <h2>{{ categoria }}</h2>
+      <div class="categoria-header" (click)="toggleCategoria(categoria)">
+        <div class="categoria-header-left">
+          <span class="categoria-toggle">{{ isCategoriaAbierta(categoria) ? '🔽' : '▶️' }}</span>
+          <h2>{{ categoria }}</h2>
+        </div>
         <span class="categoria-count">{{ agrupadoresFiltrados(categoria).length }}</span>
       </div>
 
-      <div class="agrupadores-list">
+      <div class="agrupadores-list" *ngIf="isCategoriaAbierta(categoria)">
         <div class="agrupador-item"
           *ngFor="let agrupador of agrupadoresFiltrados(categoria); let i = index"
           [class.selected]="agrupador === agrupadorSeleccionadoTicket"
