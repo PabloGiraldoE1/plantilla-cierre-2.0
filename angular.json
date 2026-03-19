@@ -36,6 +36,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/plantilla-cierre-2.0/",
               "budgets": [
                 {
                   "type": "initial",
