@@ -4,17 +4,12 @@ $success-color: #28a745;
 $danger-color: #dc3545;
 $warning-color: #ffc107;
 $info-color: #17a2b8;
-$critico-color: #8b0000;
-$alto-color: #ff6b35;
-$medio-color: #ffc107;
-$bajo-color: #6c757d;
 $border-color: #dee2e6;
 $bg-light: #f8f9fa;
 $shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-$shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
 
 .historial-container {
-  max-width: 1600px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -24,12 +19,10 @@ $shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
     
     h1 {
       color: $primary-color;
-      font-size: 2.2rem;
+      font-size: 2rem;
       text-align: center;
       margin-bottom: 20px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      font-weight: 600;
     }
 
     .stats {
@@ -41,75 +34,23 @@ $shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
       .stat-card {
         background: linear-gradient(135deg, $primary-color, $primary-hover);
         color: white;
-        padding: 25px 45px;
-        border-radius: 15px;
+        padding: 20px 40px;
+        border-radius: 12px;
         text-align: center;
-        box-shadow: $shadow-lg;
-        min-width: 160px;
-        transition: transform 0.3s ease;
-        
-        &:hover {
-          transform: translateY(-5px);
-        }
-        
-        &.stat-critico {
-          background: linear-gradient(135deg, #8b0000, #dc143c);
-        }
-        
-        &.stat-reabierto {
-          background: linear-gradient(135deg, #ff6b35, #ff8c42);
-        }
+        box-shadow: $shadow;
+        min-width: 150px;
         
         .stat-value {
           display: block;
-          font-size: 2.8rem;
+          font-size: 2.5rem;
           font-weight: 700;
-          margin-bottom: 8px;
+          margin-bottom: 5px;
         }
         
         .stat-label {
-          font-size: 0.95rem;
-          opacity: 0.95;
-          font-weight: 500;
+          font-size: 0.9rem;
+          opacity: 0.9;
         }
-      }
-    }
-  }
-
-  // Tabs de navegación
-  .tabs-navigation {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 25px;
-    background: white;
-    padding: 10px;
-    border-radius: 12px;
-    box-shadow: $shadow;
-    overflow-x: auto;
-    
-    .tab-btn {
-      flex: 1;
-      padding: 15px 25px;
-      border: 2px solid transparent;
-      background: $bg-light;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #495057;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      white-space: nowrap;
-      
-      &:hover {
-        background: #e9ecef;
-        transform: translateY(-2px);
-      }
-      
-      &.active {
-        background: linear-gradient(135deg, $primary-color, $primary-hover);
-        color: white;
-        border-color: $primary-color;
-        box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
       }
     }
   }
@@ -310,158 +251,6 @@ $shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
 
     &.btn-recover:hover {
       background: lighten($info-color, 40%);
-    }
-  }
-
-  // Nuevas secciones: Análisis y Reabiertos
-  .section-header {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: $shadow;
-    margin-bottom: 25px;
-    border-left: 5px solid $primary-color;
-    
-    h2 {
-      color: $primary-color;
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    
-    .subtitle {
-      color: #6c757d;
-      font-size: 1rem;
-      margin: 0;
-    }
-  }
-
-  // Grupo por analista
-  .analista-grupo {
-    background: white;
-    border-radius: 12px;
-    box-shadow: $shadow;
-    margin-bottom: 25px;
-    overflow: hidden;
-    
-    .analista-header {
-      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-      padding: 20px 25px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 3px solid $primary-color;
-      
-      h3 {
-        color: $primary-color;
-        font-size: 1.3rem;
-        font-weight: 700;
-        margin: 0;
-      }
-      
-      .analista-stats {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-    }
-  }
-
-  // Badges de urgencia
-  .badge-urgencia {
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    
-    &[data-urgencia="Crítica"] {
-      background: linear-gradient(135deg, #8b0000, #dc143c);
-      color: white;
-      box-shadow: 0 2px 8px rgba(139, 0, 0, 0.3);
-    }
-    
-    &[data-urgencia="Alta"] {
-      background: linear-gradient(135deg, #ff6b35, #ff8c42);
-      color: white;
-      box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
-    }
-    
-    &[data-urgencia="Media"] {
-      background: linear-gradient(135deg, #ffc107, #ffcd38);
-      color: #333;
-      box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
-    }
-    
-    &[data-urgencia="Baja"] {
-      background: linear-gradient(135deg, #6c757d, #868e96);
-      color: white;
-    }
-  }
-
-  .badge-critico {
-    background: linear-gradient(135deg, #8b0000, #dc143c);
-    color: white;
-  }
-
-  .badge-alto {
-    background: linear-gradient(135deg, #ff6b35, #ff8c42);
-    color: white;
-  }
-
-  .badge-total {
-    background: linear-gradient(135deg, $primary-color, $primary-hover);
-    color: white;
-  }
-
-  .badge-success {
-    background: linear-gradient(135deg, #28a745, #34ce57);
-    color: white;
-  }
-
-  // Tabla compacta para análisis
-  .incidentes-table.compact {
-    font-size: 0.9rem;
-    
-    th {
-      padding: 12px 10px;
-      font-size: 0.85rem;
-    }
-    
-    td {
-      padding: 10px;
-    }
-  }
-
-  // Fila de incidente reabierto
-  .incidente-row.reabierto {
-    background: #fff3cd;
-    
-    &:hover {
-      background: #ffe8a1;
-    }
-    
-    .fecha-reapertura {
-      color: $danger-color;
-      font-weight: 700;
-    }
-  }
-
-  // Secciones de análisis y reabiertos
-  .analisis-section,
-  .reabiertos-section {
-    animation: fadeIn 0.4s ease-in;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
     }
   }
 

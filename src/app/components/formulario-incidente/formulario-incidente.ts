@@ -111,11 +111,6 @@ export class FormularioIncidente implements OnInit, OnDestroy {
 
   inicializarFormulario(): void {
     this.formulario = this.fb.group({
-      numeroIncidente: [''],
-      analista: [''],
-      urgencia: [''],
-      cumpleANS: [''],
-      fechaReapertura: [null],
       causaError: ['', Validators.required],
       huRaizal: ['', Validators.required],
       huRaizalOtro: [''], // Campo para raizales custom

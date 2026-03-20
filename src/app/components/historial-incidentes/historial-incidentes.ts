@@ -1,17 +1,10 @@
-import { Component, OnInit, computed, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Storage } from '../../services/storage';
 import { IncidenteCompartido } from '../../services/incidente-compartido';
 import { Incidente } from '../../models/incidente';
-
-interface IncidentePorAnalista {
-  analista: string;
-  incidentes: Incidente[];
-  totalCriticos: number;
-  totalAltos: number;
-}
 
 @Component({
   selector: 'app-historial-incidentes',
@@ -23,59 +16,6 @@ export class HistorialIncidentes implements OnInit {
   historial: Incidente[] = [];
   filteredHistorial: Incidente[] = [];
   searchTerm: string = '';
-  
-  // Signals para análisis
-  vistaActual = signal<'todos' | 'analisis' | 'reabiertos'>('todos');
-  
-  // Computed para incidentes prioritarios (Crítica y Alta, ANS Sí)
-  incidentesPrioritarios = computed(() => {
-    return this.historial.filter(inc => 
-      (inc.urgencia === 'Crítica' || inc.urgencia === 'Alta') && 
-      inc.cumpleANS === 'Sí'
-    ).sort((a, b) => {
-      if (a.urgencia === 'Crítica' && b.urgencia !== 'Crítica') return -1;
-      if (a.urgencia !== 'Crítica' && b.urgencia === 'Crítica') return 1;
-      return (a.analista || '').localeCompare(b.analista || '');
-    });
-  });
-  
-  // Computed para agrupar incidentes por analista
-  incidentesPorAnalista = computed(() => {
-    const grupos = new Map<string, Incidente[]>();
-    
-    this.incidentesPrioritarios().forEach(inc => {
-      const analista = inc.analista || 'Sin Asignar';
-      if (!grupos.has(analista)) {
-        grupos.set(analista, []);
-      }
-      grupos.get(analista)!.push(inc);
-    });
-    
-    const resultado: IncidentePorAnalista[] = [];
-    grupos.forEach((incidentes, analista) => {
-      resultado.push({
-        analista,
-        incidentes,
-        totalCriticos: incidentes.filter(i => i.urgencia === 'Crítica').length,
-        totalAltos: incidentes.filter(i => i.urgencia === 'Alta').length
-      });
-    });
-    
-    return resultado.sort((a, b) => 
-      (b.totalCriticos + b.totalAltos) - (a.totalCriticos + a.totalAltos)
-    );
-  });
-  
-  // Computed para incidentes reabiertos
-  incidentesReabiertos = computed(() => {
-    return this.historial.filter(inc => 
-      inc.fechaReapertura && inc.fechaReapertura !== null
-    ).sort((a, b) => {
-      const fechaA = a.fechaReapertura ? new Date(a.fechaReapertura).getTime() : 0;
-      const fechaB = b.fechaReapertura ? new Date(b.fechaReapertura).getTime() : 0;
-      return fechaB - fechaA; // Más recientes primero
-    });
-  });
 
   constructor(
     private storageService: Storage,
@@ -85,10 +25,6 @@ export class HistorialIncidentes implements OnInit {
 
   ngOnInit(): void {
     this.cargarHistorial();
-  }
-
-  cambiarVista(vista: 'todos' | 'analisis' | 'reabiertos'): void {
-    this.vistaActual.set(vista);
   }
 
   cargarHistorial(): void {
