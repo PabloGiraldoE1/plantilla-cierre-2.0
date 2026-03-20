@@ -10,6 +10,49 @@
         <fieldset class="fieldset">
           <legend>🗂️ Clasificación del Incidente</legend>
 
+          <!-- Número de Incidente -->
+          <div class="form-group">
+            <label for="numeroIncidente">Número de Incidente</label>
+            <input type="text" id="numeroIncidente" formControlName="numeroIncidente"
+              placeholder="Ej: INC0012345">
+          </div>
+
+          <!-- Analista -->
+          <div class="form-group">
+            <label for="analista">Analista Asignado</label>
+            <input type="text" id="analista" formControlName="analista"
+              placeholder="Nombre del analista">
+          </div>
+
+          <!-- Urgencia -->
+          <div class="form-group">
+            <label for="urgencia">Urgencia</label>
+            <select id="urgencia" formControlName="urgencia">
+              <option value="">-- Seleccione --</option>
+              <option value="Crítica">Crítica</option>
+              <option value="Alta">Alta</option>
+              <option value="Media">Media</option>
+              <option value="Baja">Baja</option>
+            </select>
+          </div>
+
+          <!-- Cumple ANS -->
+          <div class="form-group">
+            <label for="cumpleANS">¿Cumple ANS?</label>
+            <select id="cumpleANS" formControlName="cumpleANS">
+              <option value="">-- Seleccione --</option>
+              <option value="Sí">Sí</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+
+          <!-- Fecha de Reapertura -->
+          <div class="form-group">
+            <label for="fechaReapertura">Fecha de Reapertura</label>
+            <input type="datetime-local" id="fechaReapertura" formControlName="fechaReapertura">
+            <span class="field-hint">💡 Dejar vacío si el incidente no ha sido reabierto</span>
+          </div>
+
           <!-- Causa del Error -->
           <div class="form-group">
             <label for="causaError">Causa del Error <span class="required">*</span></label>
