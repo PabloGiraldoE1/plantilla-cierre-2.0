@@ -124,6 +124,7 @@ export class IncidenteService {
   public readonly aplicativos: string[] = [
     "Cotizador Salud",
     "Cotizador Autos",
+    "Cotizador Plan Complementario",
     "Cotizador PCP",
     "Cotizador Accidente Personal",
     "ICargo",
