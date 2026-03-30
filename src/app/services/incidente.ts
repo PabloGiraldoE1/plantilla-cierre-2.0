@@ -74,7 +74,8 @@ export class IncidenteService {
       "Falla en generación de certificados",
       "Falla en carga de estado de póliza",
       "Falla en categorización de póliza",
-      "Error en datos del asegurado"
+      "Error en datos del asegurado",
+      "Error en la matriz de asignación"
     ],
     "AVA": [
       "Restricción en visualización de póliza",
