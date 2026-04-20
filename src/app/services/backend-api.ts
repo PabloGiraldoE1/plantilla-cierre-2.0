@@ -60,7 +60,8 @@ export class BackendApiService {
     { numero_historia: '1064807', tipo: 'Historia', descripcion: 'Plan de pruebas Sprint 2 Q1 2026' },
     { numero_historia: '1026468', tipo: 'Historia', descripcion: 'Raizal cotizaciones no viajan a Salesforce' },
     { numero_historia: '1069710', tipo: 'Historia', descripcion: 'Revision funcionalidad de SP AVA' },
-    { numero_historia: '840358', tipo: 'Historia', descripcion: 'Cotizaciones en Proceso de Envio - Autos' }
+    { numero_historia: '840358', tipo: 'Historia', descripcion: 'Cotizaciones en Proceso de Envio - Autos' },
+    { numero_historia: '550972', tipo: 'Historia', descripcion: 'Pooled Connection Request TimeOut - SimonNet' }
   ];
 
   // ===== HU RAIZALES CUSTOM (localStorage) =====

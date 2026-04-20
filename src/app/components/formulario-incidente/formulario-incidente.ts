@@ -232,8 +232,21 @@ ${MENSAJE_CIERRE}
 
   filtrarRaizales(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.busquedaRaizal.set(input.value);
-    this.mostrarSugerenciasRaizal.set(input.value.trim().length > 0);
+    const valor = input.value;
+    this.busquedaRaizal.set(valor);
+
+    // Si escribe "OTRO" o variaciones, activar campo Otro automáticamente
+    if (valor.trim().toLowerCase() === 'otro' || valor.trim().toLowerCase() === 'otra') {
+      this.seleccionarOtro();
+      return;
+    }
+
+    this.mostrarSugerenciasRaizal.set(valor.trim().length > 0);
+
+    // Si no hay sugerencias y hay texto, ofrecer opción "Otro"
+    if (valor.trim().length > 0 && this.sugerenciasRaizal().length === 0) {
+      this.mostrarSugerenciasRaizal.set(true);
+    }
   }
 
   seleccionarRaizal(raizal: HURaizal): void {
