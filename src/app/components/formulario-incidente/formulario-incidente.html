@@ -47,7 +47,7 @@
             </div>
             
             <!-- Sugerencias de raizales -->
-            <ul class="sugerencias-raizal" *ngIf="mostrarSugerenciasRaizal() && busquedaRaizal().trim().length > 0">
+            <ul class="sugerencias-raizal" *ngIf="mostrarSugerenciasRaizal()">
               <li
                 *ngFor="let raizal of sugerenciasRaizal()"
                 (mousedown)="seleccionarRaizal(raizal)"
