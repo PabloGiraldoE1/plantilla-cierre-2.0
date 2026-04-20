@@ -138,6 +138,13 @@ export class FormularioIncidente implements OnInit, OnDestroy {
 
     const v = this.formulario.value;
     
+    // Validar que si se seleccionó "Otro", el campo huRaizalOtro tenga contenido
+    if (this.mostrarCampoOtro() && (!v.huRaizalOtro || v.huRaizalOtro.trim().length < 10)) {
+      this.showToast('Por favor ingresa el motivo/causa del error (mínimo 10 caracteres)');
+      this.formulario.get('huRaizalOtro')?.markAsTouched();
+      return;
+    }
+
     // Determinar valor de HU Raizal: si es "Otro" usar el texto libre, si no solo el número
     let raizalTexto: string;
     if (this.mostrarCampoOtro()) {
@@ -183,6 +190,14 @@ ${MENSAJE_CIERRE}
       confirmacionUsuario: 'Si'
     });
     this.textoGenerado = '';
+    this.mostrarCampoOtro.set(false);
+    this.busquedaRaizal.set('');
+    this.mostrarSugerenciasRaizal.set(false);
+
+    // Remover validaciones del campo huRaizalOtro
+    this.formulario.get('huRaizalOtro')?.clearValidators();
+    this.formulario.get('huRaizalOtro')?.updateValueAndValidity();
+
     this.incidenteCompartido.limpiarBorrador();
   }
 
@@ -229,6 +244,11 @@ ${MENSAJE_CIERRE}
     this.mostrarSugerenciasRaizal.set(false);
     this.mostrarCampoOtro.set(false);
     
+    // Remover validaciones del campo huRaizalOtro
+    this.formulario.get('huRaizalOtro')?.clearValidators();
+    this.formulario.get('huRaizalOtro')?.updateValueAndValidity();
+    this.formulario.patchValue({ huRaizalOtro: '' });
+
     // Incrementar contador de uso
     this.backendApi.incrementarUsoRaizal(raizal.numero_historia).subscribe();
     
@@ -239,7 +259,12 @@ ${MENSAJE_CIERRE}
     this.mostrarCampoOtro.set(true);
     this.mostrarSugerenciasRaizal.set(false);
     this.formulario.patchValue({ huRaizal: 'OTRO' });
-    this.showToast('💡 Ingresa una nueva raizal en el campo "Otro"');
+
+    // Hacer el campo huRaizalOtro obligatorio
+    this.formulario.get('huRaizalOtro')?.setValidators([Validators.required, Validators.minLength(10)]);
+    this.formulario.get('huRaizalOtro')?.updateValueAndValidity();
+
+    this.showToast('💡 Ingresa el motivo/causa del error en el campo "Otro"');
   }
 
 

@@ -67,7 +67,11 @@
                 id="huRaizalOtro" 
                 formControlName="huRaizalOtro"
                 placeholder="Ej: Error en validación de póliza al procesar solicitud"
-                maxlength="100">
+                maxlength="100"
+                [class.invalid]="isFieldInvalid('huRaizalOtro')">
+              <span class="error" *ngIf="isFieldInvalid('huRaizalOtro')">
+                Ingresa el motivo/causa del error (mínimo 10 caracteres)
+              </span>
             </div>
 
             <span class="error" *ngIf="isFieldInvalid('huRaizal')">Campo obligatorio</span>
