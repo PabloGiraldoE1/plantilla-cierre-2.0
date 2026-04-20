@@ -59,7 +59,7 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host ""
     Write-Host "💡 Posibles soluciones:" -ForegroundColor Yellow
     Write-Host "   1. Verifica que hayas hecho push al repositorio de GitHub" -ForegroundColor Gray
-    Write-Host "   2. Asegúrate de tener configurado el remote 'origin'" -ForegroundColor Gray
+    Write-Host "   2. Asegurate de tener configurado el remote origin" -ForegroundColor Gray
     Write-Host "   3. Ejecuta: git remote -v" -ForegroundColor Gray
     exit 1
 }
@@ -76,7 +76,7 @@ Write-Host "⏱️  Espera 1-5 minutos para que GitHub Pages procese los cambios
 Write-Host ""
 Write-Host "📊 Para verificar el estado:" -ForegroundColor Cyan
 Write-Host "   1. Ve a: https://github.com/$USER_NAME/$REPO_NAME/settings/pages" -ForegroundColor Gray
-Write-Host "   2. Verifica que 'Source' esté en rama 'gh-pages'" -ForegroundColor Gray
+Write-Host "   2. Verifica que Source este en rama gh-pages" -ForegroundColor Gray
 Write-Host ""
 Write-Host "¡Listo! 🎉" -ForegroundColor Green
 Write-Host ""
