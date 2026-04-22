@@ -210,9 +210,13 @@ ${MENSAJE_CIERRE}
   showToast(message: string): void {
     this.toastMessage = message;
     this.mostrarToast = true;
+    
+    // Si el mensaje es largo (más de 100 caracteres), dejarlo más tiempo
+    const duration = message.length > 100 ? 6000 : 3500;
+    
     setTimeout(() => {
       this.mostrarToast = false;
-    }, 3500);
+    }, duration);
   }
 
   isFieldInvalid(fieldName: string): boolean {
@@ -265,7 +269,7 @@ ${MENSAJE_CIERRE}
     // Incrementar contador de uso
     this.backendApi.incrementarUsoRaizal(raizal.numero_historia).subscribe();
     
-    this.showToast('✅ Raizal seleccionada: ' + raizal.numero_historia);
+    this.showToast(`✅ Raizal ${raizal.numero_historia} seleccionada. ⚠️ IMPORTANTE: Debes asociar este incidente a la raizal ${raizal.numero_historia} en Azure.`);
   }
 
   seleccionarOtro(): void {
