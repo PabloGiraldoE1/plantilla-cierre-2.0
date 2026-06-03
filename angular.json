@@ -55,6 +55,24 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "ghpages": {
+              "baseHref": "/plantilla-cierre-2.0/",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "20kB",
+                  "maximumError": "28kB"
+                }
+              ],
+              "outputHashing": "all",
+              "prerender": false,
+              "ssr": false
             }
           },
           "defaultConfiguration": "production"
