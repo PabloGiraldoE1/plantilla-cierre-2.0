@@ -1,59 +1,89 @@
-/* Global Styles */
-* {
+/* =====================================================
+   GLOBAL STYLES — DESIGN SYSTEM
+   Paleta: Deep Navy · Indigo · Cyan · Emerald
+   ===================================================== */
+
+/* Import en componentes vía CSS variables */
+:root {
+  /* Colores principales */
+  --color-navy:      #0a0f2c;
+  --color-navy-mid:  #131a45;
+  --color-indigo:    #4361ee;
+  --color-indigo-lt: #6d83f2;
+  --color-cyan:      #06b6d4;
+  --color-emerald:   #10b981;
+  --color-rose:      #f43f5e;
+  --color-amber:     #f59e0b;
+
+  /* Superficies */
+  --bg-page:    #f1f4fd;
+  --bg-surface: #ffffff;
+  --bg-subtle:  #f8f9ff;
+
+  /* Texto */
+  --text-primary:   #0f172a;
+  --text-secondary: #475569;
+  --text-muted:     #94a3b8;
+
+  /* Bordes */
+  --border:       #e2e8f0;
+  --border-focus: #4361ee;
+
+  /* Sombras */
+  --shadow-sm:  0 1px 3px rgba(10, 15, 44, 0.08), 0 1px 2px rgba(10, 15, 44, 0.06);
+  --shadow-md:  0 4px 16px rgba(10, 15, 44, 0.10), 0 2px 6px rgba(10, 15, 44, 0.07);
+  --shadow-lg:  0 10px 32px rgba(10, 15, 44, 0.13), 0 4px 12px rgba(10, 15, 44, 0.08);
+  --shadow-xl:  0 20px 48px rgba(10, 15, 44, 0.16), 0 8px 20px rgba(10, 15, 44, 0.10);
+
+  /* Tipografía */
+  --font-body:    'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-heading: 'Poppins', 'Inter', system-ui, sans-serif;
+}
+
+/* ===== RESET ===== */
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* ===== BASE ===== */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f5f7fa;
-  color: #333;
+  font-family: var(--font-body);
+  background: var(--bg-page);
+  color: var(--text-primary);
   line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar personalizado */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar       { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: #e8edf8; border-radius: 4px; }
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 5px;
+  background: linear-gradient(180deg, #4361ee 0%, #06b6d4 100%);
+  border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: linear-gradient(180deg, #3451de 0%, #0590a8 100%);
 }
 
-/* Animaciones globales */
+/* ===== KEYFRAMES GLOBALES ===== */
 @keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-/* Utilidades */
-.text-center {
-  text-align: center;
-}
-
-.mt-20 {
-  margin-top: 20px;
-}
-
-.mb-20 {
-  margin-bottom: 20px;
-}
+/* ===== UTILIDADES ===== */
+.text-center { text-align: center; }
+.mt-20 { margin-top: 20px; }
+.mb-20 { margin-bottom: 20px; }

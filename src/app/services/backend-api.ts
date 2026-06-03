@@ -61,7 +61,14 @@ export class BackendApiService {
     { numero_historia: '1026468', tipo: 'Historia', descripcion: 'Raizal cotizaciones no viajan a Salesforce' },
     { numero_historia: '1069710', tipo: 'Historia', descripcion: 'Revision funcionalidad de SP AVA' },
     { numero_historia: '840358', tipo: 'Historia', descripcion: 'Cotizaciones en Proceso de Envio - Autos' },
-    { numero_historia: '550972', tipo: 'Historia', descripcion: 'Pooled Connection Request TimeOut - SimonNet' }
+    { numero_historia: '550972', tipo: 'Historia', descripcion: 'Pooled Connection Request TimeOut - SimonNet' },
+    { numero_historia: '1157042', tipo: 'Historia', descripcion: 'Actualizar Mensaje Cotizador Autos' },
+    { numero_historia: '1152592', tipo: 'Historia', descripcion: 'Validación Correos Cotizador Autos' },
+    { numero_historia: '1148046', tipo: 'Historia', descripcion: 'Revisión Servicios PorChat' },
+    { numero_historia: '1146011', tipo: 'Historia', descripcion: 'Cotizaciones SARLAFT Finalizado - pero no Avanzan' },
+    { numero_historia: '1136355', tipo: 'Historia', descripcion: 'Cambios de Estado en Trazabilidad, sin completarse el proceso del Cotizador - Salud' },
+    { numero_historia: '1146022', tipo: 'Historia', descripcion: 'Ingreso Digital - Lotes en estado "Procesando" para Ingreso y retiro de asegurados' },
+    { numero_historia: '1146007', tipo: 'Historia', descripcion: 'GENERAL Cotizadores - Proceso FIRMA realizado pero cotizacion no avanza' }
   ];
 
   // ===== HU RAIZALES CUSTOM (localStorage) =====

@@ -1,6 +1,6 @@
 <div class="formulario-container">
   <h1>📋 PLANTILLA CIERRE DE INCIDENTES</h1>
-  
+
   <div class="main-content">
     <!-- FORMULARIO -->
     <div class="form-section">
@@ -25,56 +25,72 @@
 
           <!-- HU Raizal / Mejora -->
           <div class="form-group">
-            <label for="huRaizal">HU Raizal / Mejora <span class="required">*</span></label>
+            <label for="huRaizal">
+              HU Raizal / Mejora <span class="required">*</span>
+              <span class="field-note">Solo del listado o OTRO</span>
+            </label>
             <div class="raizal-input-wrapper">
-              <input 
-                type="text" 
-                id="huRaizal" 
-                formControlName="huRaizal"
+              <input
+                type="text"
+                id="huRaizal"
                 [value]="busquedaRaizal()"
                 (input)="filtrarRaizales($event)"
                 (blur)="ocultarSugerenciasRaizal()"
-                placeholder="Buscar historia raizal..."
+                placeholder="Buscar raizal o escribe OTRO..."
                 [class.invalid]="isFieldInvalid('huRaizal')"
+                [class.raizal-seleccionada]="raizalSeleccionada()"
                 autocomplete="off">
-              <button 
-                type="button" 
-                class="btn-ver-raizales"
+              <button type="button" class="btn-ver-raizales"
                 (click)="abrirModalRaizales()"
-                title="Ver listado completo de raizales">
-                📋 Ver Raizales
+                title="Ver listado completo">
+                📋 Ver
               </button>
             </div>
-            
-            <!-- Sugerencias de raizales -->
+
+            <!-- Sugerencias -->
             <ul class="sugerencias-raizal" *ngIf="mostrarSugerenciasRaizal()">
-              <li
-                *ngFor="let raizal of sugerenciasRaizal()"
+              <li *ngFor="let raizal of sugerenciasRaizal()"
                 (mousedown)="seleccionarRaizal(raizal)"
                 class="sugerencia-raizal-item">
-                <strong>{{ raizal.numero_historia }}</strong> - {{ raizal.tipo }} - {{ raizal.descripcion }}
+                <strong>{{ raizal.numero_historia }}</strong> — {{ raizal.descripcion }}
               </li>
               <li class="sugerencia-raizal-otro" (mousedown)="seleccionarOtro()">
-                ➕ <strong>Otro / No Existe Raizal</strong>
+                ➕ <strong>OTRO / No existe raizal</strong>
               </li>
             </ul>
 
-            <!-- Campo Otro -->
+            <!-- Campo OTRO: prefijo fijo + sufijo editable -->
             <div class="campo-otro" *ngIf="mostrarCampoOtro()">
-              <label for="huRaizalOtro">Motivo / Causa del error en la aplicación <span class="required">*</span></label>
-              <input 
-                type="text" 
-                id="huRaizalOtro" 
-                formControlName="huRaizalOtro"
-                placeholder="Ej: Error en validación de póliza al procesar solicitud"
-                maxlength="100"
-                [class.invalid]="isFieldInvalid('huRaizalOtro')">
-              <span class="error" *ngIf="isFieldInvalid('huRaizalOtro')">
-                Ingresa el motivo/causa del error (mínimo 10 caracteres)
-              </span>
+              <label>Motivo / Causa del error en la aplicación <span class="required">*</span></label>
+
+              <!-- MODO CAPACITACIÓN: valor completo readonly -->
+              <div class="valor-readonly" *ngIf="esCapacitacion()">
+                <span class="valor-check">✅</span>
+                <span>{{ prefijoCampoOtro() }}</span>
+              </div>
+
+              <!-- MODO FALLA: prefijo fijo + input libre -->
+              <div class="prefijo-wrapper" *ngIf="!esCapacitacion()">
+                <span class="prefijo-badge" title="Este texto no puede modificarse">
+                  {{ prefijoCampoOtro() }}
+                </span>
+                <input
+                  type="text"
+                  class="sufijo-input"
+                  [(ngModel)]="sufijoCampoOtro"
+                  [ngModelOptions]="{standalone: true}"
+                  (ngModelChange)="onSufijoChange()"
+                  placeholder="Ej: Firma, Expedición..."
+                  maxlength="60"
+                  autocomplete="off">
+              </div>
+
+              <div class="char-counter" *ngIf="!esCapacitacion()">
+                {{ sufijoCampoOtro.length }}/60 caracteres adicionales
+              </div>
             </div>
 
-            <span class="error" *ngIf="isFieldInvalid('huRaizal')">Campo obligatorio</span>
+            <span class="error" *ngIf="isFieldInvalid('huRaizal') && !mostrarCampoOtro()">Campo obligatorio</span>
           </div>
 
           <!-- Causa Raíz -->
@@ -83,9 +99,7 @@
             <select id="causaRaiz" formControlName="causaRaiz"
               [class.invalid]="isFieldInvalid('causaRaiz')">
               <option value="">-- Seleccione --</option>
-              <option *ngFor="let causa of causasRaiz" [value]="causa">
-                {{ causa }}
-              </option>
+              <option *ngFor="let causa of causasRaiz" [value]="causa">{{ causa }}</option>
             </select>
             <span class="error" *ngIf="isFieldInvalid('causaRaiz')">Campo obligatorio</span>
           </div>
@@ -95,7 +109,6 @@
         <fieldset class="fieldset">
           <legend>✅ Solución</legend>
 
-          <!-- Descripción de la Solución -->
           <div class="form-group">
             <label for="descripcionSolucion">
               Descripción de la Solución <span class="required">*</span>
@@ -103,17 +116,12 @@
             <textarea id="descripcionSolucion" formControlName="descripcionSolucion"
               rows="5" [class.invalid]="isFieldInvalid('descripcionSolucion')"
               placeholder="Describe la solución aplicada..."></textarea>
-            <span class="error" *ngIf="isFieldInvalid('descripcionSolucion')">
-              Campo obligatorio
-            </span>
-            <span class="field-hint">💡 El mensaje de cierre se agregará automáticamente al generar el texto.</span>
+            <span class="error" *ngIf="isFieldInvalid('descripcionSolucion')">Campo obligatorio</span>
+            <span class="field-hint">💡 El mensaje de cierre se agrega automáticamente.</span>
           </div>
 
-          <!-- Confirmar Operatividad -->
           <div class="form-group">
-            <label for="confirmacionUsuario">
-              Confirmar Operatividad del Usuario Afectado
-            </label>
+            <label for="confirmacionUsuario">Confirmar Operatividad del Usuario Afectado</label>
             <select id="confirmacionUsuario" formControlName="confirmacionUsuario">
               <option value="Si">Sí</option>
               <option value="No">No</option>
@@ -121,55 +129,95 @@
           </div>
         </fieldset>
 
-        <!-- Botones de Acción -->
+        <!-- Botones -->
         <div class="button-group">
-          <button type="button" class="btn btn-primary" (click)="generarTexto()">
-            📄 Generar Texto
-          </button>
-          <button type="button" class="btn btn-success" (click)="guardarIncidente()">
-            💾 Guardar Plantilla
-          </button>
-          <button type="button" class="btn btn-secondary" (click)="limpiarFormulario()">
-            🧹 Limpiar
-          </button>
+          <button type="button" class="btn btn-primary" (click)="generarTexto()">📄 Generar Texto</button>
+          <button type="button" class="btn btn-success" (click)="guardarIncidente()">💾 Guardar</button>
+          <button type="button" class="btn btn-secondary" (click)="limpiarFormulario()">🧹 Limpiar</button>
         </div>
       </form>
     </div>
 
     <!-- RESULTADO -->
     <div class="result-section">
-      <h2>📄 TEXTO GENERADO SOLUCIÓN INCIDENTE</h2>
-
+      <h2>📄 TEXTO GENERADO</h2>
       <div class="resultado" [class.empty]="!textoGenerado">
         {{ textoGenerado || 'El texto generado aparecerá aquí...' }}
       </div>
-
       <button type="button" class="btn btn-primary full-width"
-        (click)="copiarAlPortapapeles()"
-        [disabled]="!textoGenerado">
+        (click)="copiarAlPortapapeles()" [disabled]="!textoGenerado">
         📋 Copiar al Portapapeles
       </button>
     </div>
   </div>
 </div>
 
-<!-- Toast de Notificaciones -->
-<div class="toast" [class.show]="mostrarToast">
-  {{ toastMessage }}
+<!-- Toast -->
+<div class="toast" [class.show]="mostrarToast">{{ toastMessage }}</div>
+
+<!-- Modal: ¿Es capacitación? -->
+<div class="modal-overlay" *ngIf="mostrarModalCapacitacion()">
+  <div class="modal-content modal-capacitacion">
+    <div class="modal-header modal-header-warning">
+      <span class="modal-icon">❓</span>
+      <h2>¿El incidente es de Capacitación?</h2>
+    </div>
+    <div class="modal-body">
+      <p class="modal-question">
+        ¿Este incidente corresponde a un caso de <strong>capacitación de usuario</strong>?
+      </p>
+      <p class="modal-sub">
+        Tu respuesta define el mensaje predeterminado en el campo "Motivo / Causa del error".
+      </p>
+      <div class="modal-actions">
+        <button type="button" class="btn-modal btn-modal-si" (click)="confirmarCapacitacion(true)">
+          ✅ Sí, es Capacitación
+        </button>
+        <button type="button" class="btn-modal btn-modal-no" (click)="confirmarCapacitacion(false)">
+          ❌ No, es Falla Técnica
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- Modal de Raizales -->
+<!-- Modal: Azure DevOps -->
+<div class="modal-overlay" *ngIf="mostrarModalAzureDevops()" (click)="cerrarModalAzureDevops()">
+  <div class="modal-content modal-azure" (click)="$event.stopPropagation()">
+    <div class="modal-header modal-header-info">
+      <span class="modal-icon">ℹ️</span>
+      <h2>Recordatorio Azure DevOps</h2>
+      <button type="button" class="modal-close" (click)="cerrarModalAzureDevops()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="azure-reminder">
+        <div class="azure-hu-badge">HU — {{ raizalParaAzure() }}</div>
+        <p class="azure-message">
+          Recuerda asociar el incidente a la HU <strong>{{ raizalParaAzure() }}</strong>
+          en <strong>Azure DevOps</strong>.
+        </p>
+        <p class="azure-sub">
+          Si no tienes acceso, apóyate con un compañero o solicita acceso a tu líder.
+        </p>
+      </div>
+      <button type="button" class="btn-modal btn-modal-ok" (click)="cerrarModalAzureDevops()">
+        ✅ Entendido
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Listado de Raizales -->
 <div class="modal-overlay" *ngIf="mostrarModalRaizales()" (click)="cerrarModalRaizales()">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2>📋 Listado de HU Raizales</h2>
+    <div class="modal-header modal-header-info">
+      <span class="modal-icon">📋</span>
+      <h2>Listado de HU Raizales</h2>
       <button type="button" class="modal-close" (click)="cerrarModalRaizales()">✕</button>
     </div>
     <div class="modal-body">
       <div class="raizales-list">
-        <div 
-          *ngFor="let raizal of raizalesDisponibles()" 
-          class="raizal-card"
+        <div *ngFor="let raizal of raizalesDisponibles()" class="raizal-card"
           (click)="seleccionarRaizal(raizal); cerrarModalRaizales()">
           <div class="raizal-numero">{{ raizal.numero_historia }}</div>
           <div class="raizal-tipo">{{ raizal.tipo }}</div>
@@ -182,4 +230,3 @@
     </div>
   </div>
 </div>
-

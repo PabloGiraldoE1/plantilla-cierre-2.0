@@ -3,6 +3,7 @@ export interface Incidente {
   fecha?: Date;
   causaError: string;
   huRaizal: string;
+  huRaizalOtro?: string;
   causaRaiz: string;
   descripcionSolucion: string;
   confirmacionUsuario: string;

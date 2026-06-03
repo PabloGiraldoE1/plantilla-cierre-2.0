@@ -1,11 +1,29 @@
 import { Injectable } from '@angular/core';
 
+export interface AppTicketSection {
+  key: string;
+  nombre: string;
+  icono: string;
+  aplicativoFijo: string;
+  aplicativos: string[];
+  procesos: string[];
+  agrupadores: string[];
+  isOpen: boolean;
+  selectedApp: string;
+  selectedProceso: string;
+  selectedAgrupador: string;
+  busquedaAgrupador: string;
+  sugerencias: string[];
+  mostrarSugerencias: boolean;
+  externalTicket: string;
+  mostrarListaAgrupadores: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class IncidenteService {
 
-  // Agrupadores organizados por categorías
   public readonly agrupadoresPorCategoria: { [key: string]: string[] } = {
     "ALERTAMIENTO": [
       "Reportes Dynatrace Cotizador",
@@ -14,7 +32,7 @@ export class IncidenteService {
       "Reportes Dynatrace SimonNet"
     ],
     "SIMONNET": [
-        "Capacitacion Aplicativo",
+      "Capacitacion Aplicativo",
       "Solicitud no registra datos",
       "Sin Permisos",
       "Recuperar datos laborales",
@@ -58,19 +76,19 @@ export class IncidenteService {
       "Aplicativo no carga / Lentitud / Intermitencia",
       "Capacitacion Aplicativo",
       "Falla en visualización de radicados",
-      "Error interno en servicios críticos ",
+      "Error interno en servicios críticos",
       "Restricción funcional por tipo de póliza",
       "Error general de aplicación",
       "Duplicidad en radicados",
       "Interfaz sin respuesta",
       "Falla en autenticación o acceso",
       "Botones inactivos en flujo de solicitud",
-      "Falla en opciones de estado ",
-      "Restricción de acceso por permisos ",
+      "Falla en opciones de estado",
+      "Restricción de acceso por permisos",
       "Flujo detenido en proceso de solicitud",
       "Falla en integración con P8",
-      "Póliza no localizada en sistema ",
-      "Validación de estado de póliza ",
+      "Póliza no localizada en sistema",
+      "Validación de estado de póliza",
       "Falla en generación de certificados",
       "Falla en carga de estado de póliza",
       "Falla en categorización de póliza",
@@ -116,10 +134,14 @@ export class IncidenteService {
       "Bloqueo en carga de asegurabilidad",
       "Falla en integración con servicio de firma",
       "Lote pendiente por expedir"
+    ],
+    "OTROS": [
+      "Tareas DMS",
+      "Consulta de Pólizas",
+      "Validación de Oportunidades"
     ]
   };
 
-  // Lista plana de todos los agrupadores para autocompletado
   public readonly opcionesAgrupador: string[] = Object.values(this.agrupadoresPorCategoria).flat();
 
   public readonly aplicativos: string[] = [
@@ -157,7 +179,6 @@ export class IncidenteService {
     "Alertamiento",
     "Consultas",
     "Cancelación",
-    "Alertamiento",
     "Ingresos",
     "Retiros",
     "Colectivo",
@@ -166,36 +187,206 @@ export class IncidenteService {
     "Procesos AWS",
   ];
 
-  constructor() { }
+  crearSecciones(): AppTicketSection[] {
+    return [
+      {
+        key: 'AUS',
+        nombre: 'AUS',
+        icono: '🏥',
+        aplicativoFijo: 'AUS',
+        aplicativos: [],
+        procesos: ['Documentos', 'Radicación', 'Consulta'],
+        agrupadores: this.agrupadoresPorCategoria['AUS'],
+        isOpen: false,
+        selectedApp: 'AUS',
+        selectedProceso: '',
+        selectedAgrupador: '',
+        busquedaAgrupador: '',
+        sugerencias: [],
+        mostrarSugerencias: false,
+        externalTicket: '',
+        mostrarListaAgrupadores: false
+      },
+      {
+        key: 'AVA',
+        nombre: 'AVA',
+        icono: '📊',
+        aplicativoFijo: 'AVA',
+        aplicativos: [],
+        procesos: ['Consulta', 'SubGrupos', 'Ingresos'],
+        agrupadores: this.agrupadoresPorCategoria['AVA'],
+        isOpen: false,
+        selectedApp: 'AVA',
+        selectedProceso: '',
+        selectedAgrupador: '',
+        busquedaAgrupador: '',
+        sugerencias: [],
+        mostrarSugerencias: false,
+        externalTicket: '',
+        mostrarListaAgrupadores: false
+      },
+      {
+        key: 'PORCHAT',
+        nombre: 'PorChat',
+        icono: '💬',
+        aplicativoFijo: 'PorChat',
+        aplicativos: [],
+        procesos: ['Consulta', 'Documentos'],
+        agrupadores: this.agrupadoresPorCategoria['PORCHAT'],
+        isOpen: false,
+        selectedApp: 'PorChat',
+        selectedProceso: '',
+        selectedAgrupador: '',
+        busquedaAgrupador: '',
+        sugerencias: [],
+        mostrarSugerencias: false,
+        externalTicket: '',
+        mostrarListaAgrupadores: false
+      },
+      {
+        key: 'COTIZADORES',
+        nombre: 'Cotizadores',
+        icono: '💰',
+        aplicativoFijo: '',
+        aplicativos: [
+          'Cotizador Salud',
+          'Cotizador Educación',
+          'Cotizador PCP',
+          'Cotizador Pensión',
+          'Cotizador Autos',
+          'Cotizador Accidentes Personales',
+          'Cotizador Vida/Plan Vive',
+          'Cotizador Vida Grupo PES',
+          'Cotizador Plan Complementario',
+          'Cotizador Mas Vida',
+          'Cotizador Saldado'
+        ],
+        procesos: ['Consulta', 'Cotización', 'Modificación', 'Expedición', 'Renovación', 'Cancelación', 'Ingresos', 'Retiros'],
+        agrupadores: this.agrupadoresPorCategoria['COTIZADORES'],
+        isOpen: false,
+        selectedApp: '',
+        selectedProceso: '',
+        selectedAgrupador: '',
+        busquedaAgrupador: '',
+        sugerencias: [],
+        mostrarSugerencias: false,
+        externalTicket: '',
+        mostrarListaAgrupadores: false
+      },
+      {
+        key: 'HOME_COTIZADOR',
+        nombre: 'Home Cotizador / Mis Negocios',
+        icono: '🏠',
+        aplicativoFijo: 'Home Cotizador / Mis Negocios',
+        aplicativos: [],
+        procesos: ['Proceso'],
+        agrupadores: this.agrupadoresPorCategoria['HOME COTIZADOR / MIS NEGOCIOS'],
+        isOpen: false,
+        selectedApp: 'Home Cotizador / Mis Negocios',
+        selectedProceso: '',
+        selectedAgrupador: '',
+        busquedaAgrupador: '',
+        sugerencias: [],
+        mostrarSugerencias: false,
+        externalTicket: '',
+        mostrarListaAgrupadores: false
+      },
+      {
+        key: 'INGRESO_DIGITAL',
+        nombre: 'Ingreso Digital',
+        icono: '📥',
+        aplicativoFijo: 'Cotizador Ingreso Digital Vida Grupo',
+        aplicativos: [],
+        procesos: ['Ingresos', 'Modificación', 'Retiros'],
+        agrupadores: this.agrupadoresPorCategoria['INGRESO DIGITAL'],
+        isOpen: false,
+        selectedApp: 'Cotizador Ingreso Digital Vida Grupo',
+        selectedProceso: '',
+        selectedAgrupador: '',
+        busquedaAgrupador: '',
+        sugerencias: [],
+        mostrarSugerencias: false,
+        externalTicket: '',
+        mostrarListaAgrupadores: false
+      },
+      {
+        key: 'ALERTAMIENTO',
+        nombre: 'Alertamiento',
+        icono: '🔔',
+        aplicativoFijo: 'Reportes Dynatrace',
+        aplicativos: [],
+        procesos: ['Alertamiento'],
+        agrupadores: this.agrupadoresPorCategoria['ALERTAMIENTO'],
+        isOpen: false,
+        selectedApp: 'Reportes Dynatrace',
+        selectedProceso: '',
+        selectedAgrupador: '',
+        busquedaAgrupador: '',
+        sugerencias: [],
+        mostrarSugerencias: false,
+        externalTicket: '',
+        mostrarListaAgrupadores: false
+      },
+      {
+        key: 'SIMONNET',
+        nombre: 'SimonNet / Gestión Documental',
+        icono: '📂',
+        aplicativoFijo: 'SimonNet / Gestión Documental',
+        aplicativos: [],
+        procesos: ['Procesos'],
+        agrupadores: this.agrupadoresPorCategoria['SIMONNET'],
+        isOpen: false,
+        selectedApp: 'SimonNet / Gestión Documental',
+        selectedProceso: '',
+        selectedAgrupador: '',
+        busquedaAgrupador: '',
+        sugerencias: [],
+        mostrarSugerencias: false,
+        externalTicket: '',
+        mostrarListaAgrupadores: false
+      },
+      {
+        key: 'OTROS',
+        nombre: 'Otros',
+        icono: '⚙️',
+        aplicativoFijo: '',
+        aplicativos: ['ICargo', 'AWS', 'Cotizador/Salesforce'],
+        procesos: ['Consulta'],
+        agrupadores: this.agrupadoresPorCategoria['OTROS'],
+        isOpen: false,
+        selectedApp: '',
+        selectedProceso: '',
+        selectedAgrupador: '',
+        busquedaAgrupador: '',
+        sugerencias: [],
+        mostrarSugerencias: false,
+        externalTicket: '',
+        mostrarListaAgrupadores: false
+      }
+    ];
+  }
 
-  // Filtrar agrupadores basado en texto de búsqueda
   filtrarAgrupadores(busqueda: string): string[] {
     if (!busqueda) return [];
     const term = busqueda.toLowerCase();
     return this.opcionesAgrupador.filter(op => op.toLowerCase().includes(term));
   }
 
-  // Generar external ticket
   generarExternalTicket(aplicativo: string, proceso: string, agrupador: string): string {
     const parts: string[] = [];
     if (aplicativo) parts.push(aplicativo + '.');
     if (proceso) parts.push(proceso + ' ');
-    if (this.opcionesAgrupador.includes(agrupador)) parts.push(agrupador);
+    if (agrupador) parts.push(agrupador);
     return parts.join('').trim();
   }
 
-  // Validar HU Raizal
   validarHURaizal(valor: string): boolean {
     const prohibidos = ["n/a", "na", "no aplica"];
     return !prohibidos.includes(valor.trim().toLowerCase());
   }
 
-  // Extraer solo el número de la historia raizal
   extraerNumeroRaizal(huRaizal: string): string {
-    // Si es una estructura como "1027578 - Historia - Descripción"
-    // o solo "1027578", extraemos el número
     const match = huRaizal.match(/^(\d+)/);
     return match ? match[1] : huRaizal;
   }
 }
-

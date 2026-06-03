@@ -1,165 +1,247 @@
+// Design tokens
+$indigo:     #4361ee;
+$indigo-dk:  #3451de;
+$cyan:       #06b6d4;
+$emerald:    #10b981;
+$navy:       #0d1a52;
+$rose:       #f43f5e;
+$border:     #e2e8f0;
+$bg-card:    #ffffff;
+$bg-subtle:  #f8f9ff;
+$text-main:  #0f172a;
+$text-soft:  #475569;
+$text-muted: #94a3b8;
+$shadow-sm:  0 1px 4px rgba(10,15,44,.07);
+$shadow-md:  0 4px 18px rgba(10,15,44,.10);
+$transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+
 .formulario-container {
-  max-width: 1600px;
+  max-width: 1480px;
   margin: 0 auto;
-  padding: 2rem;
-  overflow-x: hidden;
+  padding: 24px 20px;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  animation: fadeInUp 0.4s ease;
 }
 
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ===== HEADER =============================================
 .header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 28px;
 
   h1 {
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    background: linear-gradient(135deg, $navy 0%, $indigo 55%, $cyan 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0 0 6px 0;
+
+    @media (max-width: 768px) { font-size: 1.45rem; }
   }
 
   p {
-    color: #7f8c8d;
-    font-size: 1.1rem;
+    color: $text-muted;
+    font-size: 0.9rem;
+    margin: 0;
   }
 }
 
+// ===== LAYOUT =============================================
 .main-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  gap: 22px;
   align-items: start;
-  overflow: hidden;
+
+  @media (max-width: 1100px) { grid-template-columns: 1fr; }
 }
 
+// ===== FORMULARIO =========================================
 .formulario {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: $bg-card;
+  padding: 28px;
+  border-radius: 18px;
+  box-shadow: $shadow-sm;
+  border: 1.5px solid $border;
+  transition: $transition;
+
+  &:hover { box-shadow: $shadow-md; }
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 18px;
+  position: relative;
 
   label {
     display: block;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: #2c3e50;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    color: $text-soft;
+    margin-bottom: 7px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
-  input, textarea, select {
+  input,
+  textarea {
     width: 100%;
-    padding: 0.75rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
+    padding: 11px 14px;
+    border: 1.5px solid $border;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.92rem;
+    color: $text-main;
+    background: $bg-subtle;
+    transition: $transition;
 
     &:focus {
       outline: none;
-      border-color: #3498db;
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+      border-color: $indigo;
+      background: $bg-card;
+      box-shadow: 0 0 0 3px rgba(67,97,238,.1);
     }
 
+    &:hover:not(:focus) { border-color: rgba(67,97,238,.3); }
+
     &.invalid {
-      border-color: #e74c3c;
+      border-color: $rose;
+      &:focus { box-shadow: 0 0 0 3px rgba(244,63,94,.1); }
     }
   }
 
   textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 88px;
+    line-height: 1.6;
   }
 }
 
+// Radio groups modernos
 .radio-group {
   display: flex;
-  gap: 2rem;
-  margin-top: 0.5rem;
+  gap: 12px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
 
-  .radio-label {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    font-weight: normal;
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 10px 18px;
+  border: 1.5px solid $border;
+  border-radius: 10px;
+  transition: $transition;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: $text-soft;
 
-    input[type="radio"] {
-      width: auto;
-      margin-right: 0.5rem;
-      cursor: pointer;
-    }
-
-    span {
-      font-size: 1rem;
-    }
+  &:hover {
+    border-color: $indigo;
+    background: rgba(67,97,238,.04);
+    color: $indigo;
   }
+
+  input[type="radio"] {
+    width: 16px !important;
+    height: 16px !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    accent-color: $indigo;
+    flex-shrink: 0;
+  }
+
+  &:has(input:checked) {
+    border-color: $indigo;
+    background: rgba(67,97,238,.07);
+    color: $indigo;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(67,97,238,.15);
+  }
+
+  span { line-height: 1; }
 }
 
 .error-message {
   display: block;
-  color: #e74c3c;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
+  font-family: 'Inter', sans-serif;
+  color: $rose;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 5px;
 }
 
+// ===== BOTONES ============================================
 .button-group {
   display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
+  gap: 10px;
+  margin-top: 22px;
   flex-wrap: wrap;
 }
 
 .btn {
-  padding: 0.75rem 1.5rem;
+  padding: 12px 20px;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: $transition;
   flex: 1;
-  min-width: 150px;
+  min-width: 130px;
+  letter-spacing: 0.2px;
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
+  &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: $shadow-md; }
+  &:active:not(:disabled) { transform: translateY(0); }
 
   &.btn-primary {
-    background: #3498db;
+    background: linear-gradient(135deg, $indigo 0%, $indigo-dk 100%);
     color: white;
-
-    &:hover {
-      background: #2980b9;
-    }
+    box-shadow: 0 2px 8px rgba(67,97,238,.3);
   }
 
   &.btn-success {
-    background: #27ae60;
+    background: linear-gradient(135deg, $emerald 0%, #0da271 100%);
     color: white;
-
-    &:hover {
-      background: #229954;
-    }
+    box-shadow: 0 2px 8px rgba(16,185,129,.3);
   }
 
   &.btn-secondary {
-    background: #95a5a6;
+    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
     color: white;
-
-    &:hover {
-      background: #7f8c8d;
-    }
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
   }
 }
 
+// ===== TEXTO GENERADO =====================================
 .texto-generado-container {
   position: sticky;
-  top: 2rem;
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  min-height: 400px;
-  overflow: hidden;
+  top: 24px;
+  background: $bg-card;
+  padding: 28px;
+  border-radius: 18px;
+  box-shadow: $shadow-sm;
+  border: 1.5px solid $border;
+  min-height: 420px;
+  transition: $transition;
+
+  &:hover { box-shadow: $shadow-md; }
+
+  @media (max-width: 1100px) { position: relative; top: 0; }
 }
 
 .texto-placeholder {
@@ -167,140 +249,123 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 400px;
-  color: #95a5a6;
-  
+  min-height: 380px;
+  color: $text-muted;
+  text-align: center;
+
   .placeholder-icon {
     font-size: 4rem;
-    margin-bottom: 1rem;
+    display: block;
+    margin-bottom: 16px;
     opacity: 0.3;
+    animation: pulse 2.8s ease-in-out infinite;
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.05); }
+    }
   }
-  
+
   p {
-    font-size: 1.1rem;
-    opacity: 0.6;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    opacity: 0.7;
+    margin: 0;
   }
 }
 
 .texto-generado {
-  overflow: hidden;
-  
   .texto-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 14px;
 
     h3 {
-      color: #2c3e50;
+      font-family: 'Poppins', sans-serif;
+      color: $navy;
       margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
     }
 
     .btn-copy {
-      padding: 0.5rem 1rem;
-      background: #3498db;
+      padding: 9px 18px;
+      background: linear-gradient(135deg, $indigo 0%, $indigo-dk 100%);
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 9px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 0.84rem;
       cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
+      transition: $transition;
+      box-shadow: 0 2px 8px rgba(67,97,238,.3);
 
-      &:hover {
-        background: #2980b9;
-        transform: translateY(-2px);
-      }
+      &:hover { transform: translateY(-2px); box-shadow: 0 5px 14px rgba(67,97,238,.4); }
     }
   }
 
   .texto-content {
-    background: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 8px;
+    background: $bg-subtle;
+    padding: 18px;
+    border-radius: 12px;
     white-space: pre-wrap;
     word-wrap: break-word;
     overflow-wrap: break-word;
     word-break: break-word;
     font-family: 'Courier New', monospace;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: #2c3e50;
-    border: 1px solid #e0e0e0;
-    max-height: 500px;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: $text-main;
+    border: 1.5px solid rgba(67,97,238,.1);
+    max-height: 520px;
     overflow-y: auto;
-    overflow-x: hidden;
-    
-    &::-webkit-scrollbar {
-      width: 8px;
-    }
-    
-    &::-webkit-scrollbar-track {
-      background: #e9ecef;
-      border-radius: 4px;
-    }
-    
+
+    &::-webkit-scrollbar       { width: 6px; }
+    &::-webkit-scrollbar-track { background: #e8edf8; border-radius: 4px; }
     &::-webkit-scrollbar-thumb {
-      background: #6c757d;
+      background: linear-gradient(180deg, $indigo 0%, $cyan 100%);
       border-radius: 4px;
-      
-      &:hover {
-        background: #495057;
-      }
     }
   }
 }
 
+// ===== TOAST ==============================================
 .toast {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  background: #2c3e50;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, $navy 0%, #1e3a8a 100%);
   color: white;
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
-  animation: slideIn 0.3s ease;
-}
+  padding: 13px 24px;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  box-shadow: $shadow-md;
+  z-index: 9999;
+  animation: slideUpToast 0.3s ease;
+  border: 1px solid rgba(255,255,255,.1);
 
-@keyframes slideIn {
-  from {
-    transform: translateX(400px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
+  @keyframes slideUpToast {
+    from { opacity: 0; transform: translateX(-50%) translateY(18px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
   }
 }
 
-@media (max-width: 1024px) {
-  .main-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .texto-generado-container {
-    position: relative;
-    top: 0;
-  }
-}
-
+// ===== RESPONSIVE =========================================
 @media (max-width: 768px) {
-  .formulario-container {
-    padding: 1rem;
-  }
+  .formulario-container { padding: 16px 12px; }
+  .formulario, .texto-generado-container { padding: 20px 16px; }
 
-  .button-group {
-    flex-direction: column;
-
-    .btn {
-      width: 100%;
-    }
-  }
+  .button-group { flex-direction: column; .btn { min-width: unset; } }
 
   .texto-generado .texto-header {
     flex-direction: column;
-    gap: 1rem;
+    gap: 10px;
     align-items: flex-start;
+    .btn-copy { width: 100%; text-align: center; }
   }
 }

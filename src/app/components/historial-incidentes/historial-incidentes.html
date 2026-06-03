@@ -1,65 +1,94 @@
 <div class="historial-container">
-  <div class="header">
-    <h1>📊 HISTORIAL DE PLANTILLAS</h1>
-    <div class="stats">
-      <div class="stat-card">
-        <span class="stat-value">{{ historial.length }}</span>
-        <span class="stat-label">Total Plantillas</span>
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>📊 HISTORIAL DE PLANTILLAS</h1>
+      <p class="header-sub">Registro de incidentes guardados y sus datos de cierre</p>
+    </div>
+    <div class="stats-row">
+      <div class="stat-pill">
+        <span class="stat-num">{{ historial.length }}</span>
+        <span class="stat-lbl">Total registros</span>
+      </div>
+      <div class="stat-pill stat-pill-filtered" *ngIf="searchTerm">
+        <span class="stat-num">{{ filteredHistorial.length }}</span>
+        <span class="stat-lbl">Resultados</span>
       </div>
     </div>
   </div>
 
-  <!-- Filtros y Búsqueda -->
-  <div class="filter-section">
-    <div class="search-group">
-      <input type="text"
+  <!-- Barra de búsqueda y acciones -->
+  <div class="filter-bar">
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
         [(ngModel)]="searchTerm"
         (input)="buscar()"
-        placeholder="🔍 Buscar por causa, HU Raizal, descripción...">
+        placeholder="Buscar por causa, HU Raizal, motivo, descripción..."
+        class="search-input">
+      <button *ngIf="searchTerm" type="button" class="clear-search" (click)="searchTerm = ''; buscar()">✕</button>
     </div>
-
-    <div class="action-buttons">
-      <button class="btn btn-danger" (click)="limpiarHistorial()"
-        [disabled]="historial.length === 0">
-        🗑️ Limpiar Todo
-      </button>
-    </div>
+    <button class="btn btn-danger" (click)="limpiarHistorial()"
+      [disabled]="historial.length === 0">
+      🗑️ Limpiar Todo
+    </button>
   </div>
 
-  <!-- Tabla de Incidentes -->
-  <div class="table-container" *ngIf="filteredHistorial.length > 0">
-    <table class="incidentes-table">
+  <!-- Tabla -->
+  <div class="table-wrapper" *ngIf="filteredHistorial.length > 0">
+    <table class="historial-table">
       <thead>
         <tr>
-          <th>ID</th>
           <th>Fecha</th>
           <th>Causa del Error</th>
-          <th>HU Raizal</th>
+          <th>HU / Motivo</th>
           <th>Causa Raíz</th>
-          <th>Conf. Operatividad</th>
-          <th>Acciones</th>
+          <th>Operatividad</th>
+          <th class="th-actions">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let incidente of filteredHistorial" class="incidente-row">
-          <td class="id-cell">{{ incidente.id }}</td>
-          <td>{{ formatearFecha(incidente.fecha) }}</td>
-          <td class="agrupador-cell">{{ incidente.causaError || 'N/A' }}</td>
-          <td>{{ incidente.huRaizal || 'N/A' }}</td>
-          <td>
-            <span class="badge" [class]="incidente.causaRaiz === 'Identificada' ? 'badge-identificada' : 'badge-default'">
+        <tr *ngFor="let incidente of filteredHistorial" class="historial-row">
+          <td class="td-fecha">
+            <span class="fecha-text">{{ formatearFecha(incidente.fecha) }}</span>
+          </td>
+          <td class="td-causa">
+            <span class="causa-text" [title]="incidente.causaError">{{ incidente.causaError || 'N/A' }}</span>
+          </td>
+          <td class="td-hu">
+            <div class="hu-display">
+              <span class="hu-badge" [class.hu-badge-otro]="incidente.huRaizal === 'OTRO'">
+                {{ incidente.huRaizal === 'OTRO' ? 'OTRO' : (incidente.huRaizal ? (incidente.huRaizal.match(/^(\d+)/) ? incidente.huRaizal.match(/^(\d+)/)![1] : 'N/A') : 'N/A') }}
+              </span>
+              <span class="hu-motivo" *ngIf="incidente.huRaizalOtro">
+                {{ incidente.huRaizalOtro }}
+              </span>
+            </div>
+          </td>
+          <td class="td-raiz">
+            <span class="badge-raiz"
+              [class.badge-identificada]="incidente.causaRaiz === 'Identificada'"
+              [class.badge-sin]="incidente.causaRaiz === 'Sin Identificar'">
               {{ incidente.causaRaiz || 'N/A' }}
             </span>
           </td>
-          <td>{{ incidente.confirmacionUsuario || 'N/A' }}</td>
-          <td class="actions-cell">
-            <button class="btn-icon" (click)="copiarIncidente(incidente)" title="Copiar">
+          <td class="td-operatividad">
+            <span class="operatividad-badge"
+              [class.op-si]="incidente.confirmacionUsuario === 'Si'"
+              [class.op-no]="incidente.confirmacionUsuario === 'No'">
+              {{ incidente.confirmacionUsuario || 'N/A' }}
+            </span>
+          </td>
+          <td class="td-actions">
+            <button class="action-btn action-copy" (click)="copiarIncidente(incidente)" title="Copiar al portapapeles">
               📋
             </button>
-            <button class="btn-icon btn-recover" (click)="recuperarIncidente(incidente)" title="Recuperar en Formulario">
+            <button class="action-btn action-recover" (click)="recuperarIncidente(incidente)" title="Recuperar en formulario">
               🔄
             </button>
-            <button class="btn-icon btn-delete" (click)="eliminarIncidente(incidente.id)" title="Eliminar">
+            <button class="action-btn action-delete" (click)="eliminarIncidente(incidente.id)" title="Eliminar">
               🗑️
             </button>
           </td>
@@ -68,16 +97,15 @@
     </table>
   </div>
 
-  <!-- Mensaje cuando no hay resultados -->
+  <!-- Estado vacío -->
   <div class="empty-state" *ngIf="filteredHistorial.length === 0">
     <div class="empty-icon">📭</div>
-    <h3>No se encontraron incidentes</h3>
-    <p *ngIf="searchTerm">
-      Intenta ajustar los filtros de búsqueda
-    </p>
-    <p *ngIf="!searchTerm && historial.length === 0">
-      Aún no has guardado ningún incidente
-    </p>
+    <h3>No se encontraron registros</h3>
+    <p *ngIf="searchTerm">Ajusta los filtros de búsqueda</p>
+    <p *ngIf="!searchTerm && historial.length === 0">Aún no has guardado ningún incidente</p>
   </div>
+
 </div>
 
+<!-- Toast -->
+<div class="toast" [class.show]="mostrarToast">{{ toastMessage }}</div>
