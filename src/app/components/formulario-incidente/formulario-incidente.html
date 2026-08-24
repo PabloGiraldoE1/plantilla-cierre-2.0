@@ -1,5 +1,8 @@
 <div class="formulario-container">
-  <h1>📋 PLANTILLA CIERRE DE INCIDENTES</h1>
+  <div class="page-header">
+    <h1>📋 PLANTILLA CIERRE DE INCIDENTES</h1>
+    <p class="page-subtitle">Completa los campos para generar el texto de cierre y registrar el incidente</p>
+  </div>
 
   <div class="main-content">
     <!-- FORMULARIO -->
@@ -213,19 +216,47 @@
     <div class="modal-header modal-header-info">
       <span class="modal-icon">📋</span>
       <h2>Listado de HU Raizales</h2>
+      <span class="raizales-contador">{{ raizalesModal().length }} de {{ raizalesDisponibles().length }}</span>
       <button type="button" class="modal-close" (click)="cerrarModalRaizales()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="raizales-list">
-        <div *ngFor="let raizal of raizalesDisponibles()" class="raizal-card"
-          (click)="seleccionarRaizal(raizal); cerrarModalRaizales()">
-          <div class="raizal-numero">{{ raizal.numero_historia }}</div>
-          <div class="raizal-tipo">{{ raizal.tipo }}</div>
-          <div class="raizal-desc">{{ raizal.descripcion }}</div>
-          <div class="raizal-uso" *ngIf="raizal.usado_contador">
-            🔢 Usado {{ raizal.usado_contador }} veces
-          </div>
-        </div>
+      <input
+        type="text"
+        class="raizales-buscador"
+        [value]="filtroModalRaizales()"
+        (input)="filtrarModalRaizales($event)"
+        placeholder="🔎 Buscar por número o descripción...">
+      <div class="raizales-table-wrapper" *ngIf="raizalesModal().length > 0">
+        <table class="raizales-table">
+          <thead>
+            <tr>
+              <th (click)="ordenarModalRaizalesPor('numero')" [class.th-activa]="ordenModalRaizales().col === 'numero'">
+                Número <span class="th-arrow" *ngIf="ordenModalRaizales().col === 'numero'">{{ ordenModalRaizales().dir === 1 ? '▲' : '▼' }}</span>
+              </th>
+              <th (click)="ordenarModalRaizalesPor('tipo')" [class.th-activa]="ordenModalRaizales().col === 'tipo'" class="th-tipo">
+                Tipo <span class="th-arrow" *ngIf="ordenModalRaizales().col === 'tipo'">{{ ordenModalRaizales().dir === 1 ? '▲' : '▼' }}</span>
+              </th>
+              <th (click)="ordenarModalRaizalesPor('descripcion')" [class.th-activa]="ordenModalRaizales().col === 'descripcion'">
+                Descripción <span class="th-arrow" *ngIf="ordenModalRaizales().col === 'descripcion'">{{ ordenModalRaizales().dir === 1 ? '▲' : '▼' }}</span>
+              </th>
+              <th (click)="ordenarModalRaizalesPor('uso')" [class.th-activa]="ordenModalRaizales().col === 'uso'" class="th-uso">
+                Usos <span class="th-arrow" *ngIf="ordenModalRaizales().col === 'uso'">{{ ordenModalRaizales().dir === 1 ? '▲' : '▼' }}</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let raizal of raizalesModal()" class="raizal-row"
+              (click)="seleccionarRaizal(raizal); cerrarModalRaizales()">
+              <td class="td-numero">{{ raizal.numero_historia }}</td>
+              <td class="td-tipo"><span class="raizal-tipo-chip">{{ raizal.tipo }}</span></td>
+              <td class="td-desc">{{ raizal.descripcion }}</td>
+              <td class="td-uso">{{ raizal.usado_contador || '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="raizales-vacio" *ngIf="raizalesModal().length === 0">
+        Sin resultados para tu búsqueda.
       </div>
     </div>
   </div>

@@ -68,7 +68,18 @@ export class BackendApiService {
     { numero_historia: '1146011', tipo: 'Historia', descripcion: 'Cotizaciones SARLAFT Finalizado - pero no Avanzan' },
     { numero_historia: '1136355', tipo: 'Historia', descripcion: 'Cambios de Estado en Trazabilidad, sin completarse el proceso del Cotizador - Salud' },
     { numero_historia: '1146022', tipo: 'Historia', descripcion: 'Ingreso Digital - Lotes en estado "Procesando" para Ingreso y retiro de asegurados' },
-    { numero_historia: '1146007', tipo: 'Historia', descripcion: 'GENERAL Cotizadores - Proceso FIRMA realizado pero cotizacion no avanza' }
+    { numero_historia: '1146007', tipo: 'Historia', descripcion: 'GENERAL Cotizadores - Proceso FIRMA realizado pero cotizacion no avanza' },
+    { numero_historia: '1239585', tipo: 'Historia', descripcion: 'Cotizaciones Proceso de Envio - Pendiente Firma' },
+    { numero_historia: '1239003', tipo: 'Historia', descripcion: 'Corregir el envío anticipado de producción a Teradata para los ramos 193 y 196' },
+    { numero_historia: '1196801', tipo: 'Historia', descripcion: 'Recursos de memoria agotados en ms-ayv-vida' },
+    { numero_historia: '1192884', tipo: 'Historia', descripcion: 'Porchat - Error en la generación de certificados - Rol 048 AFILIADO' },
+    { numero_historia: '1191371', tipo: 'Historia', descripcion: 'Ingreso Digital Vida Grupo - Falla en carga de planes para grupo familiar en Ingreso de Asegurados' },
+    { numero_historia: '1173968', tipo: 'Historia', descripcion: 'AUS - Falla en operación: Reversar Prorrogado' },
+    { numero_historia: '1165258', tipo: 'Historia', descripcion: 'Cotizador Autos - Error en Modificaciones "No se puede cambiar PeriodStart salvo que EditEffectiveDate coincida con PeriodStart actual"' },
+    { numero_historia: '692563', tipo: 'Historia', descripcion: 'AUS. Demasiada lentitud en la aplicación, se queda cargando para expedir un radicado, se trata de consultar y no lo trae, queda la barra de estados en blanco' },
+    { numero_historia: '807581', tipo: 'Historia', descripcion: 'Raizal VG Cotizador - Lotes sin expedir' },
+    { numero_historia: '797265', tipo: 'Historia', descripcion: 'AUS. No muestra la carga inicial de los radicados' },
+    { numero_historia: '926873', tipo: 'Historia', descripcion: 'Raizal - Cotizador No se logró descomponer el nombre' }
   ];
 
   // ===== HU RAIZALES CUSTOM (localStorage) =====

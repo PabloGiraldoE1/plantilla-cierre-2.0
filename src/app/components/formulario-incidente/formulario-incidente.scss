@@ -33,19 +33,29 @@ $transition:  all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: 'Inter', 'Segoe UI', sans-serif;
 
   // ===== TÍTULO PRINCIPAL =================================
+  .page-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
   h1 {
     font-family: 'Poppins', sans-serif;
     font-size: 2.1rem;
     font-weight: 800;
     letter-spacing: -1px;
-    text-align: center;
-    margin-bottom: 28px;
+    margin-bottom: 6px;
     background: linear-gradient(135deg, #0d1a52 0%, #4361ee 50%, #06b6d4 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 
     @media (max-width: 768px) { font-size: 1.5rem; }
+  }
+
+  .page-subtitle {
+    color: $text-muted;
+    font-size: 0.92rem;
+    margin: 0;
   }
 
   // ===== LAYOUT ===========================================
@@ -707,74 +717,138 @@ $transition:  all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 // ===== MODAL RAIZALES =====================================
-.raizales-list {
-  display: grid;
-  gap: 12px;
+.raizales-contador {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #4361ee;
+  background: rgba(67, 97, 238, 0.08);
+  padding: 4px 12px;
+  border-radius: 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.raizal-card {
-  padding: 16px 18px;
+.raizales-buscador {
+  width: 100%;
+  padding: 12px 16px;
   border: 1.5px solid #e2e8f0;
   border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.22s;
-  background: white;
-  position: relative;
-  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.92rem;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: 100%;
-    background: linear-gradient(180deg, #4361ee 0%, #06b6d4 100%);
-    transform: scaleY(0);
-    transition: transform 0.22s;
-    transform-origin: bottom;
-  }
-
-  &:hover {
+  &:focus {
+    outline: none;
     border-color: #4361ee;
-    background: rgba(67, 97, 238, 0.03);
-    transform: translateX(5px);
-    box-shadow: 0 4px 16px rgba(67, 97, 238, 0.12);
+  }
+}
 
-    &::before { transform: scaleY(1); }
+.raizales-vacio {
+  text-align: center;
+  padding: 24px;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.raizales-table-wrapper {
+  max-height: 55vh;
+  overflow: auto;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+
+  &::-webkit-scrollbar       { width: 6px; height: 6px; }
+  &::-webkit-scrollbar-track { background: #f1f5f9; }
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #4361ee 0%, #06b6d4 100%);
+    border-radius: 4px;
+  }
+}
+
+.raizales-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Inter', sans-serif;
+
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    th {
+      background: linear-gradient(135deg, #0d1a52 0%, #1a2a6b 100%);
+      color: rgba(255, 255, 255, 0.85);
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      transition: background 0.18s, color 0.18s;
+
+      &:hover { background: linear-gradient(135deg, #142266 0%, #1f3480 100%); color: #fff; }
+
+      &.th-activa { color: #7dd8ec; }
+      &.th-tipo, &.th-uso { width: 110px; }
+
+      .th-arrow { font-size: 0.7rem; margin-left: 3px; }
+    }
   }
 
-  .raizal-numero {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #4361ee;
-    margin-bottom: 5px;
-  }
+  tbody {
+    .raizal-row {
+      cursor: pointer;
+      transition: background 0.16s;
+      border-bottom: 1px solid #eef1f8;
 
-  .raizal-tipo {
-    display: inline-block;
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: white;
-    background: linear-gradient(135deg, #06b6d4 0%, #0590a8 100%);
-    padding: 3px 10px;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
+      &:nth-child(even) { background: #f8f9ff; }
+      &:hover { background: rgba(67, 97, 238, 0.07); }
 
-  .raizal-desc {
-    font-size: 0.9rem;
-    color: #475569;
-    line-height: 1.5;
-  }
+      td {
+        padding: 11px 16px;
+        font-size: 0.86rem;
+        color: #334155;
+        vertical-align: top;
+      }
 
-  .raizal-uso {
-    font-size: 0.78rem;
-    color: #94a3b8;
-    font-style: italic;
-    margin-top: 6px;
+      .td-numero {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        color: #4361ee;
+        white-space: nowrap;
+      }
+
+      .td-desc { line-height: 1.45; }
+
+      .td-uso {
+        text-align: center;
+        color: #94a3b8;
+        font-weight: 600;
+      }
+
+      .raizal-tipo-chip {
+        display: inline-block;
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: white;
+        background: linear-gradient(135deg, #06b6d4 0%, #0590a8 100%);
+        padding: 3px 9px;
+        border-radius: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .raizales-table {
+    .th-tipo, .td-tipo { display: none; }
   }
 }

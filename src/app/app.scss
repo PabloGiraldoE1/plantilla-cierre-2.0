@@ -23,7 +23,9 @@ $transition:    all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: linear-gradient(100deg, #060c24 0%, #0d1a52 50%, #0a1440 100%);
+    background: linear-gradient(100deg, rgba(6, 12, 36, 0.92) 0%, rgba(13, 26, 82, 0.92) 50%, rgba(10, 20, 64, 0.92) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 2px 20px rgba(6, 12, 36, 0.6);
 
     // Línea luminosa en la base del nav
@@ -57,6 +59,10 @@ $transition:    all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       color: #fff;
       margin: 0;
       letter-spacing: -0.3px;
+      background: linear-gradient(120deg, #ffffff 0%, #ffffff 55%, #7dd8ec 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
 
       span.brand-accent {
         color: #06b6d4;

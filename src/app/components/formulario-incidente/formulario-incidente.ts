@@ -34,6 +34,7 @@ export class FormularioIncidente implements OnInit, OnDestroy {
   mostrarSugerenciasRaizal = signal<boolean>(false);
   mostrarCampoOtro    = signal<boolean>(false);
   mostrarModalRaizales = signal<boolean>(false);
+  filtroModalRaizales  = signal<string>('');
 
   // Modales
   mostrarModalCapacitacion = signal<boolean>(false);
@@ -57,6 +58,35 @@ export class FormularioIncidente implements OnInit, OnDestroy {
       )
       .slice(0, 15);
   });
+
+  // Listado del modal "Ver": filtrado por búsqueda y ordenado por columna
+  ordenModalRaizales = signal<{ col: 'numero' | 'tipo' | 'descripcion' | 'uso'; dir: 1 | -1 }>({ col: 'numero', dir: 1 });
+
+  raizalesModal = computed(() => {
+    const busqueda = this.filtroModalRaizales().toLowerCase().trim();
+    const lista = busqueda
+      ? this.raizalesDisponibles().filter(r =>
+          r.numero_historia.toLowerCase().includes(busqueda) ||
+          r.descripcion.toLowerCase().includes(busqueda)
+        )
+      : this.raizalesDisponibles();
+
+    const { col, dir } = this.ordenModalRaizales();
+    return [...lista].sort((a, b) => {
+      switch (col) {
+        case 'numero':      return dir * (Number(a.numero_historia) - Number(b.numero_historia));
+        case 'tipo':        return dir * a.tipo.localeCompare(b.tipo);
+        case 'descripcion': return dir * a.descripcion.localeCompare(b.descripcion);
+        case 'uso':         return dir * ((a.usado_contador || 0) - (b.usado_contador || 0));
+      }
+    });
+  });
+
+  ordenarModalRaizalesPor(col: 'numero' | 'tipo' | 'descripcion' | 'uso'): void {
+    this.ordenModalRaizales.update(actual =>
+      actual.col === col ? { col, dir: actual.dir === 1 ? -1 : 1 } : { col, dir: 1 }
+    );
+  }
 
   causasError = [
     { value: "1. Capacitación - Tiene la opción pero no sabe cómo hacerlo",     label: "1. Capacitación - Tiene la opción pero no sabe cómo hacerlo" },
@@ -334,6 +364,13 @@ ${MENSAJE_CIERRE}
   cerrarModalAzureDevops(): void { this.mostrarModalAzureDevops.set(false); }
 
   // ===== MODAL RAIZALES ======================================
-  abrirModalRaizales(): void { this.mostrarModalRaizales.set(true); }
+  abrirModalRaizales(): void {
+    this.filtroModalRaizales.set('');
+    this.ordenModalRaizales.set({ col: 'numero', dir: 1 });
+    this.mostrarModalRaizales.set(true);
+  }
   cerrarModalRaizales(): void { this.mostrarModalRaizales.set(false); }
+  filtrarModalRaizales(event: Event): void {
+    this.filtroModalRaizales.set((event.target as HTMLInputElement).value);
+  }
 }
