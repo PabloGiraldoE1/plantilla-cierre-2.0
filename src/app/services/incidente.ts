@@ -31,6 +31,9 @@ export class IncidenteService {
       "Reportes Dynatrace AVA",
       "Reportes Dynatrace SimonNet"
     ],
+    "PROCESOS/CAPACITACION": [
+      "Firma Electronica"
+    ],
     "SIMONNET": [
       "Capacitacion Aplicativo",
       "Solicitud no registra datos",
@@ -185,10 +188,37 @@ export class IncidenteService {
     "Subgrupos",
     "Radicacion",
     "Procesos AWS",
+    "Procesos/Capacitación"
   ];
 
   crearSecciones(): AppTicketSection[] {
     return [
+      {
+        key: 'PROCESOS_CAPACITACION',
+        nombre: 'Procesos/Capacitación',
+        icono: '📚',
+        aplicativoFijo: '',
+        aplicativos: [
+          'Cotizador Salud',
+          'Cotizador Educación',
+          'Cotizador PCP',
+          'Cotizador Pensión',
+          'Cotizador Autos',
+          'Cotizador Vida/Plan Vive',
+          'Cotizador Plan Complementario'
+        ],
+        procesos: ['Pendientes', 'Expedidas'],
+        agrupadores: this.agrupadoresPorCategoria['PROCESOS/CAPACITACION'],
+        isOpen: false,
+        selectedApp: '',
+        selectedProceso: '',
+        selectedAgrupador: '',
+        busquedaAgrupador: '',
+        sugerencias: [],
+        mostrarSugerencias: false,
+        externalTicket: '',
+        mostrarListaAgrupadores: false
+      },
       {
         key: 'AUS',
         nombre: 'AUS',
