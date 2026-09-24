@@ -1,31 +1,37 @@
 // Design tokens
-$indigo:     #4361ee;
-$indigo-dk:  #3451de;
-$cyan:       #06b6d4;
-$emerald:    #10b981;
-$navy:       #0d1a52;
-$rose:       #f43f5e;
-$border:     #e2e8f0;
-$bg-card:    #ffffff;
-$bg-subtle:  #f8f9ff;
-$text-main:  #0f172a;
-$text-soft:  #475569;
-$text-muted: #94a3b8;
-$shadow-sm:  0 1px 4px rgba(10,15,44,.07);
-$shadow-md:  0 4px 18px rgba(10,15,44,.10);
+$indigo: var(--color-indigo);
+$indigo-dk: var(--color-indigo-dark);
+$cyan: var(--color-cyan);
+$emerald: var(--color-emerald);
+$navy: var(--color-navy-deep);
+$rose: var(--color-rose);
+$border: var(--border);
+$bg-card: var(--bg-surface);
+$bg-subtle: var(--bg-subtle);
+$text-main: var(--text-primary);
+$text-soft: var(--text-secondary);
+$text-muted: var(--text-muted);
+$shadow-sm: var(--shadow-sm);
+$shadow-md: var(--shadow-md);
 $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 
 .formulario-container {
   max-width: 1480px;
   margin: 0 auto;
   padding: 24px 20px;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
   animation: fadeInUp 0.4s ease;
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 // ===== HEADER =============================================
@@ -34,7 +40,7 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   margin-bottom: 28px;
 
   h1 {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-heading);
     font-size: 2rem;
     font-weight: 800;
     letter-spacing: -0.8px;
@@ -44,7 +50,9 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     background-clip: text;
     margin: 0 0 6px 0;
 
-    @media (max-width: 768px) { font-size: 1.45rem; }
+    @media (max-width: 768px) {
+      font-size: 1.45rem;
+    }
   }
 
   p {
@@ -61,7 +69,9 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   gap: 22px;
   align-items: start;
 
-  @media (max-width: 1100px) { grid-template-columns: 1fr; }
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 // ===== FORMULARIO =========================================
@@ -73,7 +83,9 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1.5px solid $border;
   transition: $transition;
 
-  &:hover { box-shadow: $shadow-md; }
+  &:hover {
+    box-shadow: $shadow-md;
+  }
 }
 
 .form-group {
@@ -82,7 +94,7 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 
   label {
     display: block;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-body);
     font-weight: 700;
     font-size: 0.78rem;
     color: $text-soft;
@@ -97,7 +109,7 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 11px 14px;
     border: 1.5px solid $border;
     border-radius: 10px;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-body);
     font-size: 0.92rem;
     color: $text-main;
     background: $bg-subtle;
@@ -107,14 +119,18 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
       outline: none;
       border-color: $indigo;
       background: $bg-card;
-      box-shadow: 0 0 0 3px rgba(67,97,238,.1);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
     }
 
-    &:hover:not(:focus) { border-color: rgba(67,97,238,.3); }
+    &:hover:not(:focus) {
+      border-color: rgba(67, 97, 238, 0.3);
+    }
 
     &.invalid {
       border-color: $rose;
-      &:focus { box-shadow: 0 0 0 3px rgba(244,63,94,.1); }
+      &:focus {
+        box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.1);
+      }
     }
   }
 
@@ -136,24 +152,32 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 .radio-label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+
+  input[type='radio'] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--color-indigo);
+    flex-shrink: 0;
+  }
   cursor: pointer;
   padding: 10px 18px;
   border: 1.5px solid $border;
   border-radius: 10px;
   transition: $transition;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-weight: 500;
   font-size: 0.9rem;
   color: $text-soft;
 
   &:hover {
     border-color: $indigo;
-    background: rgba(67,97,238,.04);
-    color: $indigo;
+    background: rgba(67, 97, 238, 0.04);
+    color: var(--brand-text);
   }
 
-  input[type="radio"] {
+  input[type='radio'] {
     width: 16px !important;
     height: 16px !important;
     padding: 0 !important;
@@ -166,18 +190,20 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:has(input:checked) {
     border-color: $indigo;
-    background: rgba(67,97,238,.07);
-    color: $indigo;
+    background: rgba(67, 97, 238, 0.07);
+    color: var(--brand-text);
     font-weight: 700;
-    box-shadow: 0 2px 8px rgba(67,97,238,.15);
+    box-shadow: 0 2px 8px rgba(67, 97, 238, 0.15);
   }
 
-  span { line-height: 1; }
+  span {
+    line-height: 1;
+  }
 }
 
 .error-message {
   display: block;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   color: $rose;
   font-size: 0.78rem;
   font-weight: 600;
@@ -196,7 +222,7 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 12px 20px;
   border: none;
   border-radius: 10px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
@@ -205,25 +231,30 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 130px;
   letter-spacing: 0.2px;
 
-  &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: $shadow-md; }
-  &:active:not(:disabled) { transform: translateY(0); }
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
 
   &.btn-primary {
     background: linear-gradient(135deg, $indigo 0%, $indigo-dk 100%);
     color: white;
-    box-shadow: 0 2px 8px rgba(67,97,238,.3);
+    box-shadow: 0 2px 8px rgba(67, 97, 238, 0.3);
   }
 
   &.btn-success {
-    background: linear-gradient(135deg, $emerald 0%, #0da271 100%);
+    background: linear-gradient(135deg, $emerald 0%, var(--color-emerald-dark) 100%);
     color: white;
-    box-shadow: 0 2px 8px rgba(16,185,129,.3);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
   }
 
   &.btn-secondary {
-    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-    color: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    background: linear-gradient(135deg, var(--btn-neutral-from) 0%, var(--btn-neutral-to) 100%);
+    color: var(--on-btn-neutral);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -239,9 +270,14 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   min-height: 420px;
   transition: $transition;
 
-  &:hover { box-shadow: $shadow-md; }
+  &:hover {
+    box-shadow: $shadow-md;
+  }
 
-  @media (max-width: 1100px) { position: relative; top: 0; }
+  @media (max-width: 1100px) {
+    position: relative;
+    top: 0;
+  }
 }
 
 .texto-placeholder {
@@ -250,7 +286,7 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   align-items: center;
   justify-content: center;
   min-height: 380px;
-  color: $text-muted;
+  color: var(--text-secondary);
   text-align: center;
 
   .placeholder-icon {
@@ -261,15 +297,21 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     animation: pulse 2.8s ease-in-out infinite;
 
     @keyframes pulse {
-      0%, 100% { opacity: 0.3; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.05); }
+      0%,
+      100% {
+        opacity: 0.3;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.5;
+        transform: scale(1.05);
+      }
     }
   }
 
   p {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-body);
     font-size: 1rem;
-    opacity: 0.7;
     margin: 0;
   }
 }
@@ -282,8 +324,8 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     margin-bottom: 14px;
 
     h3 {
-      font-family: 'Poppins', sans-serif;
-      color: $navy;
+      font-family: var(--font-heading);
+      color: var(--brand-text);
       margin: 0;
       font-size: 1rem;
       font-weight: 700;
@@ -295,14 +337,17 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
       color: white;
       border: none;
       border-radius: 9px;
-      font-family: 'Inter', sans-serif;
+      font-family: var(--font-body);
       font-weight: 700;
       font-size: 0.84rem;
       cursor: pointer;
       transition: $transition;
-      box-shadow: 0 2px 8px rgba(67,97,238,.3);
+      box-shadow: 0 2px 8px rgba(67, 97, 238, 0.3);
 
-      &:hover { transform: translateY(-2px); box-shadow: 0 5px 14px rgba(67,97,238,.4); }
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 14px rgba(67, 97, 238, 0.4);
+      }
     }
   }
 
@@ -314,16 +359,21 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     word-wrap: break-word;
     overflow-wrap: break-word;
     word-break: break-word;
-    font-family: 'Courier New', monospace;
+    font-family: var(--font-mono);
     font-size: 0.88rem;
     line-height: 1.7;
     color: $text-main;
-    border: 1.5px solid rgba(67,97,238,.1);
+    border: 1.5px solid rgba(67, 97, 238, 0.1);
     max-height: 520px;
     overflow-y: auto;
 
-    &::-webkit-scrollbar       { width: 6px; }
-    &::-webkit-scrollbar-track { background: #e8edf8; border-radius: 4px; }
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      background: var(--bg-muted-2);
+      border-radius: 4px;
+    }
     &::-webkit-scrollbar-thumb {
       background: linear-gradient(180deg, $indigo 0%, $cyan 100%);
       border-radius: 4px;
@@ -337,35 +387,72 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, $navy 0%, #1e3a8a 100%);
+  background: linear-gradient(135deg, $navy 0%, var(--color-blue-900) 100%);
   color: white;
   padding: 13px 24px;
   border-radius: 12px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.88rem;
   font-weight: 500;
   box-shadow: $shadow-md;
   z-index: 9999;
   animation: slideUpToast 0.3s ease;
-  border: 1px solid rgba(255,255,255,.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 
   @keyframes slideUpToast {
-    from { opacity: 0; transform: translateX(-50%) translateY(18px); }
-    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
   }
 }
 
 // ===== RESPONSIVE =========================================
 @media (max-width: 768px) {
-  .formulario-container { padding: 16px 12px; }
-  .formulario, .texto-generado-container { padding: 20px 16px; }
+  .formulario-container {
+    padding: 16px 12px;
+  }
+  .formulario,
+  .texto-generado-container {
+    padding: 20px 16px;
+  }
 
-  .button-group { flex-direction: column; .btn { min-width: unset; } }
+  .button-group {
+    flex-direction: column;
+    .btn {
+      min-width: unset;
+    }
+  }
 
   .texto-generado .texto-header {
     flex-direction: column;
     gap: 10px;
     align-items: flex-start;
-    .btn-copy { width: 100%; text-align: center; }
+    .btn-copy {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+
+// ===== GRUPOS DE OPCIONES =================================
+.radio-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+
+  legend {
+    display: block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-strong);
+    margin-bottom: 8px;
+    padding: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
   }
 }

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Icon } from '../icon/icon';
 
 @Component({
   selector: 'app-plantilla-tecnica',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule, Icon],
   templateUrl: './plantilla-tecnica.html',
   styleUrl: './plantilla-tecnica.scss',
 })
@@ -14,9 +15,7 @@ export class PlantillaTecnicaComponent implements OnInit {
   toastMessage: string = '';
   mostrarToast: boolean = false;
 
-  constructor(
-    private fb: FormBuilder
-  ) {}
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.inicializarFormulario();
@@ -33,7 +32,7 @@ export class PlantillaTecnicaComponent implements OnInit {
       solucionPuntual: ['', Validators.required],
       afectaCanalAsesor: ['SI', Validators.required],
       requiereBarrido: ['NO', Validators.required],
-      descripcionError: ['', Validators.required]
+      descripcionError: ['', Validators.required],
     });
   }
 
@@ -65,20 +64,20 @@ export class PlantillaTecnicaComponent implements OnInit {
       return;
     }
     navigator.clipboard.writeText(this.textoGenerado).then(() => {
-      this.showToast('📋 Texto copiado al portapapeles');
+      this.showToast('Texto copiado al portapapeles');
     });
   }
 
   limpiarFormulario(): void {
     this.formulario.reset({
       afectaCanalAsesor: 'SI',
-      requiereBarrido: 'NO'
+      requiereBarrido: 'NO',
     });
     this.textoGenerado = '';
   }
 
   private marcarCamposComoTocados(): void {
-    Object.keys(this.formulario.controls).forEach(key => {
+    Object.keys(this.formulario.controls).forEach((key) => {
       this.formulario.get(key)?.markAsTouched();
     });
   }

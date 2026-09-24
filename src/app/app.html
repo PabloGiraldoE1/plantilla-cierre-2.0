@@ -1,32 +1,75 @@
+<a class="skip-link" href="#contenido-principal">Saltar al contenido principal</a>
+
 <div class="app-container">
   <!-- Navegación -->
-  <nav class="navbar">
-    <div class="nav-brand">
-      <h1>🎯 {{ title }}</h1>
-    </div>
-    <div class="nav-links">
-      <a routerLink="/formulario" routerLinkActive="active" class="nav-link">
-        📝 Plantilla de Cierre
-      </a>
-      <a routerLink="/agrupadores" routerLinkActive="active" class="nav-link">
-        🎯 Ver Agrupadores
-      </a>
-      <a routerLink="/plantilla-tecnica" routerLinkActive="active" class="nav-link">
-        🔧 Raizales
-      </a>
-      <a routerLink="/historial" routerLinkActive="active" class="nav-link">
-        📊 Historial
-      </a>
+  <nav class="navbar" aria-label="Navegación principal">
+    <a class="nav-brand" routerLink="/formulario" (click)="cerrarMenu()">
+      <span class="brand-mark" aria-hidden="true">
+        <app-icon name="target" [size]="20" [strokeWidth]="2" />
+      </span>
+      <span class="brand-text">
+        <span class="brand-title">{{ title }}</span>
+        <span class="brand-sub">Mesa de servicio</span>
+      </span>
+    </a>
+
+    <button
+      type="button"
+      class="nav-toggle"
+      [class.nav-toggle-open]="menuAbierto()"
+      [attr.aria-expanded]="menuAbierto()"
+      aria-controls="nav-menu"
+      (click)="alternarMenu()"
+    >
+      <app-icon [name]="menuAbierto() ? 'x' : 'menu'" [size]="20" />
+      <span class="sr-only">{{ menuAbierto() ? 'Cerrar menú' : 'Abrir menú' }}</span>
+    </button>
+
+    <div id="nav-menu" class="nav-menu" [class.nav-menu-open]="menuAbierto()">
+      <ul class="nav-links">
+        @for (enlace of enlaces; track enlace.ruta) {
+          <li>
+            <a
+              [routerLink]="enlace.ruta"
+              routerLinkActive="active"
+              #rla="routerLinkActive"
+              [attr.aria-current]="rla.isActive ? 'page' : null"
+              class="nav-link"
+              (click)="cerrarMenu()"
+            >
+              <app-icon [name]="enlace.icono" [size]="17" />
+              <span>{{ enlace.texto }}</span>
+            </a>
+          </li>
+        }
+      </ul>
+
+      <button
+        type="button"
+        class="theme-toggle"
+        (click)="alternarTema()"
+        [attr.aria-pressed]="temaEfectivo() === 'dark'"
+      >
+        <app-icon [name]="temaEfectivo() === 'dark' ? 'sun' : 'moon'" [size]="17" />
+        <span class="theme-toggle-text">
+          {{ temaEfectivo() === 'dark' ? 'Tema claro' : 'Tema oscuro' }}
+        </span>
+      </button>
     </div>
   </nav>
 
   <!-- Contenido Principal -->
-  <main class="main-content">
-    <router-outlet></router-outlet>
+  <main id="contenido-principal" class="main-content" tabindex="-1">
+    <router-outlet />
   </main>
 
   <!-- Footer -->
   <footer class="footer">
-    <p>⚡ Plantilla de Gestión de Incidentes v2.0 &nbsp;·&nbsp; Angular {{ getCurrentYear() }}</p>
+    <p>
+      <app-icon name="bolt" [size]="14" />
+      <span>Plantilla de Gestión de Incidentes v2.1</span>
+      <span class="footer-dot" aria-hidden="true">·</span>
+      <span>Angular {{ anioActual }}</span>
+    </p>
   </footer>
 </div>

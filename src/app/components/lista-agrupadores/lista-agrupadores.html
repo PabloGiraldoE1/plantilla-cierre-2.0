@@ -1,148 +1,221 @@
 <div class="agrupadores-container">
-
   <div class="page-header">
-    <h1>🎯 GENERADOR DE EXTERNAL TICKETS</h1>
-    <p class="page-subtitle">Selecciona la aplicación, proceso y agrupador para generar el ticket externo</p>
+    <h1><app-icon name="target" /> GENERADOR DE EXTERNAL TICKETS</h1>
+    <p class="page-subtitle">
+      Selecciona la aplicación, proceso y agrupador para generar el ticket externo
+    </p>
   </div>
 
   <!-- Controles globales -->
   <div class="global-controls">
     <button type="button" class="btn-ctrl" (click)="expandirTodas()">
-      ➕ Expandir Todas
+      <app-icon name="plus" /> Expandir Todas
     </button>
     <button type="button" class="btn-ctrl btn-ctrl-secondary" (click)="colapsarTodas()">
-      ➖ Colapsar Todas
+      <app-icon name="minus" /> Colapsar Todas
     </button>
   </div>
 
   <!-- Secciones por Aplicación -->
   <div class="secciones-container">
-    <div class="seccion-app" *ngFor="let seccion of secciones">
-
-      <!-- Header Colapsable -->
-      <div class="seccion-header" (click)="toggleSeccion(seccion)"
-        [class.seccion-header-open]="seccion.isOpen">
-        <div class="seccion-header-left">
-          <span class="seccion-icono">{{ seccion.icono }}</span>
-          <h2 class="seccion-nombre">{{ seccion.nombre }}</h2>
-          <span class="seccion-badge">{{ seccion.agrupadores.length }} agrupadores</span>
-        </div>
-        <div class="seccion-header-right">
-          <span class="seccion-ticket-preview" *ngIf="seccion.externalTicket && !seccion.isOpen">
-            {{ seccion.externalTicket }}
-          </span>
-          <span class="seccion-toggle-icon">{{ seccion.isOpen ? '▲' : '▼' }}</span>
-        </div>
-      </div>
-
-      <!-- Cuerpo de la sección -->
-      <div class="seccion-body" *ngIf="seccion.isOpen">
-
-        <!-- Generador de Ticket -->
-        <div class="ticket-generator-card">
-          <h3 class="generator-title">🔗 Generador de External Ticket</h3>
-
-          <div class="generator-form">
-
-            <!-- Aplicativo (fijo o dropdown) -->
-            <div class="gen-field">
-              <label>Aplicación</label>
-              <div class="app-fija" *ngIf="seccion.aplicativoFijo">
-                <span class="app-fija-badge">🏷️ {{ seccion.aplicativoFijo }}</span>
-              </div>
-              <select *ngIf="!seccion.aplicativoFijo"
-                [(ngModel)]="seccion.selectedApp"
-                (change)="calcularTicket(seccion)"
-                class="gen-select">
-                <option value="">-- Seleccione aplicativo --</option>
-                <option *ngFor="let app of seccion.aplicativos" [value]="app">{{ app }}</option>
-              </select>
-            </div>
-
-            <!-- Proceso -->
-            <div class="gen-field">
-              <label>Proceso</label>
-              <select [(ngModel)]="seccion.selectedProceso"
-                (change)="calcularTicket(seccion)"
-                class="gen-select">
-                <option value="">-- Seleccione proceso --</option>
-                <option *ngFor="let p of seccion.procesos" [value]="p">{{ p }}</option>
-              </select>
-            </div>
-
-            <!-- Agrupador con autocomplete -->
-            <div class="gen-field gen-field-agrupador">
-              <label>Agrupador del Error</label>
-              <div class="agrupador-autocomplete">
-                <input
-                  type="text"
-                  [(ngModel)]="seccion.busquedaAgrupador"
-                  (input)="filtrarSugerencias(seccion)"
-                  (blur)="ocultarSugerencias(seccion)"
-                  placeholder="Escribe para buscar..."
-                  class="gen-input"
-                  [class.gen-input-ok]="seccion.selectedAgrupador"
-                  autocomplete="off">
-                <span class="check-icon" *ngIf="seccion.selectedAgrupador">✅</span>
-                <button *ngIf="seccion.busquedaAgrupador" type="button"
-                  class="clear-btn" (click)="limpiarAgrupador(seccion)">✕</button>
-                <ul class="sugerencias-lista" *ngIf="seccion.mostrarSugerencias">
-                  <li *ngFor="let sug of seccion.sugerencias"
-                    (mousedown)="seleccionarSugerencia(seccion, sug)"
-                    class="sugerencia-item">
-                    {{ sug }}
-                  </li>
-                </ul>
-              </div>
-              <p class="agrupador-hint" *ngIf="!seccion.selectedAgrupador">
-                💡 También puedes hacer clic en un agrupador de la lista de abajo
-              </p>
-            </div>
+    @for (seccion of secciones; track seccion) {
+      <div class="seccion-app">
+        <!-- Header Colapsable -->
+        <button
+          type="button"
+          class="seccion-header"
+          (click)="toggleSeccion(seccion)"
+          [class.seccion-header-open]="seccion.isOpen"
+          [attr.aria-expanded]="seccion.isOpen"
+          [attr.aria-controls]="'seccion-' + seccion.key"
+        >
+          <div class="seccion-header-left">
+            <span class="seccion-icono"
+              ><app-icon [name]="seccion.icono" [size]="20" [strokeWidth]="2"
+            /></span>
+            <h2 class="seccion-nombre">{{ seccion.nombre }}</h2>
+            <span class="seccion-badge">{{ seccion.agrupadores.length }} agrupadores</span>
           </div>
-
-          <!-- Resultado del ticket -->
-          <div class="ticket-result" *ngIf="seccion.externalTicket">
-            <div class="ticket-result-label">External Ticket generado:</div>
-            <div class="ticket-output-row">
-              <div class="ticket-value">{{ seccion.externalTicket }}</div>
-              <button type="button" class="btn-copiar" (click)="copiarTicket(seccion)">
-                📋 Copiar
+          <div class="seccion-header-right">
+            @if (seccion.externalTicket && !seccion.isOpen) {
+              <span class="seccion-ticket-preview">
+                {{ seccion.externalTicket }}
+              </span>
+            }
+            <app-icon
+              class="seccion-toggle-icon"
+              [name]="seccion.isOpen ? 'chevron-up' : 'chevron-down'"
+              [size]="18"
+            />
+          </div>
+        </button>
+        <!-- Cuerpo de la sección -->
+        @if (seccion.isOpen) {
+          <div class="seccion-body" [id]="'seccion-' + seccion.key">
+            <!-- Generador de Ticket -->
+            <div class="ticket-generator-card">
+              <h3 class="generator-title"><app-icon name="link" /> Generador de External Ticket</h3>
+              <div class="generator-form">
+                <!-- Aplicativo (fijo o dropdown) -->
+                <div class="gen-field">
+                  <label [for]="'app-' + seccion.key">Aplicación</label>
+                  @if (seccion.aplicativoFijo) {
+                    <div class="app-fija">
+                      <span class="app-fija-badge"
+                        ><app-icon name="tag" /> {{ seccion.aplicativoFijo }}</span
+                      >
+                    </div>
+                  }
+                  @if (!seccion.aplicativoFijo) {
+                    <select
+                      [id]="'app-' + seccion.key"
+                      [(ngModel)]="seccion.selectedApp"
+                      (change)="calcularTicket(seccion)"
+                      class="gen-select"
+                    >
+                      <option value="">-- Seleccione aplicativo --</option>
+                      @for (app of seccion.aplicativos; track app) {
+                        <option [value]="app">{{ app }}</option>
+                      }
+                    </select>
+                  }
+                </div>
+                <!-- Proceso -->
+                <div class="gen-field">
+                  <label [for]="'proceso-' + seccion.key">Proceso</label>
+                  <select
+                    [id]="'proceso-' + seccion.key"
+                    [(ngModel)]="seccion.selectedProceso"
+                    (change)="calcularTicket(seccion)"
+                    class="gen-select"
+                  >
+                    <option value="">-- Seleccione proceso --</option>
+                    @for (p of seccion.procesos; track p) {
+                      <option [value]="p">{{ p }}</option>
+                    }
+                  </select>
+                </div>
+                <!-- Agrupador con autocomplete -->
+                <div class="gen-field gen-field-agrupador">
+                  <label [for]="'agrupador-' + seccion.key">Agrupador del Error</label>
+                  <div class="agrupador-autocomplete">
+                    <input
+                      type="text"
+                      [id]="'agrupador-' + seccion.key"
+                      role="combobox"
+                      aria-autocomplete="list"
+                      [attr.aria-expanded]="seccion.mostrarSugerencias"
+                      [attr.aria-controls]="'sugerencias-' + seccion.key"
+                      [(ngModel)]="seccion.busquedaAgrupador"
+                      (input)="filtrarSugerencias(seccion)"
+                      (blur)="ocultarSugerencias(seccion)"
+                      placeholder="Escribe para buscar..."
+                      class="gen-input"
+                      [class.gen-input-ok]="seccion.selectedAgrupador"
+                      autocomplete="off"
+                    />
+                    @if (seccion.selectedAgrupador) {
+                      <span class="check-icon"><app-icon name="check-circle" /></span>
+                    }
+                    @if (seccion.busquedaAgrupador) {
+                      <button
+                        type="button"
+                        class="clear-btn"
+                        aria-label="Limpiar agrupador"
+                        (click)="limpiarAgrupador(seccion)"
+                      >
+                        <app-icon name="x" />
+                      </button>
+                    }
+                    @if (seccion.mostrarSugerencias) {
+                      <ul
+                        class="sugerencias-lista"
+                        role="listbox"
+                        [id]="'sugerencias-' + seccion.key"
+                      >
+                        @for (sug of seccion.sugerencias; track sug) {
+                          <li
+                            role="option"
+                            [attr.aria-selected]="sug === seccion.selectedAgrupador"
+                          >
+                            <button
+                              type="button"
+                              class="sugerencia-item"
+                              (mousedown)="seleccionarSugerencia(seccion, sug)"
+                              (click)="seleccionarSugerencia(seccion, sug)"
+                            >
+                              {{ sug }}
+                            </button>
+                          </li>
+                        }
+                      </ul>
+                    }
+                  </div>
+                  @if (!seccion.selectedAgrupador) {
+                    <p class="agrupador-hint">
+                      <app-icon name="bulb" /> También puedes hacer clic en un agrupador de la lista
+                      de abajo
+                    </p>
+                  }
+                </div>
+              </div>
+              <!-- Resultado del ticket -->
+              @if (seccion.externalTicket) {
+                <div class="ticket-result">
+                  <div class="ticket-result-label">External Ticket generado:</div>
+                  <div class="ticket-output-row">
+                    <div class="ticket-value">{{ seccion.externalTicket }}</div>
+                    <button type="button" class="btn-copiar" (click)="copiarTicket(seccion)">
+                      <app-icon name="clipboard" /> Copiar
+                    </button>
+                  </div>
+                </div>
+              }
+              @if (!seccion.externalTicket) {
+                <div class="ticket-hint">
+                  <p>
+                    <app-icon name="bulb" /> Completa los campos para generar el External Ticket
+                  </p>
+                </div>
+              }
+              <!-- Botón para ver/ocultar lista de agrupadores -->
+              <button type="button" class="btn-ver-lista" (click)="toggleListaAgrupadores(seccion)">
+                <app-icon [name]="seccion.mostrarListaAgrupadores ? 'eye-off' : 'eye'" />
+                {{ seccion.mostrarListaAgrupadores ? 'Ocultar' : 'Ver' }} agrupadores de
+                {{ seccion.nombre }}
               </button>
             </div>
+            <!-- Lista de Agrupadores -->
+            @if (seccion.mostrarListaAgrupadores) {
+              <div class="lista-agrupadores-section">
+                <h4 class="lista-titulo">
+                  <app-icon name="clipboard" /> Agrupadores disponibles — {{ seccion.nombre }}
+                </h4>
+                <div class="agrupadores-grid">
+                  @for (ag of seccion.agrupadores; track ag) {
+                    <button
+                      type="button"
+                      class="agrupador-chip"
+                      [class.agrupador-chip-selected]="ag === seccion.selectedAgrupador"
+                      [attr.aria-pressed]="ag === seccion.selectedAgrupador"
+                      (click)="seleccionarAgrupadorDeLista(seccion, ag)"
+                    >
+                      <span class="chip-text">{{ ag }}</span>
+                      <span class="chip-action"><app-icon name="check" /></span>
+                    </button>
+                  }
+                </div>
+              </div>
+            }
           </div>
-
-          <div class="ticket-hint" *ngIf="!seccion.externalTicket">
-            <p>💡 Completa los campos para generar el External Ticket</p>
-          </div>
-
-          <!-- Botón para ver/ocultar lista de agrupadores -->
-          <button type="button" class="btn-ver-lista"
-            (click)="toggleListaAgrupadores(seccion)">
-            {{ seccion.mostrarListaAgrupadores ? '🔽 Ocultar' : '👁 Ver' }} agrupadores de {{ seccion.nombre }}
-          </button>
-        </div>
-
-        <!-- Lista de Agrupadores -->
-        <div class="lista-agrupadores-section" *ngIf="seccion.mostrarListaAgrupadores">
-          <h4 class="lista-titulo">📋 Agrupadores disponibles — {{ seccion.nombre }}</h4>
-          <div class="agrupadores-grid">
-            <div class="agrupador-chip"
-              *ngFor="let ag of seccion.agrupadores"
-              [class.agrupador-chip-selected]="ag === seccion.selectedAgrupador"
-              (click)="seleccionarAgrupadorDeLista(seccion, ag)"
-              title="Clic para seleccionar este agrupador">
-              <span class="chip-text">{{ ag }}</span>
-              <span class="chip-action">✓</span>
-            </div>
-          </div>
-        </div>
-
+        }
       </div>
-    </div>
+    }
   </div>
 </div>
 
 <!-- Toast de Notificaciones -->
-<div class="toast" [class.show]="mostrarToast">
-  {{ toastMessage }}
+<div class="toast" role="status" aria-live="polite" [class.show]="mostrarToast">
+  <app-icon name="check-circle" [size]="18" />
+  <span>{{ toastMessage }}</span>
 </div>

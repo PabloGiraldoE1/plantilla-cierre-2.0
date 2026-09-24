@@ -1,29 +1,37 @@
 <div class="formulario-container">
   <div class="page-header">
-    <h1>📋 PLANTILLA CIERRE DE INCIDENTES</h1>
-    <p class="page-subtitle">Completa los campos para generar el texto de cierre y registrar el incidente</p>
+    <h1><app-icon name="clipboard" /> PLANTILLA CIERRE DE INCIDENTES</h1>
+    <p class="page-subtitle">
+      Completa los campos para generar el texto de cierre y registrar el incidente
+    </p>
   </div>
 
   <div class="main-content">
     <!-- FORMULARIO -->
     <div class="form-section">
       <form [formGroup]="formulario" autocomplete="off">
-
         <!-- Clasificación del Incidente -->
         <fieldset class="fieldset">
-          <legend>🗂️ Clasificación del Incidente</legend>
+          <legend><app-icon name="folder" /> Clasificación del Incidente</legend>
 
           <!-- Causa del Error -->
           <div class="form-group">
             <label for="causaError">Causa del Error <span class="required">*</span></label>
-            <select id="causaError" formControlName="causaError"
-              [class.invalid]="isFieldInvalid('causaError')">
+            <select
+              id="causaError"
+              formControlName="causaError"
+              [class.invalid]="isFieldInvalid('causaError')"
+            >
               <option value="">-- Seleccione --</option>
-              <option *ngFor="let causa of causasError" [value]="causa.value">
-                {{ causa.label }}
-              </option>
+              @for (causa of causasError; track causa) {
+                <option [value]="causa.value">
+                  {{ causa.label }}
+                </option>
+              }
             </select>
-            <span class="error" *ngIf="isFieldInvalid('causaError')">Campo obligatorio</span>
+            @if (isFieldInvalid('causaError')) {
+              <span class="error">Campo obligatorio</span>
+            }
           </div>
 
           <!-- HU Raizal / Mejora -->
@@ -42,85 +50,145 @@
                 placeholder="Buscar raizal o escribe OTRO..."
                 [class.invalid]="isFieldInvalid('huRaizal')"
                 [class.raizal-seleccionada]="raizalSeleccionada()"
-                autocomplete="off">
-              <button type="button" class="btn-ver-raizales"
+                role="combobox"
+                aria-autocomplete="list"
+                aria-controls="sugerencias-raizal"
+                [attr.aria-expanded]="mostrarSugerenciasRaizal()"
+                autocomplete="off"
+              />
+              <button
+                type="button"
+                class="btn-ver-raizales"
                 (click)="abrirModalRaizales()"
-                title="Ver listado completo">
-                📋 Ver
+                title="Ver listado completo"
+              >
+                <app-icon name="clipboard" /> Ver
               </button>
             </div>
 
             <!-- Sugerencias -->
-            <ul class="sugerencias-raizal" *ngIf="mostrarSugerenciasRaizal()">
-              <li *ngFor="let raizal of sugerenciasRaizal()"
-                (mousedown)="seleccionarRaizal(raizal)"
-                class="sugerencia-raizal-item">
-                <strong>{{ raizal.numero_historia }}</strong> — {{ raizal.descripcion }}
-              </li>
-              <li class="sugerencia-raizal-otro" (mousedown)="seleccionarOtro()">
-                ➕ <strong>OTRO / No existe raizal</strong>
-              </li>
-            </ul>
+            @if (mostrarSugerenciasRaizal()) {
+              <ul class="sugerencias-raizal" id="sugerencias-raizal" role="listbox">
+                @for (raizal of sugerenciasRaizal(); track raizal) {
+                  <li
+                    role="option"
+                    [attr.aria-selected]="raizal.numero_historia === raizalSeleccionada()"
+                  >
+                    <button
+                      type="button"
+                      class="sugerencia-raizal-item"
+                      (mousedown)="seleccionarRaizal(raizal)"
+                      (click)="seleccionarRaizal(raizal)"
+                    >
+                      <strong>{{ raizal.numero_historia }}</strong> — {{ raizal.descripcion }}
+                    </button>
+                  </li>
+                }
+                <li role="option" aria-selected="false">
+                  <button
+                    type="button"
+                    class="sugerencia-raizal-otro"
+                    (mousedown)="seleccionarOtro()"
+                    (click)="seleccionarOtro()"
+                  >
+                    <app-icon name="plus" /> <strong>OTRO / No existe raizal</strong>
+                  </button>
+                </li>
+              </ul>
+            }
 
             <!-- Campo OTRO: prefijo fijo + sufijo editable -->
-            <div class="campo-otro" *ngIf="mostrarCampoOtro()">
-              <label>Motivo / Causa del error en la aplicación <span class="required">*</span></label>
-
-              <!-- MODO CAPACITACIÓN: valor completo readonly -->
-              <div class="valor-readonly" *ngIf="esCapacitacion()">
-                <span class="valor-check">✅</span>
-                <span>{{ prefijoCampoOtro() }}</span>
+            @if (mostrarCampoOtro()) {
+              <div class="campo-otro">
+                <label
+                  >Motivo / Causa del error en la aplicación <span class="required">*</span></label
+                >
+                <!-- MODO CAPACITACIÓN: valor completo readonly -->
+                @if (esCapacitacion()) {
+                  <div class="valor-readonly">
+                    <span class="valor-check"><app-icon name="check-circle" /></span>
+                    <span>{{ prefijoCampoOtro() }}</span>
+                  </div>
+                }
+                <!-- MODO FALLA: prefijo fijo + input libre -->
+                @if (!esCapacitacion()) {
+                  <div class="prefijo-wrapper">
+                    <span class="prefijo-badge" title="Este texto no puede modificarse">
+                      {{ prefijoCampoOtro() }}
+                    </span>
+                    <input
+                      type="text"
+                      class="sufijo-input"
+                      [(ngModel)]="sufijoCampoOtro"
+                      [ngModelOptions]="{ standalone: true }"
+                      (ngModelChange)="onSufijoChange()"
+                      placeholder="Ej: Firma, Expedición..."
+                      maxlength="60"
+                      autocomplete="off"
+                    />
+                  </div>
+                }
+                @if (!esCapacitacion()) {
+                  <div class="char-counter">
+                    {{ sufijoCampoOtro.length }}/60 caracteres adicionales
+                  </div>
+                }
               </div>
+            }
 
-              <!-- MODO FALLA: prefijo fijo + input libre -->
-              <div class="prefijo-wrapper" *ngIf="!esCapacitacion()">
-                <span class="prefijo-badge" title="Este texto no puede modificarse">
-                  {{ prefijoCampoOtro() }}
-                </span>
-                <input
-                  type="text"
-                  class="sufijo-input"
-                  [(ngModel)]="sufijoCampoOtro"
-                  [ngModelOptions]="{standalone: true}"
-                  (ngModelChange)="onSufijoChange()"
-                  placeholder="Ej: Firma, Expedición..."
-                  maxlength="60"
-                  autocomplete="off">
-              </div>
-
-              <div class="char-counter" *ngIf="!esCapacitacion()">
-                {{ sufijoCampoOtro.length }}/60 caracteres adicionales
-              </div>
-            </div>
-
-            <span class="error" *ngIf="isFieldInvalid('huRaizal') && !mostrarCampoOtro()">Campo obligatorio</span>
+            @if (isFieldInvalid('huRaizal') && !mostrarCampoOtro()) {
+              <span class="error">Campo obligatorio</span>
+            }
           </div>
 
           <!-- Causa Raíz -->
           <div class="form-group">
-            <label for="causaRaiz">Causa Raíz (Identificada/Sin Identificar) <span class="required">*</span></label>
-            <select id="causaRaiz" formControlName="causaRaiz"
-              [class.invalid]="isFieldInvalid('causaRaiz')">
+            <label for="causaRaiz"
+              >Causa Raíz (Identificada/Sin Identificar) <span class="required">*</span></label
+            >
+            <select
+              id="causaRaiz"
+              formControlName="causaRaiz"
+              [class.invalid]="isFieldInvalid('causaRaiz')"
+            >
               <option value="">-- Seleccione --</option>
-              <option *ngFor="let causa of causasRaiz" [value]="causa">{{ causa }}</option>
+              @for (causa of causasRaiz; track causa) {
+                <option [value]="causa">{{ causa }}</option>
+              }
             </select>
-            <span class="error" *ngIf="isFieldInvalid('causaRaiz')">Campo obligatorio</span>
+            @if (isFieldInvalid('causaRaiz')) {
+              <span class="error">Campo obligatorio</span>
+            }
           </div>
         </fieldset>
 
         <!-- Solución -->
         <fieldset class="fieldset">
-          <legend>✅ Solución</legend>
+          <legend><app-icon name="check-circle" /> Solución</legend>
 
           <div class="form-group">
             <label for="descripcionSolucion">
               Descripción de la Solución <span class="required">*</span>
             </label>
-            <textarea id="descripcionSolucion" formControlName="descripcionSolucion"
-              rows="5" [class.invalid]="isFieldInvalid('descripcionSolucion')"
-              placeholder="Describe la solución aplicada..."></textarea>
-            <span class="error" *ngIf="isFieldInvalid('descripcionSolucion')">Campo obligatorio</span>
-            <span class="field-hint">💡 El mensaje de cierre se agrega automáticamente.</span>
+            <textarea
+              id="descripcionSolucion"
+              formControlName="descripcionSolucion"
+              rows="5"
+              [class.invalid]="isFieldInvalid('descripcionSolucion')"
+              placeholder="Describe la solución aplicada..."
+            ></textarea>
+            @if (isFieldInvalid('descripcionSolucion')) {
+              <span class="error">Campo obligatorio</span>
+            }
+
+            <span class="field-hint">
+              <app-icon name="bulb" />
+              @if (iaDisponible) {
+                Al generar el texto, la redacción se mejora automáticamente con IA.
+              } @else {
+                El mensaje de cierre se agrega automáticamente.
+              }
+            </span>
           </div>
 
           <div class="form-group">
@@ -134,130 +202,315 @@
 
         <!-- Botones -->
         <div class="button-group">
-          <button type="button" class="btn btn-primary" (click)="generarTexto()">📄 Generar Texto</button>
-          <button type="button" class="btn btn-success" (click)="guardarIncidente()">💾 Guardar</button>
-          <button type="button" class="btn btn-secondary" (click)="limpiarFormulario()">🧹 Limpiar</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="generarTexto()"
+            [disabled]="generandoTexto()"
+            [attr.aria-busy]="generandoTexto()"
+          >
+            @if (generandoTexto()) {
+              <span class="ia-girando"><app-icon name="refresh" [size]="16" /></span>
+              Mejorando con IA…
+            } @else {
+              <app-icon name="file-text" /> Generar Texto
+            }
+          </button>
+          <button type="button" class="btn btn-success" (click)="guardarIncidente()">
+            <app-icon name="save" /> Guardar
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="limpiarFormulario()">
+            <app-icon name="eraser" /> Limpiar
+          </button>
         </div>
       </form>
     </div>
 
     <!-- RESULTADO -->
     <div class="result-section">
-      <h2>📄 TEXTO GENERADO</h2>
+      <h2><app-icon name="file-text" /> TEXTO GENERADO</h2>
       <div class="resultado" [class.empty]="!textoGenerado">
         {{ textoGenerado || 'El texto generado aparecerá aquí...' }}
       </div>
-      <button type="button" class="btn btn-primary full-width"
-        (click)="copiarAlPortapapeles()" [disabled]="!textoGenerado">
-        📋 Copiar al Portapapeles
+      <button
+        type="button"
+        class="btn btn-primary full-width"
+        (click)="copiarAlPortapapeles()"
+        [disabled]="!textoGenerado"
+      >
+        <app-icon name="clipboard" /> Copiar al Portapapeles
       </button>
     </div>
   </div>
 </div>
 
 <!-- Toast -->
-<div class="toast" [class.show]="mostrarToast">{{ toastMessage }}</div>
+<div
+  class="toast"
+  role="status"
+  aria-live="polite"
+  [class.show]="mostrarToast"
+  [class.toast-aviso]="tipoToast === 'aviso'"
+>
+  <app-icon [name]="tipoToast === 'exito' ? 'check-circle' : 'alert'" [size]="18" />
+  <span>{{ toastMessage }}</span>
+</div>
 
 <!-- Modal: ¿Es capacitación? -->
-<div class="modal-overlay" *ngIf="mostrarModalCapacitacion()">
-  <div class="modal-content modal-capacitacion">
-    <div class="modal-header modal-header-warning">
-      <span class="modal-icon">❓</span>
-      <h2>¿El incidente es de Capacitación?</h2>
-    </div>
-    <div class="modal-body">
-      <p class="modal-question">
-        ¿Este incidente corresponde a un caso de <strong>capacitación de usuario</strong>?
-      </p>
-      <p class="modal-sub">
-        Tu respuesta define el mensaje predeterminado en el campo "Motivo / Causa del error".
-      </p>
-      <div class="modal-actions">
-        <button type="button" class="btn-modal btn-modal-si" (click)="confirmarCapacitacion(true)">
-          ✅ Sí, es Capacitación
-        </button>
-        <button type="button" class="btn-modal btn-modal-no" (click)="confirmarCapacitacion(false)">
-          ❌ No, es Falla Técnica
-        </button>
+@if (mostrarModalCapacitacion()) {
+  <div class="modal-overlay">
+    <div
+      class="modal-content modal-capacitacion"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-modal-capacitacion"
+    >
+      <div class="modal-header modal-header-warning">
+        <span class="modal-icon"><app-icon name="help" /></span>
+        <h2 id="titulo-modal-capacitacion">¿El incidente es de Capacitación?</h2>
+      </div>
+      <div class="modal-body">
+        <p class="modal-question">
+          ¿Este incidente corresponde a un caso de <strong>capacitación de usuario</strong>?
+        </p>
+        <p class="modal-sub">
+          Tu respuesta define el mensaje predeterminado en el campo "Motivo / Causa del error".
+        </p>
+        <div class="modal-actions">
+          <button
+            type="button"
+            class="btn-modal btn-modal-si"
+            (click)="confirmarCapacitacion(true)"
+          >
+            <app-icon name="check-circle" /> Sí, es Capacitación
+          </button>
+          <button
+            type="button"
+            class="btn-modal btn-modal-no"
+            (click)="confirmarCapacitacion(false)"
+          >
+            <app-icon name="x-circle" /> No, es Falla Técnica
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+}
 
 <!-- Modal: Azure DevOps -->
-<div class="modal-overlay" *ngIf="mostrarModalAzureDevops()" (click)="cerrarModalAzureDevops()">
-  <div class="modal-content modal-azure" (click)="$event.stopPropagation()">
-    <div class="modal-header modal-header-info">
-      <span class="modal-icon">ℹ️</span>
-      <h2>Recordatorio Azure DevOps</h2>
-      <button type="button" class="modal-close" (click)="cerrarModalAzureDevops()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="azure-reminder">
-        <div class="azure-hu-badge">HU — {{ raizalParaAzure() }}</div>
-        <p class="azure-message">
-          Recuerda asociar el incidente a la HU <strong>{{ raizalParaAzure() }}</strong>
-          en <strong>Azure DevOps</strong>.
-        </p>
-        <p class="azure-sub">
-          Si no tienes acceso, apóyate con un compañero o solicita acceso a tu líder.
-        </p>
+@if (mostrarModalAzureDevops()) {
+  <div class="modal-overlay" (click)="cerrarModalAzureDevops()">
+    <div
+      class="modal-content modal-azure"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-modal-azure"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-header modal-header-info">
+        <span class="modal-icon"><app-icon name="info" /></span>
+        <h2 id="titulo-modal-azure">Recordatorio Azure DevOps</h2>
+        <button
+          type="button"
+          class="modal-close"
+          aria-label="Cerrar"
+          (click)="cerrarModalAzureDevops()"
+        >
+          <app-icon name="x" />
+        </button>
       </div>
-      <button type="button" class="btn-modal btn-modal-ok" (click)="cerrarModalAzureDevops()">
-        ✅ Entendido
-      </button>
+      <div class="modal-body">
+        <div class="azure-reminder">
+          <div class="azure-hu-badge">HU — {{ raizalParaAzure() }}</div>
+          <p class="azure-message">
+            Recuerda asociar el incidente a la HU <strong>{{ raizalParaAzure() }}</strong> en
+            <strong>Azure DevOps</strong>.
+          </p>
+          <p class="azure-sub">
+            Si no tienes acceso, apóyate con un compañero o solicita acceso a tu líder.
+          </p>
+        </div>
+        <button type="button" class="btn-modal btn-modal-ok" (click)="cerrarModalAzureDevops()">
+          <app-icon name="check-circle" /> Entendido
+        </button>
+      </div>
     </div>
   </div>
-</div>
+}
 
 <!-- Modal: Listado de Raizales -->
-<div class="modal-overlay" *ngIf="mostrarModalRaizales()" (click)="cerrarModalRaizales()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <div class="modal-header modal-header-info">
-      <span class="modal-icon">📋</span>
-      <h2>Listado de HU Raizales</h2>
-      <span class="raizales-contador">{{ raizalesModal().length }} de {{ raizalesDisponibles().length }}</span>
-      <button type="button" class="modal-close" (click)="cerrarModalRaizales()">✕</button>
-    </div>
-    <div class="modal-body">
-      <input
-        type="text"
-        class="raizales-buscador"
-        [value]="filtroModalRaizales()"
-        (input)="filtrarModalRaizales($event)"
-        placeholder="🔎 Buscar por número o descripción...">
-      <div class="raizales-table-wrapper" *ngIf="raizalesModal().length > 0">
-        <table class="raizales-table">
-          <thead>
-            <tr>
-              <th (click)="ordenarModalRaizalesPor('numero')" [class.th-activa]="ordenModalRaizales().col === 'numero'">
-                Número <span class="th-arrow" *ngIf="ordenModalRaizales().col === 'numero'">{{ ordenModalRaizales().dir === 1 ? '▲' : '▼' }}</span>
-              </th>
-              <th (click)="ordenarModalRaizalesPor('tipo')" [class.th-activa]="ordenModalRaizales().col === 'tipo'" class="th-tipo">
-                Tipo <span class="th-arrow" *ngIf="ordenModalRaizales().col === 'tipo'">{{ ordenModalRaizales().dir === 1 ? '▲' : '▼' }}</span>
-              </th>
-              <th (click)="ordenarModalRaizalesPor('descripcion')" [class.th-activa]="ordenModalRaizales().col === 'descripcion'">
-                Descripción <span class="th-arrow" *ngIf="ordenModalRaizales().col === 'descripcion'">{{ ordenModalRaizales().dir === 1 ? '▲' : '▼' }}</span>
-              </th>
-              <th (click)="ordenarModalRaizalesPor('uso')" [class.th-activa]="ordenModalRaizales().col === 'uso'" class="th-uso">
-                Usos <span class="th-arrow" *ngIf="ordenModalRaizales().col === 'uso'">{{ ordenModalRaizales().dir === 1 ? '▲' : '▼' }}</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let raizal of raizalesModal()" class="raizal-row"
-              (click)="seleccionarRaizal(raizal); cerrarModalRaizales()">
-              <td class="td-numero">{{ raizal.numero_historia }}</td>
-              <td class="td-tipo"><span class="raizal-tipo-chip">{{ raizal.tipo }}</span></td>
-              <td class="td-desc">{{ raizal.descripcion }}</td>
-              <td class="td-uso">{{ raizal.usado_contador || '—' }}</td>
-            </tr>
-          </tbody>
-        </table>
+@if (mostrarModalRaizales()) {
+  <div class="modal-overlay" (click)="cerrarModalRaizales()">
+    <div
+      class="modal-content"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-modal-raizales"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-header modal-header-info">
+        <span class="modal-icon"><app-icon name="clipboard" /></span>
+        <h2 id="titulo-modal-raizales">Listado de HU Raizales</h2>
+        <span class="raizales-contador"
+          >{{ raizalesModal().length }} de {{ raizalesDisponibles().length }}</span
+        >
+        <button
+          type="button"
+          class="modal-close"
+          aria-label="Cerrar"
+          (click)="cerrarModalRaizales()"
+        >
+          <app-icon name="x" />
+        </button>
       </div>
-      <div class="raizales-vacio" *ngIf="raizalesModal().length === 0">
-        Sin resultados para tu búsqueda.
+      <div class="modal-body">
+        <div class="raizales-buscador-wrapper">
+          <app-icon class="raizales-buscador-icono" name="search" [size]="17" />
+          <input
+            type="text"
+            class="raizales-buscador"
+            [value]="filtroModalRaizales()"
+            (input)="filtrarModalRaizales($event)"
+            aria-label="Buscar raizal"
+            placeholder="Buscar por número o descripción..."
+          />
+        </div>
+        @if (raizalesModal().length > 0) {
+          <div class="raizales-table-wrapper">
+            <table class="raizales-table">
+              <thead>
+                <tr>
+                  <th
+                    scope="col"
+                    [class.th-activa]="ordenModalRaizales().col === 'numero'"
+                    [attr.aria-sort]="
+                      ordenModalRaizales().col === 'numero'
+                        ? ordenModalRaizales().dir === 1
+                          ? 'ascending'
+                          : 'descending'
+                        : 'none'
+                    "
+                  >
+                    <button
+                      type="button"
+                      class="th-boton"
+                      (click)="ordenarModalRaizalesPor('numero')"
+                    >
+                      Número
+                      @if (ordenModalRaizales().col === 'numero') {
+                        <app-icon
+                          class="th-arrow"
+                          [name]="ordenModalRaizales().dir === 1 ? 'chevron-up' : 'chevron-down'"
+                          [size]="14"
+                        />
+                      }
+                    </button>
+                  </th>
+                  <th
+                    scope="col"
+                    [class.th-activa]="ordenModalRaizales().col === 'tipo'"
+                    class="th-tipo"
+                    [attr.aria-sort]="
+                      ordenModalRaizales().col === 'tipo'
+                        ? ordenModalRaizales().dir === 1
+                          ? 'ascending'
+                          : 'descending'
+                        : 'none'
+                    "
+                  >
+                    <button
+                      type="button"
+                      class="th-boton"
+                      (click)="ordenarModalRaizalesPor('tipo')"
+                    >
+                      Tipo
+                      @if (ordenModalRaizales().col === 'tipo') {
+                        <app-icon
+                          class="th-arrow"
+                          [name]="ordenModalRaizales().dir === 1 ? 'chevron-up' : 'chevron-down'"
+                          [size]="14"
+                        />
+                      }
+                    </button>
+                  </th>
+                  <th
+                    scope="col"
+                    [class.th-activa]="ordenModalRaizales().col === 'descripcion'"
+                    [attr.aria-sort]="
+                      ordenModalRaizales().col === 'descripcion'
+                        ? ordenModalRaizales().dir === 1
+                          ? 'ascending'
+                          : 'descending'
+                        : 'none'
+                    "
+                  >
+                    <button
+                      type="button"
+                      class="th-boton"
+                      (click)="ordenarModalRaizalesPor('descripcion')"
+                    >
+                      Descripción
+                      @if (ordenModalRaizales().col === 'descripcion') {
+                        <app-icon
+                          class="th-arrow"
+                          [name]="ordenModalRaizales().dir === 1 ? 'chevron-up' : 'chevron-down'"
+                          [size]="14"
+                        />
+                      }
+                    </button>
+                  </th>
+                  <th
+                    scope="col"
+                    [class.th-activa]="ordenModalRaizales().col === 'uso'"
+                    class="th-uso"
+                    [attr.aria-sort]="
+                      ordenModalRaizales().col === 'uso'
+                        ? ordenModalRaizales().dir === 1
+                          ? 'ascending'
+                          : 'descending'
+                        : 'none'
+                    "
+                  >
+                    <button type="button" class="th-boton" (click)="ordenarModalRaizalesPor('uso')">
+                      Usos
+                      @if (ordenModalRaizales().col === 'uso') {
+                        <app-icon
+                          class="th-arrow"
+                          [name]="ordenModalRaizales().dir === 1 ? 'chevron-up' : 'chevron-down'"
+                          [size]="14"
+                        />
+                      }
+                    </button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (raizal of raizalesModal(); track raizal) {
+                  <tr
+                    class="raizal-row"
+                    tabindex="0"
+                    role="button"
+                    [attr.aria-label]="'Seleccionar raizal ' + raizal.numero_historia"
+                    (click)="seleccionarRaizal(raizal); cerrarModalRaizales()"
+                    (keydown.enter)="seleccionarRaizal(raizal); cerrarModalRaizales()"
+                    (keydown.space)="seleccionarRaizal(raizal); cerrarModalRaizales()"
+                  >
+                    <td class="td-numero">{{ raizal.numero_historia }}</td>
+                    <td class="td-tipo">
+                      <span class="raizal-tipo-chip">{{ raizal.tipo }}</span>
+                    </td>
+                    <td class="td-desc">{{ raizal.descripcion }}</td>
+                    <td class="td-uso">{{ raizal.usado_contador || '—' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+        @if (raizalesModal().length === 0) {
+          <div class="raizales-vacio">Sin resultados para tu búsqueda.</div>
+        }
       </div>
     </div>
   </div>
-</div>
+}

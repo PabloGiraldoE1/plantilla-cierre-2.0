@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Storage } from '../../services/storage';
 import { IncidenteCompartido } from '../../services/incidente-compartido';
 import { Incidente } from '../../models/incidente';
+import { Icon } from '../icon/icon';
 
-const MENSAJE_CIERRE = 'Ha sido un gusto ayudarte. En breve recibirás un correo con la resolución del incidente y una breve encuesta de satisfacción. Solo tomará 3 minutos y tus comentarios nos ayudan a mejorar. ¡Gracias por tu confianza!';
+const MENSAJE_CIERRE =
+  'Ha sido un gusto ayudarte. En breve recibirás un correo con la resolución del incidente y una breve encuesta de satisfacción. Solo tomará 3 minutos y tus comentarios nos ayudan a mejorar. ¡Gracias por tu confianza!';
 
 @Component({
   selector: 'app-historial-incidentes',
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule, Icon],
   templateUrl: './historial-incidentes.html',
   styleUrl: './historial-incidentes.scss',
 })
@@ -24,7 +26,7 @@ export class HistorialIncidentes implements OnInit {
   constructor(
     private storageService: Storage,
     private incidenteCompartido: IncidenteCompartido,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -42,12 +44,13 @@ export class HistorialIncidentes implements OnInit {
       return;
     }
     const term = this.searchTerm.toLowerCase();
-    this.filteredHistorial = this.historial.filter(inc =>
-      inc.causaError?.toLowerCase().includes(term) ||
-      inc.huRaizal?.toLowerCase().includes(term) ||
-      inc.huRaizalOtro?.toLowerCase().includes(term) ||
-      inc.causaRaiz?.toLowerCase().includes(term) ||
-      inc.descripcionSolucion?.toLowerCase().includes(term)
+    this.filteredHistorial = this.historial.filter(
+      (inc) =>
+        inc.causaError?.toLowerCase().includes(term) ||
+        inc.huRaizal?.toLowerCase().includes(term) ||
+        inc.huRaizalOtro?.toLowerCase().includes(term) ||
+        inc.causaRaiz?.toLowerCase().includes(term) ||
+        inc.descripcionSolucion?.toLowerCase().includes(term),
     );
   }
 
@@ -71,8 +74,11 @@ export class HistorialIncidentes implements OnInit {
   formatearFecha(fecha: Date | undefined): string {
     if (!fecha) return 'N/A';
     return new Date(fecha).toLocaleString('es-ES', {
-      year: 'numeric', month: '2-digit', day: '2-digit',
-      hour: '2-digit', minute: '2-digit'
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   }
 
@@ -84,9 +90,12 @@ export class HistorialIncidentes implements OnInit {
   }
 
   copiarIncidente(incidente: Incidente): void {
-    const raizalTexto = incidente.huRaizal === 'OTRO' && incidente.huRaizalOtro
-      ? incidente.huRaizalOtro
-      : (incidente.huRaizal?.match(/^(\d+)/) ? incidente.huRaizal.match(/^(\d+)/)![1] : incidente.huRaizal || '');
+    const raizalTexto =
+      incidente.huRaizal === 'OTRO' && incidente.huRaizalOtro
+        ? incidente.huRaizalOtro
+        : incidente.huRaizal?.match(/^(\d+)/)
+          ? incidente.huRaizal.match(/^(\d+)/)![1]
+          : incidente.huRaizal || '';
 
     const texto = `* Causa del Error: ${incidente.causaError || ''}
 * HU Raizal / Mejora: ${raizalTexto}
@@ -98,7 +107,7 @@ ${MENSAJE_CIERRE}
 * Confirmar Operatividad del Usuario Afectado: ${incidente.confirmacionUsuario || ''}`.trim();
 
     navigator.clipboard.writeText(texto).then(() => {
-      this.showToast('📋 Incidente copiado al portapapeles');
+      this.showToast('Incidente copiado al portapapeles');
     });
   }
 
@@ -106,13 +115,15 @@ ${MENSAJE_CIERRE}
     this.incidenteCompartido.setIncidente(incidente);
     this.router.navigate(['/formulario']);
     setTimeout(() => {
-      this.showToast('✅ Incidente recuperado en el formulario');
+      this.showToast('Incidente recuperado en el formulario');
     }, 300);
   }
 
   showToast(message: string): void {
     this.toastMessage = message;
     this.mostrarToast = true;
-    setTimeout(() => { this.mostrarToast = false; }, 3500);
+    setTimeout(() => {
+      this.mostrarToast = false;
+    }, 3500);
   }
 }

@@ -1,31 +1,37 @@
 // Design tokens
-$indigo:     #4361ee;
-$indigo-dk:  #3451de;
-$cyan:       #06b6d4;
-$emerald:    #10b981;
-$navy:       #0d1a52;
-$border:     #e2e8f0;
-$bg-card:    #ffffff;
-$bg-subtle:  #f8f9ff;
-$text-main:  #0f172a;
-$text-soft:  #475569;
-$text-muted: #94a3b8;
-$shadow-sm:  0 1px 4px rgba(10,15,44,.07);
-$shadow-md:  0 4px 18px rgba(10,15,44,.10);
-$shadow-lg:  0 10px 36px rgba(10,15,44,.13);
+$indigo: var(--color-indigo);
+$indigo-dk: var(--color-indigo-dark);
+$cyan: var(--color-cyan);
+$emerald: var(--color-emerald);
+$navy: var(--color-navy-deep);
+$border: var(--border);
+$bg-card: var(--bg-surface);
+$bg-subtle: var(--bg-subtle);
+$text-main: var(--text-primary);
+$text-soft: var(--text-secondary);
+$text-muted: var(--text-muted);
+$shadow-sm: var(--shadow-sm);
+$shadow-md: var(--shadow-md);
+$shadow-lg: var(--shadow-lg);
 $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 
 .agrupadores-container {
   max-width: 1300px;
   margin: 0 auto;
   padding: 24px 20px;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
   animation: fadeIn 0.4s ease;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 // ===== PAGE HEADER ==========================================
@@ -34,17 +40,19 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   margin-bottom: 26px;
 
   h1 {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-heading);
     font-size: 2rem;
     font-weight: 800;
     letter-spacing: -1px;
-    background: linear-gradient(135deg, #0d1a52 0%, #4361ee 55%, #06b6d4 100%);
+    background: var(--heading-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 6px;
 
-    @media (max-width: 768px) { font-size: 1.4rem; }
+    @media (max-width: 768px) {
+      font-size: 1.4rem;
+    }
   }
 
   .page-subtitle {
@@ -68,22 +76,25 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   color: white;
   border: none;
   border-radius: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
   transition: $transition;
-  box-shadow: 0 2px 8px rgba(67,97,238,.25);
+  box-shadow: 0 2px 8px rgba(67, 97, 238, 0.25);
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 14px rgba(67,97,238,.35);
+    box-shadow: 0 5px 14px rgba(67, 97, 238, 0.35);
   }
 
   &.btn-ctrl-secondary {
-    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-    box-shadow: 0 2px 8px rgba(0,0,0,.15);
-    &:hover { box-shadow: 0 5px 14px rgba(0,0,0,.2); }
+    background: linear-gradient(135deg, var(--btn-neutral-from) 0%, var(--btn-neutral-to) 100%);
+    color: var(--on-btn-neutral);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    &:hover {
+      box-shadow: 0 5px 14px rgba(0, 0, 0, 0.2);
+    }
   }
 }
 
@@ -102,26 +113,39 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   transition: $transition;
 
-  &:hover { box-shadow: $shadow-md; }
+  &:hover {
+    box-shadow: $shadow-md;
+  }
 }
 
 .seccion-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
   padding: 16px 22px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font: inherit;
   cursor: pointer;
   user-select: none;
   transition: background 0.22s;
 
+  &:focus-visible {
+    outline: 2px solid var(--color-indigo);
+    outline-offset: -3px;
+  }
+
   &:hover {
-    background: linear-gradient(135deg, rgba(67,97,238,.04) 0%, rgba(6,182,212,.03) 100%);
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.04) 0%, rgba(6, 182, 212, 0.03) 100%);
   }
 
   &.seccion-header-open {
     border-bottom: 2px solid;
     border-image: linear-gradient(90deg, $indigo, $cyan) 1;
-    background: linear-gradient(135deg, rgba(67,97,238,.05) 0%, rgba(6,182,212,.04) 100%);
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.05) 0%, rgba(6, 182, 212, 0.04) 100%);
   }
 }
 
@@ -133,13 +157,16 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 0;
 }
 
-.seccion-icono { font-size: 1.5rem; flex-shrink: 0; }
+.seccion-icono {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
 
 .seccion-nombre {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-heading);
   font-size: 1.05rem;
   font-weight: 700;
-  color: $navy;
+  color: var(--brand-text);
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -147,9 +174,9 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .seccion-badge {
-  background: linear-gradient(135deg, rgba(67,97,238,.12) 0%, rgba(6,182,212,.1) 100%);
-  color: $indigo;
-  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, rgba(67, 97, 238, 0.12) 0%, rgba(6, 182, 212, 0.1) 100%);
+  color: var(--brand-text);
+  font-family: var(--font-body);
   font-size: 0.72rem;
   font-weight: 700;
   padding: 3px 10px;
@@ -170,7 +197,7 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 0.78rem;
   color: $emerald;
   font-weight: 700;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   background: rgba(16, 185, 129, 0.08);
   padding: 4px 10px;
   border-radius: 6px;
@@ -192,25 +219,31 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   animation: slideDown 0.28s ease;
 
   @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-6px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
 // ===== GENERADOR DE TICKET ================================
 .ticket-generator-card {
-  background: linear-gradient(135deg, rgba(67,97,238,.03) 0%, $bg-card 100%);
-  border: 1.5px solid rgba(67,97,238,.15);
+  background: linear-gradient(135deg, rgba(67, 97, 238, 0.03) 0%, $bg-card 100%);
+  border: 1.5px solid rgba(67, 97, 238, 0.15);
   border-radius: 14px;
   padding: 18px 20px;
   margin-bottom: 14px;
 }
 
 .generator-title {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-heading);
   font-size: 0.9rem;
   font-weight: 700;
-  color: $indigo;
+  color: var(--brand-text);
   margin: 0 0 14px 0;
   letter-spacing: 0.1px;
 }
@@ -229,7 +262,7 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 
   label {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-body);
     font-size: 0.72rem;
     font-weight: 700;
     color: $text-soft;
@@ -238,9 +271,14 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
-.gen-field-agrupador { min-width: 0; }
+.gen-field-agrupador {
+  min-width: 0;
+}
 
-.app-fija { display: flex; align-items: center; }
+.app-fija {
+  display: flex;
+  align-items: center;
+}
 
 .app-fija-badge {
   display: inline-flex;
@@ -250,17 +288,17 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   color: white;
   padding: 9px 14px;
   border-radius: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.84rem;
   font-weight: 700;
-  box-shadow: 0 2px 10px rgba(67,97,238,.3);
+  box-shadow: 0 2px 10px rgba(67, 97, 238, 0.3);
 }
 
 .gen-select {
   padding: 9px 30px 9px 11px;
   border: 1.5px solid $border;
   border-radius: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.88rem;
   color: $text-main;
   background: $bg-subtle;
@@ -275,7 +313,7 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     outline: none;
     border-color: $indigo;
     background-color: $bg-card;
-    box-shadow: 0 0 0 3px rgba(67,97,238,.12);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.12);
   }
 }
 
@@ -291,7 +329,7 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 9px 34px 9px 11px;
   border: 1.5px solid $border;
   border-radius: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.88rem;
   color: $text-main;
   background: $bg-subtle;
@@ -301,12 +339,12 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     outline: none;
     border-color: $indigo;
     background: $bg-card;
-    box-shadow: 0 0 0 3px rgba(67,97,238,.12);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.12);
   }
 
   &.gen-input-ok {
     border-color: $emerald;
-    background: rgba(16,185,129,.04);
+    background: rgba(16, 185, 129, 0.04);
   }
 }
 
@@ -328,7 +366,10 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 2px 5px;
   border-radius: 4px;
 
-  &:hover { color: #f43f5e; background: rgba(244,63,94,.08); }
+  &:hover {
+    color: var(--color-rose);
+    background: rgba(244, 63, 94, 0.08);
+  }
 }
 
 .sugerencias-lista {
@@ -349,8 +390,13 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sugerencia-item {
+  display: block;
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
   padding: 8px 12px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.84rem;
   cursor: pointer;
   color: $text-main;
@@ -359,14 +405,14 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   margin-bottom: 2px;
 
   &:hover {
-    background: rgba(67,97,238,.07);
-    color: $indigo;
+    background: rgba(67, 97, 238, 0.07);
+    color: var(--brand-text);
     font-weight: 500;
   }
 }
 
 .agrupador-hint {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.74rem;
   color: $text-muted;
   margin: 4px 0 0 0;
@@ -375,8 +421,8 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 
 // ===== RESULTADO ==========================================
 .ticket-result {
-  background: linear-gradient(135deg, rgba(16,185,129,.07) 0%, rgba(16,185,129,.03) 100%);
-  border: 1.5px solid rgba(16,185,129,.28);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.07) 0%, rgba(16, 185, 129, 0.03) 100%);
+  border: 1.5px solid rgba(16, 185, 129, 0.28);
   border-radius: 10px;
   padding: 14px 16px;
   margin-bottom: 12px;
@@ -384,7 +430,7 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .ticket-result-label {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.7rem;
   font-weight: 700;
   color: $text-soft;
@@ -402,12 +448,12 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 
 .ticket-value {
   flex: 1;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   font-size: 0.92rem;
   font-weight: 700;
-  color: #065f46;
+  color: var(--success-text);
   background: $bg-card;
-  border: 1px solid rgba(16,185,129,.2);
+  border: 1px solid rgba(16, 185, 129, 0.2);
   border-radius: 7px;
   padding: 8px 12px;
   word-break: break-all;
@@ -415,26 +461,26 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 
 .btn-copiar {
   padding: 9px 18px;
-  background: linear-gradient(135deg, $emerald 0%, #0da271 100%);
+  background: linear-gradient(135deg, $emerald 0%, var(--color-emerald-dark) 100%);
   color: white;
   border: none;
   border-radius: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.84rem;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
   transition: $transition;
-  box-shadow: 0 2px 8px rgba(16,185,129,.3);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 14px rgba(16,185,129,.4);
+    box-shadow: 0 5px 14px rgba(16, 185, 129, 0.4);
   }
 }
 
 .ticket-hint p {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   color: $text-muted;
   font-size: 0.82rem;
   font-style: italic;
@@ -446,10 +492,10 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
   padding: 9px;
   background: transparent;
-  border: 1.5px dashed rgba(67,97,238,.3);
+  border: 1.5px dashed rgba(67, 97, 238, 0.3);
   border-radius: 8px;
-  font-family: 'Inter', sans-serif;
-  color: $indigo;
+  font-family: var(--font-body);
+  color: var(--brand-text);
   font-size: 0.84rem;
   font-weight: 600;
   cursor: pointer;
@@ -457,7 +503,7 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: center;
 
   &:hover {
-    background: rgba(67,97,238,.05);
+    background: rgba(67, 97, 238, 0.05);
     border-color: $indigo;
   }
 }
@@ -466,17 +512,17 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 .lista-agrupadores-section {
   margin-top: 12px;
   padding: 14px 16px;
-  background: rgba(248,249,255,0.8);
+  background: rgba(248, 249, 255, 0.8);
   border-radius: 10px;
-  border: 1px solid rgba(67,97,238,.1);
+  border: 1px solid rgba(67, 97, 238, 0.1);
   animation: slideDown 0.28s ease;
 }
 
 .lista-titulo {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-heading);
   font-size: 0.8rem;
   font-weight: 700;
-  color: $indigo;
+  color: var(--brand-text);
   margin: 0 0 12px 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -489,6 +535,8 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .agrupador-chip {
+  font: inherit;
+  text-align: left;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -496,7 +544,7 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1.5px solid $border;
   border-radius: 20px;
   padding: 6px 13px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.82rem;
   color: $text-main;
   cursor: pointer;
@@ -512,20 +560,25 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &:hover {
-    background: rgba(67,97,238,.06);
+    background: rgba(67, 97, 238, 0.06);
     border-color: $indigo;
-    color: $indigo;
+    color: var(--brand-text);
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(67,97,238,.12);
-    .chip-action { opacity: 1; }
+    box-shadow: 0 2px 8px rgba(67, 97, 238, 0.12);
+    .chip-action {
+      opacity: 1;
+    }
   }
 
   &.agrupador-chip-selected {
     background: linear-gradient(135deg, $indigo 0%, $indigo-dk 100%);
     border-color: $indigo;
     color: white;
-    box-shadow: 0 3px 10px rgba(67,97,238,.35);
-    .chip-action { opacity: 1; color: rgba(255,255,255,.9); }
+    box-shadow: 0 3px 10px rgba(67, 97, 238, 0.35);
+    .chip-action {
+      opacity: 1;
+      color: rgba(255, 255, 255, 0.9);
+    }
   }
 }
 
@@ -535,11 +588,11 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   bottom: 28px;
   left: 50%;
   transform: translateX(-50%) translateY(80px);
-  background: linear-gradient(135deg, #0d1a52 0%, #1e3a8a 100%);
+  background: linear-gradient(135deg, var(--color-navy-deep) 0%, var(--color-blue-900) 100%);
   color: white;
   padding: 13px 24px;
   border-radius: 12px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.88rem;
   font-weight: 500;
   z-index: 9999;
@@ -549,7 +602,7 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: $shadow-lg;
   max-width: 480px;
   text-align: center;
-  border: 1px solid rgba(255,255,255,.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 
   &.show {
     opacity: 1;
@@ -560,11 +613,27 @@ $transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 
 // ===== RESPONSIVE =========================================
 @media (max-width: 768px) {
-  .agrupadores-container { padding: 16px 12px; }
-  .seccion-header        { padding: 13px 15px; }
-  .seccion-nombre        { font-size: 0.95rem; }
-  .seccion-body          { padding: 14px 15px; }
-  .generator-form        { grid-template-columns: 1fr; }
-  .ticket-output-row     { flex-direction: column; align-items: stretch; }
-  .btn-copiar            { width: 100%; text-align: center; }
+  .agrupadores-container {
+    padding: 16px 12px;
+  }
+  .seccion-header {
+    padding: 13px 15px;
+  }
+  .seccion-nombre {
+    font-size: 0.95rem;
+  }
+  .seccion-body {
+    padding: 14px 15px;
+  }
+  .generator-form {
+    grid-template-columns: 1fr;
+  }
+  .ticket-output-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn-copiar {
+    width: 100%;
+    text-align: center;
+  }
 }

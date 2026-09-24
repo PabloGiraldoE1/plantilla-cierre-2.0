@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { IncidenteService, AppTicketSection } from '../../services/incidente';
+import { Icon } from '../icon/icon';
 
 @Component({
   selector: 'app-lista-agrupadores',
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule, Icon],
   templateUrl: './lista-agrupadores.html',
   styleUrl: './lista-agrupadores.scss',
 })
@@ -38,7 +39,7 @@ export class ListaAgrupadores implements OnInit {
       return;
     }
     seccion.sugerencias = seccion.agrupadores
-      .filter(ag => ag.toLowerCase().includes(termino))
+      .filter((ag) => ag.toLowerCase().includes(termino))
       .slice(0, 20);
     seccion.mostrarSugerencias = seccion.sugerencias.length > 0;
     if (seccion.busquedaAgrupador !== seccion.selectedAgrupador) {
@@ -53,7 +54,7 @@ export class ListaAgrupadores implements OnInit {
     seccion.sugerencias = [];
     seccion.mostrarSugerencias = false;
     this.calcularTicket(seccion);
-    this.showToast('✅ Agrupador seleccionado');
+    this.showToast('Agrupador seleccionado');
   }
 
   seleccionarAgrupadorDeLista(seccion: AppTicketSection, agrupador: string): void {
@@ -62,11 +63,13 @@ export class ListaAgrupadores implements OnInit {
     seccion.sugerencias = [];
     seccion.mostrarSugerencias = false;
     this.calcularTicket(seccion);
-    this.showToast('✅ Agrupador seleccionado: ' + agrupador);
+    this.showToast('Agrupador seleccionado: ' + agrupador);
   }
 
   ocultarSugerencias(seccion: AppTicketSection): void {
-    setTimeout(() => { seccion.mostrarSugerencias = false; }, 200);
+    setTimeout(() => {
+      seccion.mostrarSugerencias = false;
+    }, 200);
   }
 
   limpiarAgrupador(seccion: AppTicketSection): void {
@@ -95,21 +98,26 @@ export class ListaAgrupadores implements OnInit {
       return;
     }
     navigator.clipboard.writeText(seccion.externalTicket).then(() => {
-      this.showToast('📋 External Ticket copiado: ' + seccion.externalTicket);
+      this.showToast('External Ticket copiado: ' + seccion.externalTicket);
     });
   }
 
   expandirTodas(): void {
-    this.secciones.forEach(s => s.isOpen = true);
+    this.secciones.forEach((s) => (s.isOpen = true));
   }
 
   colapsarTodas(): void {
-    this.secciones.forEach(s => { s.isOpen = false; s.mostrarListaAgrupadores = false; });
+    this.secciones.forEach((s) => {
+      s.isOpen = false;
+      s.mostrarListaAgrupadores = false;
+    });
   }
 
   private showToast(message: string): void {
     this.toastMessage = message;
     this.mostrarToast = true;
-    setTimeout(() => { this.mostrarToast = false; }, 3500);
+    setTimeout(() => {
+      this.mostrarToast = false;
+    }, 3500);
   }
 }

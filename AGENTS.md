@@ -9,18 +9,21 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 | Path | Purpose |
 |------|---------|
-| `src/app/app.routes.ts` | Route definitions (hash routing, all eager-loaded) |
+| `src/app/app.routes.ts` | Route definitions (hash routing, lazy-loaded) |
 | `src/app/app.config.ts` | `ApplicationConfig` — `withHashLocation()` for GitHub Pages |
 | `src/app/components/` | One directory per routed component |
-| `src/app/services/` | Five singleton services |
+| `src/app/services/` | Seven singleton services |
+| `src/app/components/icon/` | `Icon` — inline SVG icon component (`<app-icon name="…" />`) |
 | `src/app/models/` | `Incidente` and `PlantillaTecnica` interfaces |
+| `src/environments/environment.ts` | Groq credentials (API key or proxy URL) and model id |
+| `proxy-groq/` | Optional Cloudflare Worker that keeps the Groq key server-side |
 | `backend-api/` | Optional PHP/MySQL backend — **NOT currently connected** |
 
 ## Architecture
 
 ### Routes
 
-All routes are currently **eager-loaded**. Use lazy loading for any new routes.
+All routes are **lazy-loaded** via `loadComponent` and carry a `title`. Keep that pattern for new routes.
 
 | Route | Component | Description |
 |-------|-----------|-------------|
@@ -38,6 +41,8 @@ All routes are currently **eager-loaded**. Use lazy loading for any new routes.
 | `services/backend-api.ts` | `BackendApiService` | localStorage CRUD for `HURaizal` (predefined list + custom) and `ExternalTicketHistorial`; also houses the `HURaizal` and `ExternalTicketHistorial` interfaces |
 | `services/agrupador-seleccionado.ts` | `AgrupadorSeleccionado` | Signal-based one-shot cross-component state: value is cleared after first `getAgrupador()` call |
 | `services/incidente-compartido.ts` | `IncidenteCompartido` | Signal-based state for passing an `Incidente` (recover to form) or `Partial<Incidente>` draft across routes |
+| `services/theme.ts` | `ThemeService` | Signal-based light/dark/system theme; persists to `tema_preferido` and writes `data-theme` on `<html>` |
+| `services/groq.ts` | `GroqService` | Rewrites the incident solution text through Groq; throws `GroqError` with a ready-to-show Spanish message |
 
 ### Models
 
@@ -60,6 +65,7 @@ interface PlantillaTecnica { id?, fecha?, aplicacionAfectada, po, contextoTecnic
 | `plantillas_tecnicas` | `PlantillaTecnica[]` |
 | `raizales_custom_cache` | `HURaizal[]` (user-added only; predefined list is in `IncidenteService`) |
 | `external_tickets_cache` | `ExternalTicketHistorial[]` (max 10) |
+| `tema_preferido` | `light` \| `dark` \| `system` — theme preference |
 
 ## SSR & Browser APIs
 
@@ -100,10 +106,44 @@ npm test               # ng test via vitest + jsdom
 
 The following existing code diverges from the guidelines above. **Apply the correct pattern when creating new code or modifying these files:**
 
-- **Constructor injection** — existing components use constructor injection instead of `inject()`. Use `inject()` for all new code.
-- **Missing `ChangeDetectionStrategy.OnPush`** — existing components lack it. Add it when touching a component.
-- **Eager route loading** — existing routes in `app.routes.ts` are eager. Use lazy loading (`loadComponent`) for any new routes.
-- **`CommonModule` imports** — some components import `CommonModule`. Prefer importing only the specific directives needed (e.g., `DatePipe`, `AsyncPipe`) in standalone components.
+- **Constructor injection** — the four routed components still use constructor injection instead of `inject()`. Use `inject()` for all new code (`App`, `Icon` and `ThemeService` already do).
+- **Missing `ChangeDetectionStrategy.OnPush`** — the four routed components lack it (`App` and `Icon` have it). Add it when touching a component.
+
+Already aligned: routes are lazy, templates use native control flow (`@if` / `@for`), and no component imports `CommonModule`.
+
+## Design System
+
+`src/styles.scss` defines every color, spacing, radius, shadow and typography token, with a light and a dark palette. **Components must never hardcode colors** — always `var(--token)`:
+
+- Text on a surface: `--text-primary` / `--text-strong` / `--text-secondary` / `--text-tertiary` / `--text-muted`
+- Brand as text: `--brand-text` (never `--color-indigo`, which is tuned for fills)
+- Brand as fill: `--brand-solid` / `--brand-gradient` with `--on-brand` for the label
+- Surfaces: `--bg-page` / `--bg-surface` / `--bg-subtle` / `--bg-muted`, plus `--border`
+- Neutral (secondary) buttons: `--btn-neutral-from` / `--btn-neutral-to` / `--on-btn-neutral`
+- Headings with a gradient: `--heading-gradient`
+
+Dark mode activates from `data-theme="dark"` on `<html>` (set by `ThemeService`) or from `prefers-color-scheme` when the user has not chosen. `src/index.html` carries a small inline script that applies the stored theme before first paint.
+
+### Icons
+
+Use `<app-icon name="…" />` (see `components/icon/icon.ts`) instead of emojis. Icons are decorative by default; pass `label` when the icon is the only content of a control, or give the control an `aria-label`. To add an icon, add its name to `IconName` and its path to `PATHS` (24×24 grid, stroke style).
+
+### Accessibility checks
+
+All four routes pass axe-core with zero violations in both themes. Keep it that way: clickable elements are `<button>`, sortable table headers carry `aria-sort`, modals use `role="dialog"` + `aria-modal` + `aria-labelledby`, toasts use `role="status"`, and every form control has an associated `<label for>` (radio groups use `<fieldset><legend>`).
+
+## Groq — mejora automática de la redacción
+
+`FormularioIncidente.generarTexto()` sends the solution field to Groq and uses the rewrite directly in the generated closure text — there is no separate "improve" button or preview step; it happens as part of clicking "Generar Texto". While Groq responds, the button shows a spinner ("Mejorando con IA…") and is disabled. If Groq fails or isn't configured, `generarTexto()` falls back to the analyst's original text and still produces the closing text — it never blocks on Groq.
+
+Configure **one** of the two fields in `src/environments/environment.ts`:
+
+- `groqApiKey` — the browser calls Groq directly. **The key ends up in the published bundle and is readable by anyone who opens the site.** Groq's free tier needs no credit card, so the exposure costs no money, but a leaked key can be used until it is rotated, and GitHub's secret scanning may revoke it if it is committed to a public repo.
+- `groqProxyUrl` — the browser calls your own proxy, which holds the key. `proxy-groq/worker.js` is a ready Cloudflare Worker; its header comment has the deploy steps. When this field is set, `GroqService` never sends an `Authorization` header.
+
+With both fields empty `iaDisponible` is `false`, `generarTexto()` skips Groq entirely, and the rest of the app works normally. Rate limits live at `console.groq.com/settings/limits`; the free tier resets on its own (no monthly quota to renew) and returns HTTP 429 when exhausted.
+
+Model ids change: check `console.groq.com/docs/models` before switching `groqModelo`. As of September 2026 the Llama models are Enterprise-only and `openai/gpt-oss-20b` is the fast production model.
 
 ## Optional PHP Backend
 

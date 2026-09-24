@@ -29,64 +29,282 @@ export interface ExternalTicketHistorial {
 export class BackendApiService {
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
-  
+
   private readonly STORAGE_KEY_RAIZALES = 'raizales_custom_cache';
   private readonly STORAGE_KEY_TICKETS = 'external_tickets_cache';
 
   // Lista estática de HU Raizales predefinidas
   readonly raizalesPredefinidas: HURaizal[] = [
-    { numero_historia: '1027578', tipo: 'Historia', descripcion: 'AUS Radicados no llegan a Evaluación Médica' },
-    { numero_historia: '1069130', tipo: 'Historia', descripcion: 'AUS Radicados que se cambian a estado EXPEDIDO generan error' },
-    { numero_historia: '985468', tipo: 'Historia', descripcion: 'Certificado de pago total para pólizas financiadas de Vida' },
-    { numero_historia: '1009788', tipo: 'Historia', descripcion: 'Colas Rabbit Cotizador Educación y Pension SolicitudAExpedirRecibida.aws.ohs' },
-    { numero_historia: '1009850', tipo: 'Historia', descripcion: 'Colas Rabbit Cotizador Salud EstadoCotizacionActualizado.ayv_dyn' },
-    { numero_historia: '1066604', tipo: 'Historia', descripcion: 'Configuración límite de conexiones cola de Ingreso Digital' },
-    { numero_historia: '966406', tipo: 'Historia', descripcion: 'Cotizaciones VidaSuCapital, PCP Modificaciones no Avanzan' },
-    { numero_historia: '842531', tipo: 'Historia', descripcion: 'Cotizador Mas Vida - Aumento de excepciones por errores 404' },
-    { numero_historia: '744418', tipo: 'Historia', descripcion: 'Cotizador Plan Crédito Protegido habilita proceso de creación manual de Compañia' },
-    { numero_historia: '718270', tipo: 'Historia', descripcion: 'Cotizador Salud - Al momento de Enviar la Solicitud se genera Error número de celular no valido' },
+    {
+      numero_historia: '1027578',
+      tipo: 'Historia',
+      descripcion: 'AUS Radicados no llegan a Evaluación Médica',
+    },
+    {
+      numero_historia: '1069130',
+      tipo: 'Historia',
+      descripcion: 'AUS Radicados que se cambian a estado EXPEDIDO generan error',
+    },
+    {
+      numero_historia: '985468',
+      tipo: 'Historia',
+      descripcion: 'Certificado de pago total para pólizas financiadas de Vida',
+    },
+    {
+      numero_historia: '1009788',
+      tipo: 'Historia',
+      descripcion: 'Colas Rabbit Cotizador Educación y Pension SolicitudAExpedirRecibida.aws.ohs',
+    },
+    {
+      numero_historia: '1009850',
+      tipo: 'Historia',
+      descripcion: 'Colas Rabbit Cotizador Salud EstadoCotizacionActualizado.ayv_dyn',
+    },
+    {
+      numero_historia: '1066604',
+      tipo: 'Historia',
+      descripcion: 'Configuración límite de conexiones cola de Ingreso Digital',
+    },
+    {
+      numero_historia: '966406',
+      tipo: 'Historia',
+      descripcion: 'Cotizaciones VidaSuCapital, PCP Modificaciones no Avanzan',
+    },
+    {
+      numero_historia: '842531',
+      tipo: 'Historia',
+      descripcion: 'Cotizador Mas Vida - Aumento de excepciones por errores 404',
+    },
+    {
+      numero_historia: '744418',
+      tipo: 'Historia',
+      descripcion:
+        'Cotizador Plan Crédito Protegido habilita proceso de creación manual de Compañia',
+    },
+    {
+      numero_historia: '718270',
+      tipo: 'Historia',
+      descripcion:
+        'Cotizador Salud - Al momento de Enviar la Solicitud se genera Error número de celular no valido',
+    },
     { numero_historia: '948399', tipo: 'Historia', descripcion: 'Cotizador se quedan en blanco' },
-    { numero_historia: '772703', tipo: 'Historia', descripcion: 'Error en formato de fechas al momento de enviar modificaciones en PCP' },
-    { numero_historia: '674184', tipo: 'Historia', descripcion: 'Error pregunta Citologia - Cotizador Salud' },
+    {
+      numero_historia: '772703',
+      tipo: 'Historia',
+      descripcion: 'Error en formato de fechas al momento de enviar modificaciones en PCP',
+    },
+    {
+      numero_historia: '674184',
+      tipo: 'Historia',
+      descripcion: 'Error pregunta Citologia - Cotizador Salud',
+    },
     { numero_historia: '1072387', tipo: 'Historia', descripcion: 'Errores en Fecha de Nacimiento' },
-    { numero_historia: '1020926', tipo: 'Historia', descripcion: 'Informacion cuenta bancaria - Ingreso Digital Vida Grupo' },
+    {
+      numero_historia: '1020926',
+      tipo: 'Historia',
+      descripcion: 'Informacion cuenta bancaria - Ingreso Digital Vida Grupo',
+    },
     { numero_historia: '743018', tipo: 'Historia', descripcion: 'Memoria Cotizador Salud' },
-    { numero_historia: '1021777', tipo: 'Historia', descripcion: 'Modificaciones no llegan a Trazabilidad' },
-    { numero_historia: '826946', tipo: 'Historia', descripcion: 'No cargan los planes al momento de realizar una conversión en poliza de Salud' },
-    { numero_historia: '809795', tipo: 'Historia', descripcion: 'Porchat - No actualiza los datos del Asesor - (Celular y Correo)' },
-    { numero_historia: '842200', tipo: 'Historia', descripcion: 'Porchat - No llegan los correos al corporativo - Recibo de cobro' },
-    { numero_historia: '1040082', tipo: 'Historia', descripcion: 'Cambio consumo de vinculaciones' },
-    { numero_historia: '1064806', tipo: 'Historia', descripcion: 'Plan de pruebas Sprint 1 Q1 2026' },
-    { numero_historia: '1064807', tipo: 'Historia', descripcion: 'Plan de pruebas Sprint 2 Q1 2026' },
-    { numero_historia: '1026468', tipo: 'Historia', descripcion: 'Raizal cotizaciones no viajan a Salesforce' },
-    { numero_historia: '1069710', tipo: 'Historia', descripcion: 'Revision funcionalidad de SP AVA' },
-    { numero_historia: '840358', tipo: 'Historia', descripcion: 'Cotizaciones en Proceso de Envio - Autos' },
-    { numero_historia: '550972', tipo: 'Historia', descripcion: 'Pooled Connection Request TimeOut - SimonNet' },
-    { numero_historia: '1157042', tipo: 'Historia', descripcion: 'Actualizar Mensaje Cotizador Autos' },
-    { numero_historia: '1152592', tipo: 'Historia', descripcion: 'Validación Correos Cotizador Autos' },
+    {
+      numero_historia: '1021777',
+      tipo: 'Historia',
+      descripcion: 'Modificaciones no llegan a Trazabilidad',
+    },
+    {
+      numero_historia: '826946',
+      tipo: 'Historia',
+      descripcion: 'No cargan los planes al momento de realizar una conversión en poliza de Salud',
+    },
+    {
+      numero_historia: '809795',
+      tipo: 'Historia',
+      descripcion: 'Porchat - No actualiza los datos del Asesor - (Celular y Correo)',
+    },
+    {
+      numero_historia: '842200',
+      tipo: 'Historia',
+      descripcion: 'Porchat - No llegan los correos al corporativo - Recibo de cobro',
+    },
+    {
+      numero_historia: '1040082',
+      tipo: 'Historia',
+      descripcion: 'Cambio consumo de vinculaciones',
+    },
+    {
+      numero_historia: '1064806',
+      tipo: 'Historia',
+      descripcion: 'Plan de pruebas Sprint 1 Q1 2026',
+    },
+    {
+      numero_historia: '1064807',
+      tipo: 'Historia',
+      descripcion: 'Plan de pruebas Sprint 2 Q1 2026',
+    },
+    {
+      numero_historia: '1026468',
+      tipo: 'Historia',
+      descripcion: 'Raizal cotizaciones no viajan a Salesforce',
+    },
+    {
+      numero_historia: '1069710',
+      tipo: 'Historia',
+      descripcion: 'Revision funcionalidad de SP AVA',
+    },
+    {
+      numero_historia: '840358',
+      tipo: 'Historia',
+      descripcion: 'Cotizaciones en Proceso de Envio - Autos',
+    },
+    {
+      numero_historia: '550972',
+      tipo: 'Historia',
+      descripcion: 'Pooled Connection Request TimeOut - SimonNet',
+    },
+    {
+      numero_historia: '1157042',
+      tipo: 'Historia',
+      descripcion: 'Actualizar Mensaje Cotizador Autos',
+    },
+    {
+      numero_historia: '1152592',
+      tipo: 'Historia',
+      descripcion: 'Validación Correos Cotizador Autos',
+    },
     { numero_historia: '1148046', tipo: 'Historia', descripcion: 'Revisión Servicios PorChat' },
-    { numero_historia: '1146011', tipo: 'Historia', descripcion: 'Cotizaciones SARLAFT Finalizado - pero no Avanzan' },
-    { numero_historia: '1136355', tipo: 'Historia', descripcion: 'Cambios de Estado en Trazabilidad, sin completarse el proceso del Cotizador - Salud' },
-    { numero_historia: '1146022', tipo: 'Historia', descripcion: 'Ingreso Digital - Lotes en estado "Procesando" para Ingreso y retiro de asegurados' },
-    { numero_historia: '1146007', tipo: 'Historia', descripcion: 'GENERAL Cotizadores - Proceso FIRMA realizado pero cotizacion no avanza' },
-    { numero_historia: '1239585', tipo: 'Historia', descripcion: 'Cotizaciones Proceso de Envio - Pendiente Firma' },
-    { numero_historia: '1239003', tipo: 'Historia', descripcion: 'Corregir el envío anticipado de producción a Teradata para los ramos 193 y 196' },
-    { numero_historia: '1196801', tipo: 'Historia', descripcion: 'Recursos de memoria agotados en ms-ayv-vida' },
-    { numero_historia: '1192884', tipo: 'Historia', descripcion: 'Porchat - Error en la generación de certificados - Rol 048 AFILIADO' },
-    { numero_historia: '1191371', tipo: 'Historia', descripcion: 'Ingreso Digital Vida Grupo - Falla en carga de planes para grupo familiar en Ingreso de Asegurados' },
-    { numero_historia: '1173968', tipo: 'Historia', descripcion: 'AUS - Falla en operación: Reversar Prorrogado' },
-    { numero_historia: '1165258', tipo: 'Historia', descripcion: 'Cotizador Autos - Error en Modificaciones "No se puede cambiar PeriodStart salvo que EditEffectiveDate coincida con PeriodStart actual"' },
-    { numero_historia: '692563', tipo: 'Historia', descripcion: 'AUS. Demasiada lentitud en la aplicación, se queda cargando para expedir un radicado, se trata de consultar y no lo trae, queda la barra de estados en blanco' },
-    { numero_historia: '807581', tipo: 'Historia', descripcion: 'Raizal VG Cotizador - Lotes sin expedir' },
-    { numero_historia: '797265', tipo: 'Historia', descripcion: 'AUS. No muestra la carga inicial de los radicados' },
-    { numero_historia: '926873', tipo: 'Historia', descripcion: 'Raizal - Cotizador No se logró descomponer el nombre' }
+    {
+      numero_historia: '1146011',
+      tipo: 'Historia',
+      descripcion: 'Cotizaciones SARLAFT Finalizado - pero no Avanzan',
+    },
+    {
+      numero_historia: '1136355',
+      tipo: 'Historia',
+      descripcion:
+        'Cambios de Estado en Trazabilidad, sin completarse el proceso del Cotizador - Salud',
+    },
+    {
+      numero_historia: '1146022',
+      tipo: 'Historia',
+      descripcion:
+        'Ingreso Digital - Lotes en estado "Procesando" para Ingreso y retiro de asegurados',
+    },
+    {
+      numero_historia: '1146007',
+      tipo: 'Historia',
+      descripcion: 'GENERAL Cotizadores - Proceso FIRMA realizado pero cotizacion no avanza',
+    },
+    {
+      numero_historia: '1239585',
+      tipo: 'Historia',
+      descripcion: 'Cotizaciones Proceso de Envio - Pendiente Firma',
+    },
+    {
+      numero_historia: '1239003',
+      tipo: 'Historia',
+      descripcion: 'Corregir el envío anticipado de producción a Teradata para los ramos 193 y 196',
+    },
+    {
+      numero_historia: '1196801',
+      tipo: 'Historia',
+      descripcion: 'Recursos de memoria agotados en ms-ayv-vida',
+    },
+    {
+      numero_historia: '1192884',
+      tipo: 'Historia',
+      descripcion: 'Porchat - Error en la generación de certificados - Rol 048 AFILIADO',
+    },
+    {
+      numero_historia: '1191371',
+      tipo: 'Historia',
+      descripcion:
+        'Ingreso Digital Vida Grupo - Falla en carga de planes para grupo familiar en Ingreso de Asegurados',
+    },
+    {
+      numero_historia: '1173968',
+      tipo: 'Historia',
+      descripcion: 'AUS - Falla en operación: Reversar Prorrogado',
+    },
+    {
+      numero_historia: '1165258',
+      tipo: 'Historia',
+      descripcion:
+        'Cotizador Autos - Error en Modificaciones "No se puede cambiar PeriodStart salvo que EditEffectiveDate coincida con PeriodStart actual"',
+    },
+    {
+      numero_historia: '692563',
+      tipo: 'Historia',
+      descripcion:
+        'AUS. Demasiada lentitud en la aplicación, se queda cargando para expedir un radicado, se trata de consultar y no lo trae, queda la barra de estados en blanco',
+    },
+    {
+      numero_historia: '807581',
+      tipo: 'Historia',
+      descripcion: 'Raizal VG Cotizador - Lotes sin expedir',
+    },
+    {
+      numero_historia: '797265',
+      tipo: 'Historia',
+      descripcion: 'AUS. No muestra la carga inicial de los radicados',
+    },
+    {
+      numero_historia: '926873',
+      tipo: 'Historia',
+      descripcion: 'Raizal - Cotizador No se logró descomponer el nombre',
+    },
+    {
+      numero_historia: '1272953',
+      tipo: 'Historia',
+      descripcion: 'Ingreso Digital Vida Grupo - Falla en sevicio enviar-a-firma',
+    },
+    {
+      numero_historia: '1264278',
+      tipo: 'Historia',
+      descripcion: 'General Cotizadores - Capacidad correos microsoft',
+    },
+    {
+      numero_historia: '1262041',
+      tipo: 'Historia',
+      descripcion:
+        'Cotizadores - Falla de información en la lista de relaciones PEP con el tomador',
+    },
+    {
+      numero_historia: '1254134',
+      tipo: 'Historia',
+      descripcion: 'Cotizador Autos - No permite tarifa PLAN MUEVETE LIBRE',
+    },
+    {
+      numero_historia: '1248464',
+      tipo: 'Historia',
+      descripcion:
+        'Raizal - Cola sura.seguros.cotizador.pip.aws.SolicitudAExpedirRecibida.ind_dyn con encolalamiento por error de SAGA',
+    },
+    {
+      numero_historia: '1246304',
+      tipo: 'Historia',
+      descripcion: 'Gestion de colas abbandoned para Plan Vive, Rentas y PCP',
+    },
+    {
+      numero_historia: '1108979',
+      tipo: 'Historia',
+      descripcion: 'Error de consulta POS asegurado en Plan Complementario 60+',
+    },
+    {
+      numero_historia: '879138',
+      tipo: 'Historia',
+      descripcion: 'Raizal AUS Radicados con trazabilidad de estado incorrecta.',
+    },
+    {
+      numero_historia: '768328',
+      tipo: 'Historia',
+      descripcion: 'Raizal - AUS. 525. EL radicado no queda con la trazabilidad correcta',
+    },
   ];
 
   // ===== HU RAIZALES CUSTOM (localStorage) =====
 
   obtenerRaizalesCustom(): Observable<HURaizal[]> {
     if (!this.isBrowser) return of([]);
-    
+
     try {
       const data = localStorage.getItem(this.STORAGE_KEY_RAIZALES);
       const raizales = data ? JSON.parse(data) : [];
@@ -99,19 +317,19 @@ export class BackendApiService {
 
   obtenerTodasLasRaizales(): Observable<HURaizal[]> {
     return this.obtenerRaizalesCustom().pipe(
-      map(customRaizales => [...this.raizalesPredefinidas, ...customRaizales])
+      map((customRaizales) => [...this.raizalesPredefinidas, ...customRaizales]),
     );
   }
 
   crearRaizalCustom(raizal: HURaizal): Observable<any> {
     if (!this.isBrowser) return of({ success: false });
-    
+
     try {
       const raizales = JSON.parse(localStorage.getItem(this.STORAGE_KEY_RAIZALES) || '[]');
-      
+
       // Verificar si ya existe
       const existe = raizales.find((r: HURaizal) => r.numero_historia === raizal.numero_historia);
-      
+
       if (existe) {
         // Incrementar contador
         existe.usado_contador = (existe.usado_contador || 0) + 1;
@@ -123,7 +341,7 @@ export class BackendApiService {
         raizal.usado_contador = 1;
         raizales.push(raizal);
       }
-      
+
       localStorage.setItem(this.STORAGE_KEY_RAIZALES, JSON.stringify(raizales));
       return of({ success: true, message: 'Raizal guardada correctamente' });
     } catch (error) {
@@ -134,17 +352,17 @@ export class BackendApiService {
 
   incrementarUsoRaizal(numeroHistoria: string): Observable<any> {
     if (!this.isBrowser) return of({ success: false });
-    
+
     try {
       const raizales = JSON.parse(localStorage.getItem(this.STORAGE_KEY_RAIZALES) || '[]');
       const raizal = raizales.find((r: HURaizal) => r.numero_historia === numeroHistoria);
-      
+
       if (raizal) {
         raizal.usado_contador = (raizal.usado_contador || 0) + 1;
         raizal.ultima_actualizacion = new Date().toISOString();
         localStorage.setItem(this.STORAGE_KEY_RAIZALES, JSON.stringify(raizales));
       }
-      
+
       return of({ success: true });
     } catch (error) {
       console.error('Error incrementando uso:', error);
@@ -156,7 +374,7 @@ export class BackendApiService {
 
   obtenerHistorialTickets(limit: number = 10): Observable<ExternalTicketHistorial[]> {
     if (!this.isBrowser) return of([]);
-    
+
     try {
       const data = localStorage.getItem(this.STORAGE_KEY_TICKETS);
       const tickets = data ? JSON.parse(data) : [];
@@ -169,25 +387,27 @@ export class BackendApiService {
 
   guardarExternalTicket(ticket: ExternalTicketHistorial): Observable<any> {
     if (!this.isBrowser) return of({ success: false });
-    
+
     try {
       const tickets = JSON.parse(localStorage.getItem(this.STORAGE_KEY_TICKETS) || '[]');
-      
+
       // Verificar duplicado por valor del external_ticket
-      const existente = tickets.find((t: ExternalTicketHistorial) => t.external_ticket === ticket.external_ticket);
+      const existente = tickets.find(
+        (t: ExternalTicketHistorial) => t.external_ticket === ticket.external_ticket,
+      );
       if (existente) {
         return of({ success: true, message: 'Ticket ya existe en el historial', duplicate: true });
       }
 
       ticket.id = Date.now();
       ticket.fecha_creacion = new Date().toISOString();
-      
+
       // Agregar al inicio del array
       tickets.unshift(ticket);
-      
+
       // Mantener solo los últimos 10
       const ticketsLimitados = tickets.slice(0, 10);
-      
+
       localStorage.setItem(this.STORAGE_KEY_TICKETS, JSON.stringify(ticketsLimitados));
       return of({ success: true, message: 'External ticket guardado' });
     } catch (error) {
@@ -212,17 +432,24 @@ export class BackendApiService {
     // Validar palabras prohibidas
     const prohibidos = ['n/a', 'na', 'no aplica', 'no', 'ninguno', 'ninguna', 'nada'];
     const textoLower = textoLimpio.toLowerCase();
-    
+
     for (const palabra of prohibidos) {
-      if (textoLower === palabra || textoLower.includes(` ${palabra} `) || 
-          textoLower.startsWith(`${palabra} `) || textoLower.endsWith(` ${palabra}`)) {
+      if (
+        textoLower === palabra ||
+        textoLower.includes(` ${palabra} `) ||
+        textoLower.startsWith(`${palabra} `) ||
+        textoLower.endsWith(` ${palabra}`)
+      ) {
         return { valido: false, error: 'Debe ser una descripción válida y específica' };
       }
     }
 
     // Mínimo 10 caracteres para ser descriptivo
     if (textoLimpio.length < 10) {
-      return { valido: false, error: 'La descripción debe ser más específica (mínimo 10 caracteres)' };
+      return {
+        valido: false,
+        error: 'La descripción debe ser más específica (mínimo 10 caracteres)',
+      };
     }
 
     return { valido: true };
