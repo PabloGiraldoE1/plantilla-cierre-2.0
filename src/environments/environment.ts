@@ -20,7 +20,7 @@ export const environment = {
   groqApiKey: '',
 
   /** URL del proxy propio, p. ej. 'https://mi-worker.midominio.workers.dev'. */
-  groqProxyUrl: '',
+  groqProxyUrl: 'https://plantilla-cierre-groq.plantilla-cierre-inc.workers.dev',
 
   /** Modelo de Groq. Ver https://console.groq.com/docs/models */
   groqModelo: 'openai/gpt-oss-20b',

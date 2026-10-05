@@ -15,7 +15,7 @@
  */
 
 const ORIGENES_PERMITIDOS = [
-  'https://juanpge123.github.io',
+  'https://pablogiraldoe1.github.io',
   'http://localhost:4200',
   'http://localhost:4300',
 ];
