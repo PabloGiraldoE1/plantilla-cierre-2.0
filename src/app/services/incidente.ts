@@ -31,7 +31,9 @@ export class IncidenteService {
       'Reportes Dynatrace AVA',
       'Reportes Dynatrace SimonNet',
     ],
-    'PROCESOS/CAPACITACION': ['Firma Electronica'],
+    'PROCESOS/CAPACITACION': ['Firma Electronica',
+      "PeriodStart"
+    ],
     SIMONNET: [
       'Capacitacion Aplicativo',
       'Solicitud no registra datos',
