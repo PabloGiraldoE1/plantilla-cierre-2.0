@@ -31,9 +31,7 @@ export class IncidenteService {
       'Reportes Dynatrace AVA',
       'Reportes Dynatrace SimonNet',
     ],
-    'PROCESOS/CAPACITACION': ['Firma Electronica',
-      "PeriodStart"
-    ],
+    'PROCESOS/CAPACITACION': ['Firma Electronica', 'PeriodStart'],
     SIMONNET: [
       'Capacitacion Aplicativo',
       'Solicitud no registra datos',
@@ -187,6 +185,17 @@ export class IncidenteService {
     'Procesos/Capacitación',
   ];
 
+  /** Agrupadores que solo aplican a ciertos aplicativos. Los que no están aquí aplican a todos. */
+  private readonly aplicativosPorAgrupador: { [agrupador: string]: string[] } = {
+    PeriodStart: ['Cotizador Autos'],
+  };
+
+  /** Sin aplicativo seleccionado todos los agrupadores aplican. */
+  agrupadorAplicaA(agrupador: string, aplicativo: string): boolean {
+    const permitidos = this.aplicativosPorAgrupador[agrupador];
+    return !aplicativo || !permitidos || permitidos.includes(aplicativo);
+  }
+
   crearSecciones(): AppTicketSection[] {
     return [
       {
@@ -203,7 +212,7 @@ export class IncidenteService {
           'Cotizador Vida/Plan Vive',
           'Cotizador Plan Complementario',
         ],
-        procesos: ['Pendientes', 'Expedidas'],
+        procesos: ['Pendientes', 'Expedidas', 'Modificaciones'],
         agrupadores: this.agrupadoresPorCategoria['PROCESOS/CAPACITACION'],
         isOpen: false,
         selectedApp: '',

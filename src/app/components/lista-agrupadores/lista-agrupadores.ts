@@ -38,7 +38,7 @@ export class ListaAgrupadores implements OnInit {
       seccion.externalTicket = '';
       return;
     }
-    seccion.sugerencias = seccion.agrupadores
+    seccion.sugerencias = this.agrupadoresVisibles(seccion)
       .filter((ag) => ag.toLowerCase().includes(termino))
       .slice(0, 20);
     seccion.mostrarSugerencias = seccion.sugerencias.length > 0;
@@ -78,6 +78,23 @@ export class ListaAgrupadores implements OnInit {
     seccion.externalTicket = '';
     seccion.sugerencias = [];
     seccion.mostrarSugerencias = false;
+  }
+
+  agrupadoresVisibles(seccion: AppTicketSection): string[] {
+    const app = seccion.aplicativoFijo || seccion.selectedApp;
+    return seccion.agrupadores.filter((ag) => this.incidenteService.agrupadorAplicaA(ag, app));
+  }
+
+  cambiarAplicativo(seccion: AppTicketSection): void {
+    const app = seccion.aplicativoFijo || seccion.selectedApp;
+    if (
+      seccion.selectedAgrupador &&
+      !this.incidenteService.agrupadorAplicaA(seccion.selectedAgrupador, app)
+    ) {
+      this.limpiarAgrupador(seccion);
+      this.showToast('El agrupador seleccionado no aplica para ' + app);
+    }
+    this.calcularTicket(seccion);
   }
 
   calcularTicket(seccion: AppTicketSection): void {

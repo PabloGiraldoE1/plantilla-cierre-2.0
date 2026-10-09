@@ -70,7 +70,7 @@
                     <select
                       [id]="'app-' + seccion.key"
                       [(ngModel)]="seccion.selectedApp"
-                      (change)="calcularTicket(seccion)"
+                      (change)="cambiarAplicativo(seccion)"
                       class="gen-select"
                     >
                       <option value="">-- Seleccione aplicativo --</option>
@@ -192,7 +192,7 @@
                   <app-icon name="clipboard" /> Agrupadores disponibles — {{ seccion.nombre }}
                 </h4>
                 <div class="agrupadores-grid">
-                  @for (ag of seccion.agrupadores; track ag) {
+                  @for (ag of agrupadoresVisibles(seccion); track ag) {
                     <button
                       type="button"
                       class="agrupador-chip"
